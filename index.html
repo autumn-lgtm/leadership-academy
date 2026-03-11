@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Meld Leadership Development Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F172A;--navy-800:#1E293B;--navy-700:#334155;--navy-600:#475569;
+  --blue:#3B82F6;--blue-600:#2563EB;--blue-100:#DBEAFE;--blue-50:#EFF6FF;
+  --white:#FFFFFF;--gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;
+  --gray-300:#CBD5E1;--gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;
+  --green:#10B981;--green-100:#D1FAE5;--amber:#F59E0B;--amber-100:#FEF3C7;
+  --red:#EF4444;--red-100:#FEE2E2;
+  --sidebar-w:260px;
+  --transition:all 0.2s ease;
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
+  --shadow:0 1px 3px rgba(0,0,0,0.1),0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,0.1),0 4px 6px rgba(0,0,0,0.05);
+}
+body{font-family:Inter,sans-serif;background:var(--gray-50);color:var(--navy);min-height:100vh;display:flex;font-size:14px;line-height:1.6}
+body.dark{
+  --gray-50:#0F172A;--gray-100:#1E293B;--gray-200:#334155;--gray-300:#475569;
+  --gray-400:#64748B;--gray-500:#94A3B8;--white:#1E293B;--navy:#F1F5F9;
+  --navy-800:#E2E8F0;--navy-700:#CBD5E1;--blue-50:#1E3A5F;--blue-100:#1E40AF;
+  --green-100:#064E3B;--amber-100:#78350F;--red-100:#7F1D1D;
+}
+
+/* SIDEBAR */
+#sidebar{
+  width:var(--sidebar-w);min-width:var(--sidebar-w);height:100vh;
+  background:var(--navy);position:fixed;left:0;top:0;z-index:100;
+  display:flex;flex-direction:column;transition:transform 0.3s ease;
+  overflow-y:auto;
+}
+body.dark #sidebar{background:#020817}
+.sidebar-brand{
+  padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:12px;
+}
+.brand-icon{
+  width:40px;height:40px;background:linear-gradient(135deg,var(--blue),#6366F1);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.brand-text{font-size:12px;font-weight:700;color:#fff;line-height:1.3;letter-spacing:0.02em;text-transform:uppercase}
+.brand-sub{font-size:10px;color:rgba(255,255,255,0.5);font-weight:400;text-transform:none;margin-top:2px}
+.sidebar-nav{padding:16px 12px;flex:1}
+.nav-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);
+  text-transform:uppercase;letter-spacing:0.08em;padding:0 8px;margin:16px 0 6px}
+.nav-label:first-child{margin-top:0}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:var(--radius-sm);cursor:pointer;
+  color:rgba(255,255,255,0.6);font-size:13px;font-weight:500;
+  transition:var(--transition);margin-bottom:2px;text-decoration:none;
+  user-select:none;
+}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.9)}
+.nav-item.active{background:rgba(59,130,246,0.2);color:#fff}
+.nav-item.active .nav-icon{color:var(--blue)}
+.nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.sidebar-footer{padding:16px 12px 20px;border-top:1px solid rgba(255,255,255,0.08)}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)}
+.sidebar-user:hover{background:rgba(255,255,255,0.07)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#8B5CF6);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:rgba(255,255,255,0.4)}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{
+  background:var(--white);border-bottom:1px solid var(--gray-200);
+  padding:0 32px;height:64px;display:flex;align-items:center;
+  gap:16px;position:sticky;top:0;z-index:50;
+  box-shadow:0 1px 0 var(--gray-200);
+}
+body.dark .topbar{background:#1E293B;border-color:#334155;box-shadow:0 1px 0 #334155}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;border-radius:var(--radius-sm);color:var(--gray-600);font-size:20px}
+.hamburger:hover{background:var(--gray-100)}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-500);flex:1}
+.breadcrumb-sep{color:var(--gray-300)}
+.breadcrumb-cur{font-weight:600;color:var(--navy-800)}
+body.dark .breadcrumb-cur{color:var(--gray-100)}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;
+  border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;
+  border:none;transition:var(--transition);text-decoration:none;
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-600)}
+.btn-ghost{background:transparent;color:var(--gray-600);border:1px solid var(--gray-200)}
+.btn-ghost:hover{background:var(--gray-100);color:var(--navy)}
+body.dark .btn-ghost{border-color:#334155;color:var(--gray-400)}
+body.dark .btn-ghost:hover{background:#334155}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#DC2626}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+.content{padding:32px;flex:1}
+.section{display:none;animation:fadeIn 0.25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{
+  background:var(--white);border-radius:var(--radius);
+  border:1px solid var(--gray-200);box-shadow:var(--shadow);
+}
+body.dark .card{background:#1E293B;border-color:#334155}
+.card-header{padding:20px 24px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+body.dark .card-header{border-color:#334155}
+.card-body{padding:24px}
+.card-title{font-size:15px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px}
+body.dark .card-title{color:var(--gray-100)}
+.card-sub{font-size:12px;color:var(--gray-500);margin-top:2px}
+
+/* GRID */
+.grid{display:grid;gap:20px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+
+/* STAT CARDS */
+.stat-card{
+  background:var(--white);border-radius:var(--radius);border:1px solid var(--gray-200);
+  padding:20px 24px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;
+  transition:var(--transition);
+}
+body.dark .stat-card{background:#1E293B;border-color:#334155}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-icon{
+  width:48px;height:48px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:22px;flex-shrink:0;
+}
+.stat-val{font-size:28px;font-weight:800;color:var(--navy);line-height:1}
+body.dark .stat-val{color:var(--gray-100)}
+.stat-label{font-size:12px;color:var(--gray-500);font-weight:500;margin-top:4px}
+
+/* PROGRESS */
+.progress-bar{height:8px;background:var(--gray-100);border-radius:20px;overflow:hidden}
+body.dark .progress-bar{background:#334155}
+.progress-fill{height:100%;border-radius:20px;transition:width 0.6s ease;background:var(--blue)}
+.progress-fill.green{background:var(--green)}
+.progress-fill.amber{background:var(--amber)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-blue{background:var(--blue-100);color:#1D4ED8}
+.badge-green{background:var(--green-100);color:#065F46}
+.badge-amber{background:var(--amber-100);color:#92400E}
+.badge-gray{background:var(--gray-100);color:var(--gray-600)}
+.badge-red{background:var(--red-100);color:#991B1B}
+body.dark .badge-blue{background:#1E3A5F;color:#93C5FD}
+body.dark .badge-green{background:#064E3B;color:#6EE7B7}
+body.dark .badge-amber{background:#78350F;color:#FCD34D}
+body.dark .badge-gray{background:#334155;color:#94A3B8}
+
+/* PAGE HEADERS */
+.page-header{margin-bottom:28px}
+.page-title{font-size:24px;font-weight:800;color:var(--navy);line-height:1.2}
+body.dark .page-title{color:var(--gray-100)}
+.page-sub{font-size:14px;color:var(--gray-500);margin-top:6px}
+
+/* MODULE CARDS */
+.module-card{
+  background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;transition:var(--transition);cursor:pointer;
+}
+body.dark .module-card{background:#1E293B;border-color:#334155}
+.module-card:hover{box-shadow:var(--shadow-md)}
+.module-header{padding:20px 24px;display:flex;align-items:center;gap:16px}
+.module-num{
+  width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#6366F1);
+  display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;
+  color:#fff;flex-shrink:0;
+}
+.module-info{flex:1;min-width:0}
+.module-title{font-size:15px;font-weight:700;color:var(--navy)}
+body.dark .module-title{color:var(--gray-100)}
+.module-meta{font-size:12px;color:var(--gray-500);margin-top:3px}
+.module-chevron{color:var(--gray-400);font-size:18px;transition:transform 0.2s;flex-shrink:0}
+.module-card.expanded .module-chevron{transform:rotate(180deg)}
+.module-progress{padding:0 24px 20px}
+.module-progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.module-pct{font-size:12px;font-weight:600;color:var(--gray-600)}
+body.dark .module-pct{color:var(--gray-400)}
+.module-lessons{display:none;border-top:1px solid var(--gray-100);padding:0}
+body.dark .module-lessons{border-color:#334155}
+.module-card.expanded .module-lessons{display:block}
+.lesson-item{
+  display:flex;align-items:center;gap:12px;padding:14px 24px;
+  border-bottom:1px solid var(--gray-50);transition:background 0.15s;
+}
+body.dark .lesson-item{border-color:#1E293B}
+.lesson-item:last-child{border-bottom:none}
+.lesson-item:hover{background:var(--gray-50)}
+body.dark .lesson-item:hover{background:#0F172A}
+.lesson-cb{width:18px;height:18px;accent-color:var(--blue);cursor:pointer;flex-shrink:0}
+.lesson-name{font-size:13px;color:var(--navy);flex:1}
+body.dark .lesson-name{color:var(--gray-300)}
+.lesson-name.done{text-decoration:line-through;color:var(--gray-400)}
+.lesson-dur{font-size:11px;color:var(--gray-400);flex-shrink:0}
+
+/* PROGRAM HERO CARD */
+.program-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,#1E3A5F 100%);
+  border-radius:var(--radius-lg);padding:32px;margin-bottom:28px;
+  position:relative;overflow:hidden;
+}
+.program-hero::before{
+  content:"";position:absolute;top:-60px;right:-60px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(59,130,246,0.15);
+}
+.program-hero::after{
+  content:"";position:absolute;bottom:-40px;right:80px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(99,102,241,0.1);
+}
+.hero-content{position:relative;z-index:1}
+.hero-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:20px}
+.hero-stats{display:flex;gap:32px}
+.hero-stat{text-align:center}
+.hero-stat-val{font-size:28px;font-weight:800;color:#fff}
+.hero-stat-label{font-size:11px;color:rgba(255,255,255,0.55);margin-top:2px;text-transform:uppercase;letter-spacing:0.05em}
+
+/* LOCK OVERLAY */
+.lock-overlay{
+  position:relative;
+  min-height:200px;
+}
+.lock-cover{
+  position:absolute;inset:0;border-radius:var(--radius);
+  background:rgba(15,23,42,0.7);backdrop-filter:blur(4px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:10;gap:12px;
+}
+body.dark .lock-cover{background:rgba(0,0,0,0.75)}
+.lock-icon{font-size:48px}
+.lock-msg{font-size:15px;font-weight:600;color:#fff;text-align:center;max-width:300px}
+.lock-sub{font-size:13px;color:rgba(255,255,255,0.6);text-align:center;max-width:280px}
+
+/* JOURNAL */
+.journal-layout{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.journal-list{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+body.dark .journal-list{background:#1E293B;border-color:#334155}
+.journal-list-header{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+body.dark .journal-list-header{border-color:#334155}
+.journal-list-title{font-size:13px;font-weight:700;color:var(--navy)}
+body.dark .journal-list-title{color:var(--gray-100)}
+.journal-entry-item{
+  padding:14px 20px;border-bottom:1px solid var(--gray-50);cursor:pointer;
+  transition:background 0.15s;
+}
+body.dark .journal-entry-item{border-color:#334155}
+.journal-entry-item:hover{background:var(--gray-50)}
+body.dark .journal-entry-item:hover{background:#0F172A}
+.journal-entry-item.active{background:var(--blue-50);border-left:3px solid var(--blue)}
+body.dark .journal-entry-item.active{background:#1E3A5F}
+.je-date{font-size:11px;color:var(--gray-400);margin-bottom:4px}
+.je-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.dark .je-title{color:var(--gray-300)}
+.je-preview{font-size:11px;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.je-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.je-tag{font-size:10px;padding:2px 7px;background:var(--blue-50);color:var(--blue);border-radius:10px;font-weight:500}
+body.dark .je-tag{background:#1E3A5F;color:#93C5FD}
+.journal-editor{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+body.dark .journal-editor{background:#1E293B;border-color:#334155}
+.editor-toolbar{padding:16px 20px;border-bottom:1px solid var(--gray-100);display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+body.dark .editor-toolbar{border-color:#334155}
+.editor-title-input{
+  font-size:16px;font-weight:700;color:var(--navy);border:none;outline:none;
+  background:transparent;width:100%;padding:20px 24px 0;
+  font-family:Inter,sans-serif;
+}
+body.dark .editor-title-input{color:var(--gray-100)}
+.editor-title-input::placeholder{color:var(--gray-300)}
+.editor-textarea{
+  width:100%;min-height:280px;border:none;outline:none;resize:vertical;
+  padding:16px 24px 20px;font-size:14px;line-height:1.7;color:var(--navy);
+  background:transparent;font-family:Inter,sans-serif;
+}
+body.dark .editor-textarea{color:var(--gray-300)}
+.editor-textarea::placeholder{color:var(--gray-300)}
+.tag-input-row{display:flex;align-items:center;gap:8px;padding:0 24px 16px;flex-wrap:wrap}
+.tag-input{
+  border:1px solid var(--gray-200);border-radius:20px;padding:4px 14px;
+  font-size:12px;outline:none;font-family:Inter,sans-serif;background:var(--white);
+  color:var(--navy);transition:border-color 0.2s;
+}
+body.dark .tag-input{background:#334155;border-color:#475569;color:var(--gray-300)}
+.tag-input:focus{border-color:var(--blue)}
+.cur-tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cur-tag{
+  display:inline-flex;align-items:center;gap:4px;background:var(--blue-50);
+  color:var(--blue);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:500;cursor:pointer;
+}
+body.dark .cur-tag{background:#1E3A5F;color:#93C5FD}
+.cur-tag:hover{background:var(--blue-100)}
+.editor-actions{padding:16px 24px;border-top:1px solid var(--gray-100);display:flex;gap:8px}
+body.dark .editor-actions{border-color:#334155}
+
+/* RESOURCES */
+.resource-tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:4px;box-shadow:var(--shadow)}
+body.dark .resource-tabs{background:#1E293B;border-color:#334155}
+.res-tab{padding:8px 20px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--gray-600);transition:var(--transition);border:none;background:none;font-family:Inter,sans-serif}
+.res-tab:hover{color:var(--navy)}
+body.dark .res-tab{color:var(--gray-400)}
+.res-tab.active{background:var(--blue);color:#fff;box-shadow:var(--shadow)}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.resource-card{
+  background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow);transition:var(--transition);
+  display:flex;flex-direction:column;gap:12px;
+}
+body.dark .resource-card{background:#1E293B;border-color:#334155}
+.resource-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.rc-title{font-size:14px;font-weight:700;color:var(--navy);line-height:1.4}
+body.dark .rc-title{color:var(--gray-100)}
+.rc-author{font-size:12px;color:var(--gray-500)}
+.rc-desc{font-size:13px;color:var(--gray-600);line-height:1.5}
+body.dark .rc-desc{color:var(--gray-400)}
+.rc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.toggle-read{
+  display:flex;align-items:center;gap:6px;padding:6px 14px;
+  border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--gray-200);background:transparent;color:var(--gray-600);
+  transition:var(--transition);font-family:Inter,sans-serif;
+}
+body.dark .toggle-read{border-color:#475569;color:var(--gray-400)}
+.toggle-read:hover{border-color:var(--blue);color:var(--blue)}
+.toggle-read.read{background:var(--green-100);border-color:var(--green);color:#065F46}
+body.dark .toggle-read.read{background:#064E3B;color:#6EE7B7;border-color:var(--green)}
+
+/* SETTINGS */
+.settings-section{margin-bottom:32px}
+.settings-section-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--gray-100)}
+body.dark .settings-section-title{color:var(--gray-100);border-color:#334155}
+.form-group{margin-bottom:18px}
+.form-label{font-size:13px;font-weight:600;color:var(--navy-700);display:block;margin-bottom:6px}
+body.dark .form-label{color:var(--gray-300)}
+.form-input{
+  width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);
+  font-size:14px;font-family:Inter,sans-serif;color:var(--navy);background:var(--white);
+  transition:border-color 0.2s;outline:none;
+}
+body.dark .form-input{background:#334155;border-color:#475569;color:var(--gray-300)}
+.form-input:focus{border-color:var(--blue)}
+.form-input[type="date"]{cursor:pointer}
+.checkbox-group{display:flex;flex-direction:column;gap:12px}
+.checkbox-item{display:flex;align-items:center;gap:10px;cursor:pointer}
+.checkbox-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--blue);cursor:pointer}
+.checkbox-label{font-size:13px;color:var(--navy-700)}
+body.dark .checkbox-label{color:var(--gray-300)}
+.toggle-theme{display:flex;align-items:center;gap:12px}
+.toggle-switch{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle-switch input{display:none}
+.toggle-slider{
+  position:absolute;inset:0;background:var(--gray-200);border-radius:12px;
+  transition:background 0.3s;
+}
+.toggle-slider::after{
+  content:"";position:absolute;left:3px;top:3px;
+  width:18px;height:18px;border-radius:50%;background:#fff;
+  transition:transform 0.3s;box-shadow:var(--shadow);
+}
+.toggle-switch input:checked + .toggle-slider{background:var(--blue)}
+.toggle-switch input:checked + .toggle-slider::after{transform:translateX(20px)}
+.toggle-label{font-size:13px;color:var(--navy-700);font-weight:500}
+body.dark .toggle-label{color:var(--gray-300)}
+.danger-zone{background:var(--red-100);border:1px solid #FCA5A5;border-radius:var(--radius);padding:20px}
+body.dark .danger-zone{background:#450A0A;border-color:#7F1D1D}
+.danger-title{font-size:14px;font-weight:700;color:var(--red);margin-bottom:8px}
+.danger-desc{font-size:13px;color:#7F1D1D;margin-bottom:16px}
+body.dark .danger-desc{color:#FCA5A5}
+
+/* DASHBOARD WELCOME */
+.welcome-card{
+  background:linear-gradient(135deg,var(--navy) 0%,#1E3A5F 100%);
+  border-radius:var(--radius-lg);padding:32px 36px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.welcome-card::before{
+  content:"";position:absolute;top:-80px;right:-80px;
+  width:300px;height:300px;border-radius:50%;
+  background:rgba(59,130,246,0.12);
+}
+.wc-content{position:relative;z-index:1}
+.wc-greeting{font-size:13px;color:rgba(255,255,255,0.6);font-weight:500;margin-bottom:4px}
+.wc-name{font-size:28px;font-weight:800;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.wc-name-text{cursor:text;border-bottom:2px dashed rgba(255,255,255,0.3);padding-bottom:2px}
+.wc-name-text:focus{outline:none;border-bottom-color:rgba(255,255,255,0.8)}
+.wc-sub{font-size:14px;color:rgba(255,255,255,0.65)}
+.wc-emoji{font-size:60px;position:relative;z-index:1}
+
+/* DEADLINE WIDGET */
+.deadline-item{
+  display:flex;align-items:center;gap:14px;padding:14px 0;
+  border-bottom:1px solid var(--gray-100);
+}
+body.dark .deadline-item{border-color:#334155}
+.deadline-item:last-child{border-bottom:none}
+.dl-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.dl-content{flex:1}
+.dl-title{font-size:13px;font-weight:600;color:var(--navy)}
+body.dark .dl-title{color:var(--gray-300)}
+.dl-date{font-size:11px;color:var(--gray-500);margin-top:2px}
+.dl-badge{flex-shrink:0}
+
+/* OVERLAY FOR MOBILE */
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;
+  padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;
+  box-shadow:var(--shadow-lg);z-index:999;
+  transform:translateY(80px);opacity:0;transition:all 0.3s ease;
+  pointer-events:none;max-width:300px;
+}
+#toast.show{transform:translateY(0);opacity:1}
+body.dark #toast{background:#3B82F6}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;color:var(--gray-400)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-msg{font-size:14px;font-weight:500}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .journal-layout{grid-template-columns:1fr}
+  .journal-list{max-height:300px;overflow-y:auto}
+}
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #sidebar-overlay.show{display:block}
+  #main{margin-left:0}
+  .hamburger{display:flex}
+  .content{padding:20px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .hero-stats{gap:16px}
+  .welcome-card{flex-direction:column;align-items:flex-start;gap:20px}
+  .resource-tabs{overflow-x:auto}
+}
+@media(max-width:480px){
+  .topbar{padding:0 16px}
+  .content{padding:16px}
+  .program-hero{padding:24px}
+  .hero-stats{flex-direction:column;gap:12px}
+  .hero-stat{display:flex;align-items:center;gap:8px}
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gray-400)}
+body.dark ::-webkit-scrollbar-thumb{background:#334155}
+</style>
+</head>
+<body>
+<div id="sidebar-overlay"></div>
+<div id="toast"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">&#127891;</div>
+    <div>
+      <div class="brand-text">Leadership<br>Academy</div>
+      <div class="brand-sub">Property Meld</div>
+    </div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" data-section="dashboard">
+      <span class="nav-icon">&#9962;</span>
+      <span>Dashboard</span>
+    </div>
+    <div class="nav-label">Programs</div>
+    <div class="nav-item" data-section="lde">
+      <span class="nav-icon">&#128218;</span>
+      <span>LDE Program</span>
+      <span class="nav-badge" id="lde-nav-pct">0%</span>
+    </div>
+    <div class="nav-item" data-section="alde">
+      <span class="nav-icon">&#11088;</span>
+      <span>ALDE Program</span>
+      <span class="nav-badge" id="alde-nav-pct">0%</span>
+    </div>
+    <div class="nav-label">Personal</div>
+    <div class="nav-item" data-section="journal">
+      <span class="nav-icon">&#128221;</span>
+      <span>My Journal</span>
+    </div>
+    <div class="nav-item" data-section="resources">
+      <span class="nav-icon">&#128214;</span>
+      <span>Resources</span>
+    </div>
+    <div class="nav-label">Account</div>
+    <div class="nav-item" data-section="settings">
+      <span class="nav-icon">&#9881;</span>
+      <span>Settings</span>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-user" data-section="settings" id="sidebar-user-btn">
+      <div class="user-avatar" id="sidebar-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-name">Your Name</div>
+        <div class="user-role">Leadership Participant</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <button class="hamburger" id="hamburger">&#9776;</button>
+    <div class="breadcrumb">
+      <span>Academy</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-cur" id="breadcrumb-cur">Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="topbar-date" style="font-size:12px;color:var(--gray-500)"></span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="section-dashboard">
+      <div class="welcome-card">
+        <div class="wc-content">
+          <div class="wc-greeting">Welcome back to your learning journey</div>
+          <div class="wc-name">
+            <span>Hello,&nbsp;</span>
+            <span class="wc-name-text" id="welcome-name" contenteditable="true" spellcheck="false">Leader</span>
+            <span>&nbsp;&#128075;</span>
+          </div>
+          <div class="wc-sub">Continue building your leadership foundation. You're making great progress.</div>
+        </div>
+        <div class="wc-emoji">&#127775;</div>
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:24px" id="stat-cards">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--blue-50)">&#128218;</div>
+          <div>
+            <div class="stat-val" id="stat-modules">0</div>
+            <div class="stat-label">Modules Complete</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--green-100)">&#9200;</div>
+          <div>
+            <div class="stat-val" id="stat-hours">0</div>
+            <div class="stat-label">Hours Logged</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:var(--amber-100)">&#9989;</div>
+          <div>
+            <div class="stat-val" id="stat-lessons">0</div>
+            <div class="stat-label">Lessons Completed</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#EDE9FE)">&#127942;</div>
+          <div>
+            <div class="stat-val" id="stat-journal">0</div>
+            <div class="stat-label">Journal Entries</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-bottom:24px">
+        <!-- LDE progress card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">&#128218; LDE Program</div>
+              <div class="card-sub">Leadership Development Experience</div>
+            </div>
+            <span class="badge badge-blue" id="dash-lde-badge">Not Started</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13px;color:var(--gray-600)">Overall Progress</span>
+              <span style="font-size:20px;font-weight:800;color:var(--navy)" id="dash-lde-pct">0%</span>
+            </div>
+            <div class="progress-bar" style="height:10px;margin-bottom:16px">
+              <div class="progress-fill" id="dash-lde-fill" style="width:0%"></div>
+            </div>
+            <div style="display:flex;gap:20px">
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)" id="dash-lde-mods">0/6</div>
+                <div style="font-size:11px;color:var(--gray-500)">Modules</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)" id="dash-lde-lessons">0/24</div>
+                <div style="font-size:11px;color:var(--gray-500)">Lessons</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)">20h</div>
+                <div style="font-size:11px;color:var(--gray-500)">Total Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ALDE progress card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">&#11088; ALDE Program</div>
+              <div class="card-sub">Advanced Leadership Development Experience</div>
+            </div>
+            <span class="badge badge-gray" id="dash-alde-badge">Locked</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span style="font-size:13px;color:var(--gray-600)">Overall Progress</span>
+              <span style="font-size:20px;font-weight:800;color:var(--navy)" id="dash-alde-pct">0%</span>
+            </div>
+            <div class="progress-bar" style="height:10px;margin-bottom:16px">
+              <div class="progress-fill" id="dash-alde-fill" style="width:0%"></div>
+            </div>
+            <div style="display:flex;gap:20px">
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)" id="dash-alde-mods">0/5</div>
+                <div style="font-size:11px;color:var(--gray-500)">Modules</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)" id="dash-alde-lessons">0/20</div>
+                <div style="font-size:11px;color:var(--gray-500)">Lessons</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:18px;font-weight:700;color:var(--navy)">25h</div>
+                <div style="font-size:11px;color:var(--gray-500)">Total Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deadlines -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">&#128197; Upcoming Milestones</div>
+        </div>
+        <div class="card-body" style="padding:8px 24px">
+          <div class="deadline-item">
+            <div class="dl-icon" style="background:var(--blue-50)">&#128218;</div>
+            <div class="dl-content">
+              <div class="dl-title">Complete LDE Module 1: Foundations of Leadership</div>
+              <div class="dl-date">LDE Program &mdash; Week 1 Milestone</div>
+            </div>
+            <div class="dl-badge"><span class="badge badge-blue">LDE</span></div>
+          </div>
+          <div class="deadline-item">
+            <div class="dl-icon" style="background:var(--amber-100)">&#128196;</div>
+            <div class="dl-content">
+              <div class="dl-title">Mid-Program Self Assessment</div>
+              <div class="dl-date">LDE Program &mdash; Week 3 Milestone</div>
+            </div>
+            <div class="dl-badge"><span class="badge badge-amber">Upcoming</span></div>
+          </div>
+          <div class="deadline-item">
+            <div class="dl-icon" style="background:var(--green-100)">&#127942;</div>
+            <div class="dl-content">
+              <div class="dl-title">LDE Completion &rarr; ALDE Unlock</div>
+              <div class="dl-date">Complete LDE at 80%+ to unlock ALDE</div>
+            </div>
+            <div class="dl-badge"><span class="badge badge-green">Goal</span></div>
+          </div>
+          <div class="deadline-item">
+            <div class="dl-icon" style="background:#EDE9FE">&#11088;</div>
+            <div class="dl-content">
+              <div class="dl-title">ALDE Executive Presence Capstone</div>
+              <div class="dl-date">ALDE Program &mdash; Final Milestone</div>
+            </div>
+            <div class="dl-badge"><span class="badge badge-gray">Locked</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END DASHBOARD -->
+
+    <!-- LDE PROGRAM -->
+    <div class="section" id="section-lde">
+      <div class="program-hero">
+        <div class="hero-content">
+          <div class="hero-title">&#128218; Leadership Development Experience</div>
+          <div class="hero-sub">Build your foundational leadership skills through six comprehensive modules</div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-val" id="lde-pct-hero">0%</div>
+              <div class="hero-stat-label">Complete</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val" id="lde-lessons-hero">0/24</div>
+              <div class="hero-stat-label">Lessons</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">6</div>
+              <div class="hero-stat-label">Modules</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">20h</div>
+              <div class="hero-stat-label">Total Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="lde-modules"></div>
+    </div>
+
+    <!-- ALDE PROGRAM -->
+    <div class="section" id="section-alde">
+      <div class="program-hero" style="background:linear-gradient(135deg,#1E1B4B 0%,#312E81 100%)">
+        <div class="hero-content">
+          <div class="hero-title">&#11088; Advanced Leadership Development Experience</div>
+          <div class="hero-sub">Elevate your leadership to the executive level — unlocks at 80% LDE completion</div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-val" id="alde-pct-hero">0%</div>
+              <div class="hero-stat-label">Complete</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val" id="alde-lessons-hero">0/20</div>
+              <div class="hero-stat-label">Lessons</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">5</div>
+              <div class="hero-stat-label">Modules</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">25h</div>
+              <div class="hero-stat-label">Total Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="alde-lock-wrapper" class="lock-overlay">
+        <div id="alde-modules"></div>
+        <div class="lock-cover" id="alde-lock-cover">
+          <div class="lock-icon">&#128274;</div>
+          <div class="lock-msg">ALDE Program Locked</div>
+          <div class="lock-sub">Complete at least 80% of the LDE program to unlock the Advanced Leadership Development Experience</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOURNAL -->
+    <div class="section" id="section-journal">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="page-title">&#128221; My Journal</div>
+            <div class="page-sub">Reflect on your leadership journey — insights compound over time</div>
+          </div>
+          <button class="btn btn-primary" id="new-entry-btn">&#43; New Entry</button>
+        </div>
+      </div>
+      <div class="journal-layout">
+        <div class="journal-list" id="journal-list">
+          <div class="journal-list-header">
+            <span class="journal-list-title">Entries</span>
+            <span id="entry-count" style="font-size:12px;color:var(--gray-500)">0 entries</span>
+          </div>
+          <div id="journal-entries-list">
+            <div class="empty-state">
+              <div class="empty-icon">&#128221;</div>
+              <div class="empty-msg">No entries yet.<br>Start your journey!</div>
+            </div>
+          </div>
+        </div>
+        <div class="journal-editor" id="journal-editor-panel">
+          <div class="editor-toolbar">
+            <span style="font-size:12px;font-weight:600;color:var(--gray-500)" id="editor-date-display">Select an entry or create a new one</span>
+            <button class="btn btn-sm btn-danger" id="delete-entry-btn" style="margin-left:auto;display:none">&#128465; Delete</button>
+          </div>
+          <input type="text" class="editor-title-input" id="entry-title-input" placeholder="Entry title..." disabled>
+          <textarea class="editor-textarea" id="entry-body-input" placeholder="What did you learn today? What challenged you? What will you do differently?" disabled></textarea>
+          <div class="tag-input-row">
+            <span style="font-size:12px;color:var(--gray-500)">Tags:</span>
+            <div class="cur-tags" id="cur-tags-display"></div>
+            <input type="text" class="tag-input" id="tag-input-field" placeholder="Add tag, press Enter" disabled>
+          </div>
+          <div class="editor-actions">
+            <button class="btn btn-primary" id="save-entry-btn" disabled>&#128190; Save Entry</button>
+            <button class="btn btn-ghost" id="cancel-entry-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES -->
+    <div class="section" id="section-resources">
+      <div class="page-header">
+        <div class="page-title">&#128214; Resources</div>
+        <div class="page-sub">Curated reading, videos, and articles for your leadership development</div>
+      </div>
+      <div class="resource-tabs">
+        <button class="res-tab active" data-tab="books">&#128218; Books</button>
+        <button class="res-tab" data-tab="articles">&#128196; Articles</button>
+        <button class="res-tab" data-tab="videos">&#127909; Videos</button>
+      </div>
+
+      <!-- Books Tab -->
+      <div id="tab-books" class="resource-grid">
+        <div class="resource-card" data-resource="book-1">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">The Five Dysfunctions of a Team</div>
+              <div class="rc-author">Patrick Lencioni</div>
+            </div>
+            <span class="badge badge-blue">Books</span>
+          </div>
+          <div class="rc-desc">A leadership fable that explores the fundamental causes of organizational politics and team failure, offering a powerful model for overcoming the five dysfunctions.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#8987; ~4 hours</span>
+            <button class="toggle-read" data-id="book-1">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="book-2">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Extreme Ownership</div>
+              <div class="rc-author">Jocko Willink &amp; Leif Babin</div>
+            </div>
+            <span class="badge badge-blue">Books</span>
+          </div>
+          <div class="rc-desc">Navy SEAL officers share hard-hitting lessons from combat and elite business environments on how leaders must own everything in their world — no excuses.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#8987; ~6 hours</span>
+            <button class="toggle-read" data-id="book-2">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="book-3">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Turn the Ship Around!</div>
+              <div class="rc-author">L. David Marquet</div>
+            </div>
+            <span class="badge badge-blue">Books</span>
+          </div>
+          <div class="rc-desc">The true story of how the worst submarine in the US Navy became the best by abandoning the leader-follower model and embracing leader-leader thinking.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#8987; ~5 hours</span>
+            <button class="toggle-read" data-id="book-3">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="book-4">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Leaders Eat Last</div>
+              <div class="rc-author">Simon Sinek</div>
+            </div>
+            <span class="badge badge-blue">Books</span>
+          </div>
+          <div class="rc-desc">Explores why some teams trust each other and cooperate, while others don't — revealing the biological and organizational factors that create great leadership cultures.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#8987; ~6 hours</span>
+            <button class="toggle-read" data-id="book-4">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="book-5">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Dare to Lead</div>
+              <div class="rc-author">Bren&eacute; Brown</div>
+            </div>
+            <span class="badge badge-blue">Books</span>
+          </div>
+          <div class="rc-desc">Based on 20 years of research, Brown challenges conventional leadership by showing that vulnerability, courage, and empathy are the foundation of truly brave leadership.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#8987; ~7 hours</span>
+            <button class="toggle-read" data-id="book-5">&#9711; Mark Read</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Articles Tab -->
+      <div id="tab-articles" class="resource-grid" style="display:none">
+        <div class="resource-card" data-resource="art-1">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">What Great Managers Do</div>
+              <div class="rc-author">Harvard Business Review</div>
+            </div>
+            <span class="badge badge-green">Articles</span>
+          </div>
+          <div class="rc-desc">Great managers discover what is unique about each person and capitalize on it — moving away from the "golden rule" approach to individualized leadership.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#128338; 15 min read</span>
+            <button class="toggle-read" data-id="art-1">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="art-2">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">The Making of a Corporate Athlete</div>
+              <div class="rc-author">Jim Loehr &amp; Tony Schwartz &mdash; HBR</div>
+            </div>
+            <span class="badge badge-green">Articles</span>
+          </div>
+          <div class="rc-desc">Performance under pressure requires managing energy, not just time. Leaders who manage four energy dimensions — physical, emotional, mental, spiritual — outperform peers.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#128338; 20 min read</span>
+            <button class="toggle-read" data-id="art-2">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="art-3">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Level 5 Leadership</div>
+              <div class="rc-author">Jim Collins &mdash; Harvard Business Review</div>
+            </div>
+            <span class="badge badge-green">Articles</span>
+          </div>
+          <div class="rc-desc">The most powerfully transformative leaders are a paradoxical blend of personal humility and professional will — moving from Good to Great requires Level 5 leadership.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#128338; 25 min read</span>
+            <button class="toggle-read" data-id="art-3">&#9711; Mark Read</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="art-4">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Managing Oneself</div>
+              <div class="rc-author">Peter Drucker &mdash; HBR Classic</div>
+            </div>
+            <span class="badge badge-green">Articles</span>
+          </div>
+          <div class="rc-desc">Success in the knowledge economy comes to those who know themselves — their strengths, values, and how they best perform — and position themselves accordingly.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#128338; 18 min read</span>
+            <button class="toggle-read" data-id="art-4">&#9711; Mark Read</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videos Tab -->
+      <div id="tab-videos" class="resource-grid" style="display:none">
+        <div class="resource-card" data-resource="vid-1">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">How Great Leaders Inspire Action</div>
+              <div class="rc-author">Simon Sinek &mdash; TED Talk</div>
+            </div>
+            <span class="badge badge-amber">Videos</span>
+          </div>
+          <div class="rc-desc">The "Start with Why" talk that changed how millions of leaders communicate. People don't buy what you do, they buy why you do it.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#9654; 18 min</span>
+            <button class="toggle-read" data-id="vid-1">&#9711; Mark Watched</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="vid-2">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">The Power of Vulnerability</div>
+              <div class="rc-author">Bren&eacute; Brown &mdash; TED Talk</div>
+            </div>
+            <span class="badge badge-amber">Videos</span>
+          </div>
+          <div class="rc-desc">One of the most watched TED talks ever. Brown's research on vulnerability, courage, shame, and worthiness redefines what it means to be a connected, effective leader.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#9654; 20 min</span>
+            <button class="toggle-read" data-id="vid-2">&#9711; Mark Watched</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="vid-3">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">Extreme Ownership — Leadership Lessons</div>
+              <div class="rc-author">Jocko Willink &mdash; Talks at Google</div>
+            </div>
+            <span class="badge badge-amber">Videos</span>
+          </div>
+          <div class="rc-desc">Jocko discusses the core principles from Extreme Ownership, including Decentralized Command, Cover and Move, and the dichotomy of leadership.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#9654; 55 min</span>
+            <button class="toggle-read" data-id="vid-3">&#9711; Mark Watched</button>
+          </div>
+        </div>
+        <div class="resource-card" data-resource="vid-4">
+          <div class="rc-top">
+            <div>
+              <div class="rc-title">What Makes a Great Leader?</div>
+              <div class="rc-author">Amy Cuddy &mdash; TED Talk</div>
+            </div>
+            <span class="badge badge-amber">Videos</span>
+          </div>
+          <div class="rc-desc">Your body language shapes who you are. Explore how presence, posture, and power poses affect how others perceive your leadership — and how you lead yourself.</div>
+          <div class="rc-footer">
+            <span style="font-size:11px;color:var(--gray-400)">&#9654; 21 min</span>
+            <button class="toggle-read" data-id="vid-4">&#9711; Mark Watched</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="section" id="section-settings">
+      <div class="page-header">
+        <div class="page-title">&#9881; Settings</div>
+        <div class="page-sub">Customize your Leadership Academy experience</div>
+      </div>
+
+      <div class="grid grid-2" style="align-items:start">
+        <div>
+          <!-- Profile -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><div class="card-title">&#128100; Profile</div></div>
+            <div class="card-body">
+              <div class="settings-section">
+                <div class="form-group">
+                  <label class="form-label" for="settings-name">Display Name</label>
+                  <input type="text" class="form-input" id="settings-name" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="settings-start-date">Program Start Date</label>
+                  <input type="date" class="form-input" id="settings-start-date">
+                </div>
+                <button class="btn btn-primary" id="save-settings-btn">&#128190; Save Profile</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notifications -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><div class="card-title">&#128276; Notifications</div></div>
+            <div class="card-body">
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" id="notif-weekly" checked>
+                  <span class="checkbox-label">Weekly progress reminders</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" id="notif-milestone">
+                  <span class="checkbox-label">Milestone completion alerts</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" id="notif-journal" checked>
+                  <span class="checkbox-label">Journal reflection prompts</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" id="notif-new">
+                  <span class="checkbox-label">New resource notifications</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- Appearance -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><div class="card-title">&#127775; Appearance</div></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Theme</label>
+                <div class="toggle-theme">
+                  <span class="toggle-label">&#9728; Light</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span class="toggle-label">&#127762; Dark</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Management -->
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-header"><div class="card-title">&#128190; Data Management</div></div>
+            <div class="card-body">
+              <div class="settings-section">
+                <p style="font-size:13px;color:var(--gray-600);margin-bottom:16px">All your progress, journal entries, and settings are stored locally in your browser.</p>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <button class="btn btn-ghost" id="export-btn" style="justify-content:center">&#128229; Export All Data (JSON)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="danger-zone">
+            <div class="danger-title">&#9888; Danger Zone</div>
+            <div class="danger-desc">This will permanently delete all your progress, journal entries, and settings. This action cannot be undone.</div>
+            <button class="btn btn-danger btn-sm" id="clear-data-btn">&#128465; Clear All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END SETTINGS -->
+
+  </div><!-- end .content -->
+</div><!-- end #main -->
+
+<script>
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+const STATE_KEY = 'lda_state';
+
+const DEFAULT_STATE = {
+  name: 'Leader',
+  startDate: '',
+  darkMode: false,
+  ldeProgress: {},
+  aldeProgress: {},
+  journalEntries: [],
+  resources: {},
+  notifications: {
+    weekly: true,
+    milestone: false,
+    journal: true,
+    newContent: false
+  }
+};
+
+let state = {};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STATE_KEY);
+    state = saved ? Object.assign({}, DEFAULT_STATE, JSON.parse(saved)) : Object.assign({}, DEFAULT_STATE);
+    // Ensure nested objects exist
+    if (!state.ldeProgress) state.ldeProgress = {};
+    if (!state.aldeProgress) state.aldeProgress = {};
+    if (!state.journalEntries) state.journalEntries = [];
+    if (!state.resources) state.resources = {};
+    if (!state.notifications) state.notifications = DEFAULT_STATE.notifications;
+  } catch(e) {
+    state = Object.assign({}, DEFAULT_STATE);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  } catch(e) {
+    showToast('Error saving data. Storage may be full.');
+  }
+}
+
+// ============================================================
+// PROGRAM DATA
+// ============================================================
+const LDE_MODULES = [
+  {
+    id: 'lde-1', num: 1,
+    title: 'Foundations of Leadership',
+    lessons: 4, hours: 3,
+    lessonList: [
+      'What Leadership Really Means',
+      'Leadership vs. Management',
+      'Identifying Your Leadership Style',
+      'Building Your Leadership Compass'
+    ]
+  },
+  {
+    id: 'lde-2', num: 2,
+    title: 'Communication & Influence',
+    lessons: 5, hours: 4,
+    lessonList: [
+      'The Art of Active Listening',
+      'Crafting Compelling Messages',
+      'Nonverbal Communication & Presence',
+      'Influencing Without Authority',
+      'Giving and Receiving Feedback'
+    ]
+  },
+  {
+    id: 'lde-3', num: 3,
+    title: 'Team Dynamics',
+    lessons: 4, hours: 3.5,
+    lessonList: [
+      'Stages of Team Development',
+      'Building Psychological Safety',
+      'Managing Conflict Constructively',
+      'Creating High-Trust Environments'
+    ]
+  },
+  {
+    id: 'lde-4', num: 4,
+    title: 'Decision Making Under Pressure',
+    lessons: 3, hours: 2.5,
+    lessonList: [
+      'Cognitive Biases in Leadership',
+      'Frameworks for Rapid Decisions',
+      'Post-Decision Review & Learning'
+    ]
+  },
+  {
+    id: 'lde-5', num: 5,
+    title: 'Strategic Thinking',
+    lessons: 4, hours: 4,
+    lessonList: [
+      'Systems Thinking Fundamentals',
+      'Horizon Planning & Vision',
+      'Turning Strategy into Action',
+      'Measuring Strategic Impact'
+    ]
+  },
+  {
+    id: 'lde-6', num: 6,
+    title: 'Leading Change',
+    lessons: 3, hours: 3,
+    lessonList: [
+      'The Psychology of Change',
+      'Building a Change Coalition',
+      'Sustaining Momentum & Preventing Regression'
+    ]
+  }
+];
+
+const ALDE_MODULES = [
+  {
+    id: 'alde-1', num: 1,
+    title: 'Executive Presence',
+    lessons: 4, hours: 5,
+    lessonList: [
+      'Commanding a Room',
+      'Strategic Storytelling',
+      'Managing Up & Across',
+      'The Executive Mindset'
+    ]
+  },
+  {
+    id: 'alde-2', num: 2,
+    title: 'Organizational Strategy',
+    lessons: 5, hours: 6,
+    lessonList: [
+      'Competitive Landscape Analysis',
+      'OKRs & Strategic Alignment',
+      'Resource Allocation Decisions',
+      'Building Organizational Capability',
+      'Long-Range Planning'
+    ]
+  },
+  {
+    id: 'alde-3', num: 3,
+    title: 'Leading High-Performance Teams',
+    lessons: 4, hours: 5,
+    lessonList: [
+      'Talent Identification & Development',
+      'Accountability Without Micromanagement',
+      'Performance Conversations',
+      'Succession Planning'
+    ]
+  },
+  {
+    id: 'alde-4', num: 4,
+    title: 'Innovation & Disruption',
+    lessons: 3, hours: 4,
+    lessonList: [
+      'Creating a Culture of Experimentation',
+      'Leading Through Uncertainty',
+      'From Ideation to Execution'
+    ]
+  },
+  {
+    id: 'alde-5', num: 5,
+    title: 'Personal Brand & Legacy',
+    lessons: 4, hours: 5,
+    lessonList: [
+      'Defining Your Leadership Legacy',
+      'Building Your External Brand',
+      'Mentorship & Paying It Forward',
+      'The Next Chapter of Your Leadership'
+    ]
+  }
+];
+
+// ============================================================
+// UTILS
+// ============================================================
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+
+function calcProgress(modules, progressObj) {
+  let totalLessons = 0, doneLessons = 0;
+  modules.forEach(m => {
+    totalLessons += m.lessons;
+    if (progressObj[m.id]) {
+      doneLessons += progressObj[m.id].filter(Boolean).length;
+    }
+  });
+  return { total: totalLessons, done: doneLessons, pct: totalLessons ? Math.round((doneLessons / totalLessons) * 100) : 0 };
+}
+
+function calcModulePct(mod, progressObj) {
+  const arr = progressObj[mod.id] || [];
+  const done = arr.filter(Boolean).length;
+  return { done, total: mod.lessons, pct: mod.lessons ? Math.round((done / mod.lessons) * 100) : 0 };
+}
+
+function getModuleStatus(pct) {
+  if (pct === 0) return { label: 'Not Started', cls: 'badge-gray' };
+  if (pct === 100) return { label: 'Complete', cls: 'badge-green' };
+  return { label: 'In Progress', cls: 'badge-blue' };
+}
+
+function hoursLogged(modules, progressObj) {
+  let h = 0;
+  modules.forEach(m => {
+    const arr = progressObj[m.id] || [];
+    const done = arr.filter(Boolean).length;
+    if (done > 0) h += (done / m.lessons) * m.hours;
+  });
+  return Math.round(h * 10) / 10;
+}
+
+</script>
+<script>
+// ============================================================
+// NAVIGATION
+// ============================================================
+const SECTION_LABELS = {
+  dashboard: 'Dashboard',
+  lde: 'LDE Program',
+  alde: 'ALDE Program',
+  journal: 'My Journal',
+  resources: 'Resources',
+  settings: 'Settings'
+};
+
+let currentSection = 'dashboard';
+
+function navigateTo(section) {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById('section-' + section);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-item[data-section="' + section + '"]').forEach(el => el.classList.add('active'));
+  document.getElementById('breadcrumb-cur').textContent = SECTION_LABELS[section] || section;
+  currentSection = section;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+  if (section === 'dashboard') refreshDashboard();
+  if (section === 'lde') refreshLDE();
+  if (section === 'alde') refreshALDE();
+  if (section === 'journal') refreshJournal();
+  if (section === 'resources') refreshResources();
+  if (section === 'settings') refreshSettings();
+}
+
+// ============================================================
+// MODULE RENDERING
+// ============================================================
+function renderModules(modules, progressObj, containerId, program) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  modules.forEach(mod => {
+    const { done, total, pct } = calcModulePct(mod, progressObj);
+    const status = getModuleStatus(pct);
+    const fillColor = pct === 100 ? 'green' : '';
+    const card = document.createElement('div');
+    card.className = 'module-card';
+    card.style.marginBottom = '12px';
+    card.dataset.modId = mod.id;
+    const lessonsHTML = mod.lessonList.map((lesson, i) => {
+      const arr = progressObj[mod.id] || [];
+      const checked = arr[i] ? 'checked' : '';
+      const doneClass = arr[i] ? 'done' : '';
+      return '<div class="lesson-item">' +
+        '<input type="checkbox" class="lesson-cb" data-program="' + program + '" data-mod="' + mod.id + '" data-idx="' + i + '" ' + checked + '>' +
+        '<span class="lesson-name ' + doneClass + '">' + lesson + '</span>' +
+        '<span class="lesson-dur">' + (mod.hours / mod.lessons).toFixed(1) + 'h</span>' +
+        '</div>';
+    }).join('');
+    card.innerHTML =
+      '<div class="module-header">' +
+        '<div class="module-num">' + mod.num + '</div>' +
+        '<div class="module-info">' +
+          '<div class="module-title">' + mod.title + '</div>' +
+          '<div class="module-meta">' + mod.lessons + ' lessons &bull; ' + mod.hours + ' hrs</div>' +
+        '</div>' +
+        '<span class="badge ' + status.cls + '" style="margin-right:8px">' + status.label + '</span>' +
+        '<span class="module-chevron">&#8964;</span>' +
+      '</div>' +
+      '<div class="module-progress">' +
+        '<div class="module-progress-top">' +
+          '<span class="module-pct">' + done + '/' + total + ' lessons</span>' +
+          '<span class="module-pct">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="progress-bar">' +
+          '<div class="progress-fill ' + fillColor + '" style="width:' + pct + '%"></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="module-lessons">' + lessonsHTML + '</div>';
+    card.querySelector('.module-header').addEventListener('click', function() {
+      card.classList.toggle('expanded');
+    });
+    card.querySelectorAll('.lesson-cb').forEach(cb => {
+      cb.addEventListener('change', function(e) {
+        e.stopPropagation();
+        const modId = this.dataset.mod;
+        const idx = parseInt(this.dataset.idx);
+        const prog = this.dataset.program;
+        const progressKey = prog === 'lde' ? 'ldeProgress' : 'aldeProgress';
+        if (!state[progressKey][modId]) state[progressKey][modId] = [];
+        state[progressKey][modId][idx] = this.checked;
+        saveState();
+        const span = this.nextElementSibling;
+        if (this.checked) span.classList.add('done');
+        else span.classList.remove('done');
+        updateModuleCard(card, mod, state[progressKey]);
+        updateNavBadges();
+        updateALDELock();
+        if (currentSection === 'dashboard') refreshDashboard();
+      });
+    });
+    container.appendChild(card);
+  });
+}
+
+function updateModuleCard(card, mod, progressObj) {
+  const { done, total, pct } = calcModulePct(mod, progressObj);
+  const status = getModuleStatus(pct);
+  const fillColor = pct === 100 ? 'green' : '';
+  const pctEls = card.querySelectorAll('.module-pct');
+  if (pctEls[0]) pctEls[0].textContent = done + '/' + total + ' lessons';
+  if (pctEls[1]) pctEls[1].textContent = pct + '%';
+  const fill = card.querySelector('.progress-fill');
+  fill.style.width = pct + '%';
+  fill.className = 'progress-fill' + (fillColor ? ' ' + fillColor : '');
+  const badge = card.querySelector('.badge');
+  badge.textContent = status.label;
+  badge.className = 'badge ' + status.cls;
+}
+
+// ============================================================
+// DASHBOARD REFRESH
+// ============================================================
+function refreshDashboard() {
+  const ldeProg = calcProgress(LDE_MODULES, state.ldeProgress);
+  const aldeProg = calcProgress(ALDE_MODULES, state.aldeProgress);
+  const completedMods = LDE_MODULES.filter(m => calcModulePct(m, state.ldeProgress).pct === 100).length
+    + ALDE_MODULES.filter(m => calcModulePct(m, state.aldeProgress).pct === 100).length;
+  const totalHours = Math.round((hoursLogged(LDE_MODULES, state.ldeProgress) + hoursLogged(ALDE_MODULES, state.aldeProgress)) * 10) / 10;
+  document.getElementById('stat-modules').textContent = completedMods;
+  document.getElementById('stat-hours').textContent = totalHours;
+  document.getElementById('stat-lessons').textContent = ldeProg.done + aldeProg.done;
+  document.getElementById('stat-journal').textContent = state.journalEntries.length;
+  document.getElementById('dash-lde-pct').textContent = ldeProg.pct + '%';
+  document.getElementById('dash-lde-fill').style.width = ldeProg.pct + '%';
+  document.getElementById('dash-lde-mods').textContent =
+    LDE_MODULES.filter(m => calcModulePct(m, state.ldeProgress).pct === 100).length + '/6';
+  document.getElementById('dash-lde-lessons').textContent = ldeProg.done + '/24';
+  const ldeBadge = document.getElementById('dash-lde-badge');
+  const ldeS = getModuleStatus(ldeProg.pct);
+  ldeBadge.textContent = ldeS.label;
+  ldeBadge.className = 'badge ' + ldeS.cls;
+  document.getElementById('dash-alde-pct').textContent = aldeProg.pct + '%';
+  document.getElementById('dash-alde-fill').style.width = aldeProg.pct + '%';
+  document.getElementById('dash-alde-mods').textContent =
+    ALDE_MODULES.filter(m => calcModulePct(m, state.aldeProgress).pct === 100).length + '/5';
+  document.getElementById('dash-alde-lessons').textContent = aldeProg.done + '/20';
+  const aldeBadge = document.getElementById('dash-alde-badge');
+  if (ldeProg.pct < 80) {
+    aldeBadge.textContent = 'Locked';
+    aldeBadge.className = 'badge badge-gray';
+  } else {
+    const aldeS = getModuleStatus(aldeProg.pct);
+    aldeBadge.textContent = aldeS.label;
+    aldeBadge.className = 'badge ' + aldeS.cls;
+  }
+  document.getElementById('welcome-name').textContent = state.name || 'Leader';
+  updateSidebarUser();
+}
+
+function refreshLDE() {
+  renderModules(LDE_MODULES, state.ldeProgress, 'lde-modules', 'lde');
+  const prog = calcProgress(LDE_MODULES, state.ldeProgress);
+  document.getElementById('lde-pct-hero').textContent = prog.pct + '%';
+  document.getElementById('lde-lessons-hero').textContent = prog.done + '/24';
+}
+
+function refreshALDE() {
+  renderModules(ALDE_MODULES, state.aldeProgress, 'alde-modules', 'alde');
+  const prog = calcProgress(ALDE_MODULES, state.aldeProgress);
+  document.getElementById('alde-pct-hero').textContent = prog.pct + '%';
+  document.getElementById('alde-lessons-hero').textContent = prog.done + '/20';
+  updateALDELock();
+}
+
+function updateALDELock() {
+  const ldeProg = calcProgress(LDE_MODULES, state.ldeProgress);
+  const lockCover = document.getElementById('alde-lock-cover');
+  const wrapper = document.getElementById('alde-lock-wrapper');
+  if (!lockCover) return;
+  if (ldeProg.pct >= 80) {
+    lockCover.style.display = 'none';
+    wrapper.style.minHeight = '';
+  } else {
+    lockCover.style.display = 'flex';
+    wrapper.style.minHeight = '300px';
+  }
+}
+
+function updateNavBadges() {
+  const ldeProg = calcProgress(LDE_MODULES, state.ldeProgress);
+  const aldeProg = calcProgress(ALDE_MODULES, state.aldeProgress);
+  document.getElementById('lde-nav-pct').textContent = ldeProg.pct + '%';
+  document.getElementById('alde-nav-pct').textContent = aldeProg.pct + '%';
+}
+
+function updateSidebarUser() {
+  const name = state.name || 'Leader';
+  const el = document.getElementById('sidebar-name');
+  const av = document.getElementById('sidebar-avatar');
+  if (el) el.textContent = name;
+  if (av) av.textContent = name.charAt(0).toUpperCase();
+}
+</script>
+<script>
+// ============================================================
+// JOURNAL
+// ============================================================
+let currentEntryId = null;
+
+function refreshJournal() {
+  renderJournalList();
+  clearEditor();
+}
+
+function renderJournalList() {
+  const container = document.getElementById('journal-entries-list');
+  const entries = state.journalEntries.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  document.getElementById('entry-count').textContent = entries.length + ' ' + (entries.length === 1 ? 'entry' : 'entries');
+  if (entries.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128221;</div><div class="empty-msg">No entries yet.<br>Start your journey!</div></div>';
+    return;
+  }
+  container.innerHTML = entries.map(e => {
+    const preview = e.body ? e.body.substring(0, 60) + (e.body.length > 60 ? '...' : '') : '';
+    const tagsHTML = (e.tags || []).map(t => '<span class="je-tag">' + t + '</span>').join('');
+    const isActive = e.id === currentEntryId ? ' active' : '';
+    return '<div class="journal-entry-item' + isActive + '" data-id="' + e.id + '">' +
+      '<div class="je-date">' + formatDate(e.date) + '</div>' +
+      '<div class="je-title">' + (e.title || 'Untitled Entry') + '</div>' +
+      '<div class="je-preview">' + preview + '</div>' +
+      (tagsHTML ? '<div class="je-tags">' + tagsHTML + '</div>' : '') +
+      '</div>';
+  }).join('');
+  container.querySelectorAll('.journal-entry-item').forEach(item => {
+    item.addEventListener('click', function() {
+      loadEntry(this.dataset.id);
+    });
+  });
+}
+
+function loadEntry(id) {
+  const entry = state.journalEntries.find(e => e.id === id);
+  if (!entry) return;
+  currentEntryId = id;
+  document.getElementById('entry-title-input').value = entry.title || '';
+  document.getElementById('entry-body-input').value = entry.body || '';
+  document.getElementById('entry-title-input').disabled = false;
+  document.getElementById('entry-body-input').disabled = false;
+  document.getElementById('tag-input-field').disabled = false;
+  document.getElementById('save-entry-btn').disabled = false;
+  document.getElementById('delete-entry-btn').style.display = 'flex';
+  document.getElementById('editor-date-display').textContent = 'Editing — ' + formatDate(entry.date);
+  renderCurrentTags(entry.tags || []);
+  renderJournalList();
+}
+
+function clearEditor() {
+  currentEntryId = null;
+  document.getElementById('entry-title-input').value = '';
+  document.getElementById('entry-body-input').value = '';
+  document.getElementById('entry-title-input').disabled = true;
+  document.getElementById('entry-body-input').disabled = true;
+  document.getElementById('tag-input-field').disabled = true;
+  document.getElementById('tag-input-field').value = '';
+  document.getElementById('save-entry-btn').disabled = true;
+  document.getElementById('delete-entry-btn').style.display = 'none';
+  document.getElementById('editor-date-display').textContent = 'Select an entry or create a new one';
+  document.getElementById('cur-tags-display').innerHTML = '';
+  renderJournalList();
+}
+
+function renderCurrentTags(tags) {
+  const container = document.getElementById('cur-tags-display');
+  container.innerHTML = tags.map(t =>
+    '<span class="cur-tag" data-tag="' + t + '">' + t + ' &#215;</span>'
+  ).join('');
+  container.querySelectorAll('.cur-tag').forEach(el => {
+    el.addEventListener('click', function() {
+      removeTag(this.dataset.tag);
+    });
+  });
+}
+
+function removeTag(tag) {
+  if (!currentEntryId) return;
+  const entry = state.journalEntries.find(e => e.id === currentEntryId);
+  if (!entry) return;
+  entry.tags = (entry.tags || []).filter(t => t !== tag);
+  saveState();
+  renderCurrentTags(entry.tags);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('new-entry-btn').addEventListener('click', function() {
+    const newEntry = {
+      id: uid(),
+      title: '',
+      body: '',
+      tags: [],
+      date: new Date().toISOString()
+    };
+    state.journalEntries.push(newEntry);
+    saveState();
+    loadEntry(newEntry.id);
+  });
+
+  document.getElementById('save-entry-btn').addEventListener('click', function() {
+    if (!currentEntryId) return;
+    const entry = state.journalEntries.find(e => e.id === currentEntryId);
+    if (!entry) return;
+    entry.title = document.getElementById('entry-title-input').value;
+    entry.body = document.getElementById('entry-body-input').value;
+    saveState();
+    renderJournalList();
+    showToast('Entry saved!');
+  });
+
+  document.getElementById('delete-entry-btn').addEventListener('click', function() {
+    if (!currentEntryId) return;
+    if (!confirm('Delete this journal entry? This cannot be undone.')) return;
+    state.journalEntries = state.journalEntries.filter(e => e.id !== currentEntryId);
+    saveState();
+    clearEditor();
+    showToast('Entry deleted.');
+  });
+
+  document.getElementById('cancel-entry-btn').addEventListener('click', function() {
+    // If entry is empty, remove it
+    if (currentEntryId) {
+      const entry = state.journalEntries.find(e => e.id === currentEntryId);
+      if (entry && !entry.title && !entry.body) {
+        state.journalEntries = state.journalEntries.filter(e => e.id !== currentEntryId);
+        saveState();
+      }
+    }
+    clearEditor();
+  });
+
+  document.getElementById('tag-input-field').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      e.preventDefault();
+      if (!currentEntryId) return;
+      const entry = state.journalEntries.find(e2 => e2.id === currentEntryId);
+      if (!entry) return;
+      const tag = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+      if (!entry.tags) entry.tags = [];
+      if (!entry.tags.includes(tag)) {
+        entry.tags.push(tag);
+        saveState();
+        renderCurrentTags(entry.tags);
+      }
+      this.value = '';
+    }
+  });
+});
+</script>
+<script>
+// ============================================================
+// RESOURCES
+// ============================================================
+function refreshResources() {
+  // Update toggle-read buttons
+  document.querySelectorAll('.toggle-read').forEach(btn => {
+    const id = btn.dataset.id;
+    if (state.resources[id]) {
+      btn.classList.add('read');
+      btn.innerHTML = '&#10003; Read';
+    } else {
+      btn.classList.remove('read');
+      const label = id.startsWith('vid') ? '&#9711; Mark Watched' : '&#9711; Mark Read';
+      btn.innerHTML = label;
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Resource tab switching
+  document.querySelectorAll('.res-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.res-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const tabName = this.dataset.tab;
+      document.getElementById('tab-books').style.display = tabName === 'books' ? 'grid' : 'none';
+      document.getElementById('tab-articles').style.display = tabName === 'articles' ? 'grid' : 'none';
+      document.getElementById('tab-videos').style.display = tabName === 'videos' ? 'grid' : 'none';
+    });
+  });
+
+  // Toggle read buttons
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('toggle-read')) {
+      const id = e.target.dataset.id;
+      state.resources[id] = !state.resources[id];
+      saveState();
+      refreshResources();
+      showToast(state.resources[id] ? 'Marked as complete!' : 'Marked as unread.');
+    }
+  });
+});
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function refreshSettings() {
+  document.getElementById('settings-name').value = state.name || '';
+  document.getElementById('settings-start-date').value = state.startDate || '';
+  document.getElementById('dark-mode-toggle').checked = state.darkMode || false;
+  document.getElementById('notif-weekly').checked = state.notifications.weekly !== false;
+  document.getElementById('notif-milestone').checked = state.notifications.milestone === true;
+  document.getElementById('notif-journal').checked = state.notifications.journal !== false;
+  document.getElementById('notif-new').checked = state.notifications.newContent === true;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('save-settings-btn').addEventListener('click', function() {
+    const name = document.getElementById('settings-name').value.trim();
+    state.name = name || 'Leader';
+    state.startDate = document.getElementById('settings-start-date').value;
+    state.notifications = {
+      weekly: document.getElementById('notif-weekly').checked,
+      milestone: document.getElementById('notif-milestone').checked,
+      journal: document.getElementById('notif-journal').checked,
+      newContent: document.getElementById('notif-new').checked
+    };
+    saveState();
+    updateSidebarUser();
+    document.getElementById('welcome-name').textContent = state.name;
+    showToast('Settings saved!');
+  });
+
+  document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+    state.darkMode = this.checked;
+    applyTheme();
+    saveState();
+  });
+
+  document.getElementById('export-btn').addEventListener('click', function() {
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'leadership-academy-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Data exported!');
+  });
+
+  document.getElementById('clear-data-btn').addEventListener('click', function() {
+    if (confirm('Are you sure you want to delete all your data? This action cannot be undone.')) {
+      if (confirm('This will permanently erase all progress, journal entries, and settings. Are you absolutely sure?')) {
+        localStorage.removeItem(STATE_KEY);
+        state = Object.assign({}, DEFAULT_STATE);
+        applyTheme();
+        updateSidebarUser();
+        refreshDashboard();
+        showToast('All data cleared. Starting fresh!');
+        navigateTo('dashboard');
+      }
+    }
+  });
+
+  // Editable name in welcome card
+  document.getElementById('welcome-name').addEventListener('blur', function() {
+    const name = this.textContent.trim();
+    if (name) {
+      state.name = name;
+      saveState();
+      updateSidebarUser();
+      document.getElementById('settings-name').value = name;
+    } else {
+      this.textContent = state.name || 'Leader';
+    }
+  });
+
+  document.getElementById('welcome-name').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.blur();
+    }
+  });
+});
+
+function applyTheme() {
+  if (state.darkMode) {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+  const toggle = document.getElementById('dark-mode-toggle');
+  if (toggle) toggle.checked = state.darkMode;
+}
+
+// ============================================================
+// SIDEBAR & NAVIGATION EVENTS
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Nav items
+  document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+    item.addEventListener('click', function() {
+      navigateTo(this.dataset.section);
+    });
+  });
+
+  // Sidebar user click -> settings
+  document.getElementById('sidebar-user-btn').addEventListener('click', function() {
+    navigateTo('settings');
+  });
+
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+  });
+
+  // Overlay click
+  document.getElementById('sidebar-overlay').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('open');
+    this.classList.remove('show');
+  });
+
+  // Date in topbar
+  const dateEl = document.getElementById('topbar-date');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  loadState();
+  applyTheme();
+  updateSidebarUser();
+  updateNavBadges();
+  refreshDashboard();
+});
+</script>
+</body>
+</html>
