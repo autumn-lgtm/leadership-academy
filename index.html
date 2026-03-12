@@ -680,7 +680,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <div class="prog-cards-grid">
       <div class="progress-path-card" id="dash-mgmt-card" style="border-color:rgba(52,211,153,0.2);cursor:pointer" onclick="navigateTo('mgmt')" title="Open MGMT 101">
         <div class="prog-header">
-          <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 8 milestones</div></div>
+          <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 9 milestones</div></div>
           <div class="prog-pct-big" id="dash-mgmt-pct" style="color:#34D399">0%</div>
         </div>
         <div class="trail-container">
@@ -752,7 +752,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <div class="hero-content">
       <div class="hero-eyebrow">New Leader Foundations &middot; Property Meld</div>
       <h1 class="hero-title">THE TRAILHEAD</h1>
-      <p class="hero-subtitle">MGMT 101 &middot; New Leader Foundations &middot; 8 Milestones</p>
+      <p class="hero-subtitle">MGMT 101 &middot; New Leader Foundations &middot; 9 Milestones</p>
       <p class="hero-quote">&ldquo;Before you are a leader, success is all about growing yourself. When you become a leader, success is all about growing others.&rdquo;<span class="hero-quote-attr">&mdash; Jack Welch</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="mgmt-chip-progress">Start Milestone 1</span>
@@ -1162,7 +1162,7 @@ function saveState() {
 // =============================================
 const MGMT_PHASES = [
   {
-    id: 1, name: 'New Leader Foundations', subtitle: 'Milestones 1-7',
+    id: 1, name: 'New Leader Foundations', subtitle: 'Milestones 1-9',
     tagline: '"Every trail starts somewhere. This is yours."',
     desc: 'The fundamentals of leading people — before the desert crossing begins.',
     milestones: [
@@ -1320,13 +1320,13 @@ const MGMT_PHASES = [
           { type: 'video', platform: 'youtube', videoId: 'iCvmsMzlF7o', label: 'Watch Before Your Next 1:1', title: 'The Power of Vulnerability — Bren\u00e9 Brown (TED)', duration: '20 min' },
           { text: 'Read the Meld Guide to 1:1s — the full template, Lattice setup, and note-taking practices', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s' },
           { type: 'divider', label: 'Apply What You\'re Learning' },
-          { type: 'build', label: 'Design Your 1:1 Structure', prompt: 'Build your first 1:1 agenda', description: 'The best 1:1s create psychological safety before diving into work. Each section has a purpose — don\'t skip them.',
+          { type: 'build', label: 'Design Your 1:1 Structure', prompt: 'Draft your first 1:1 agenda using the Meld template', description: 'The Meld 1:1 template has five sections. Write your opening question or focus for each one before you show up.',
             fields: [
-              { key: 'opener', label: 'Opening Check-In (builds safety)', placeholder: 'e.g. "What\'s one thing that\'s energizing you this week, and one thing that\'s draining you?"' },
-              { key: 'work', label: 'Work Update Prompt (their words, not yours)', placeholder: 'e.g. "What\'s the most important thing I should know about what you\'re working on?"' },
-              { key: 'blocker', label: 'Blockers / Support Needed', placeholder: 'e.g. "Where are you stuck? What do you need from me that you haven\'t asked for?"' },
-              { key: 'growth', label: 'Development Moment (one per 1:1)', placeholder: 'e.g. "What\'s a decision you\'re sitting on right now that we could think through together?"' },
-              { key: 'close', label: 'Committed Action (theirs, not yours)', placeholder: 'e.g. "What\'s one thing you\'re committing to before our next 1:1?"' }
+              { key: 'iteration', label: '1. Start with Iteration (5 min) — what did we learn, ship, or improve since last time?', placeholder: 'e.g. "What\'s one win worth celebrating this week, and one thing that flopped that we can learn from?"' },
+              { key: 'outcomes', label: '2. Focus on Outcomes (10-15 min) — where are we against goals? Any blockers?', placeholder: 'e.g. "What\'s your top priority right now? Are you clear on what success looks like? What\'s in the way?"' },
+              { key: 'coaching', label: '3. Coaching & Support (10-15 min) — what\'s on their mind that I can help with?', placeholder: 'e.g. "What\'s feeling heavy or misaligned right now? Any feedback you\'ve received or want to give?"' },
+              { key: 'growth', label: '4. Growth & Development (5-10 min) — how are we doing on their growth path?', placeholder: 'e.g. "Are you feeling stretched, stuck, or stagnant? Any recent moments that felt like real growth?"' },
+              { key: 'close', label: '5. Commitments & Takeaways (2-5 min) — what are we each walking away with?', placeholder: 'e.g. "What action items did we agree on — from both of us? What do we loop back to next time?"' }
             ]
           },
           { type: 'scenario', label: 'Situation Lab', prompt: 'What do you do?', scenario: 'You\'ve been running 1:1s with a strong performer for 6 weeks. They show up, give updates, answer your questions, and leave. It feels transactional. They seem fine — but not engaged. What\'s your move?',
@@ -1346,10 +1346,10 @@ const MGMT_PHASES = [
           { name: 'Pattern Tracking', what: 'Review the last 3 sets of notes for a direct report before every 1:1. Coaching themes — the things someone is working through — only become visible when you look across time, not just at the current moment.', why: 'Without longitudinal notes, every 1:1 starts from scratch. You miss the through-lines. You can\'t help someone grow through a challenge if you don\'t notice the challenge repeating.', how: 'Use Granola to capture notes automatically. After each 1:1, spend 2 minutes writing one sentence: "The thing I noticed today that I want to track." In 3 months, those sentences are your coaching map.' }
         ],
         frameworkPrompts: [
-          'Open Lattice right now. Create the 5-section template for your next 1:1. Estimate your time allocation for each section.',
-          'In your next 1:1, commit to not speaking for the first 3 minutes. Ask the opening question, then wait.',
+          'Open Lattice right now. Apply the Meld 1:1 Template to your next meeting with each direct report. Estimate your time allocation for each of the 5 sections.',
+          'In your next 1:1, commit to not speaking for the first 3 minutes. Ask the Iteration question, then wait.',
           'Next time someone brings you a problem, respond with: "What options are you considering?" — not a solution.',
-          'Right now, open the last 3 sets of Granola notes from one direct report. Write down one recurring coaching theme you see.'
+          'Before your next 1:1, review your last 3 sets of notes for that person. Write one sentence: "The coaching theme I notice across these sessions is ___."'
         ],
         reflections: [
           'What does your current 1:1 approach look like — be honest. Is it a status meeting or a coaching conversation?',
@@ -1358,7 +1358,7 @@ const MGMT_PHASES = [
         ],
         deliverable: 'Your 1:1s set up in Lattice with the Meld template applied for every direct report — plus your first round of private notes documenting what you heard.',
         resources: [
-          { tier: 'read', label: 'Meld Guide to 1:1s (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s', desc: 'The official Meld 1:1 template, Lattice setup, and note-taking options (Granola, Otter.ai, manual).' },
+          { tier: 'read', label: 'Meld Guide to 1:1s (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s', desc: 'The official Meld 1:1 template with Lattice setup instructions and note-taking options — Otter.ai (in person), Fathom.video (Zoom), or manual notes.' },
           { tier: 'read', label: 'Radical Candor: 1:1 Question Bank', url: 'https://www.radicalcandor.com/blog/1-on-1-meeting-questions/', desc: 'Questions that surface what matters — for the person, not the project.' },
           { tier: 'apply', label: 'The SBI Feedback Model (CCL)', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'Situation-Behavior-Impact — the cleanest feedback delivery model to use inside 1:1s.' },
           { tier: 'watch', label: 'Brené Brown: The Power of Vulnerability (TED)', url: 'https://www.youtube.com/watch?v=iCvmsMzlF7o', desc: 'Why psychological safety in 1:1s unlocks the real conversation — not the performance.' },
@@ -1398,10 +1398,10 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'The Surprise Risk Audit', prompt: 'Think about each direct report. For which one is there the biggest gap between how they see their own performance and how you see it? Write what you think they believe about where they stand — then write what you actually see. If those are different, that gap is your most important conversation to have before their next review.', placeholder: 'Name:\n\nWhat I think they believe about their performance:\n\nWhat I actually observe:\n\nThe specific gap:\n\nWhen I will close it:', rows: 8 }
         ],
         frameworks: [
-          'The Meld Review Cadence: Annual (February) + Quarterly Snapshots — reviews in Lattice, documentation in Paylocity',
-          'Self-Assessment First: Melders evaluate themselves before the manager review — this surfaces gaps in perception before the calibration conversation',
-          'The Performance Calibration Sync: Mutual alignment → personalized feedback → goal setting → open communication → problem-solving → engagement check',
-          'No Surprises Standard: If a Melder is shocked by their review, the system failed. The calibration sync exists to close that gap.'
+          { name: 'The Meld Review Cadence', what: 'Annual review in February, tracked in Lattice. Managers assess each direct report across Meld\'s performance dimensions, informed by the ongoing 1:1 record and Lattice documentation.', why: 'The annual review should confirm what both sides already know — not introduce new information. That only happens if the conversations have been continuous throughout the year.', how: 'Before the annual cycle opens, read back through your Lattice notes for each direct report. Your review narrative should come from that record — not from memory.' },
+          { name: 'Self-Assessment First', what: 'Melders complete their own self-assessment before the manager writes theirs. Both assessments are written independently, then compared in the calibration sync.', why: 'The gap between how someone sees themselves and how their manager sees them is the most important data in the review process. Self-assessment first surfaces that gap explicitly, making the calibration conversation real instead of performative.', how: 'Write your own assessment before you look at theirs. You want your independent view in writing before their framing influences yours. Then compare — the gaps are the conversation.' },
+          { name: 'The Calibration Sync', what: 'A structured one-on-one conversation where manager and Melder align on the assessment, discuss development, set goals, and confirm mutual understanding. Format: mutual alignment → personalized feedback → goal setting → open communication → problem-solving → engagement check.', why: 'The calibration sync is where the review becomes useful. Reading a written assessment without a live conversation is compliance — not development. The conversation is the point.', how: 'Open by sharing your overall read and inviting theirs. Go dimension by dimension where there\'s a gap. Agree on 1-2 specific development areas and what support looks like. End by asking: "Is there anything you want to say that didn\'t make it into writing?"' },
+          { name: 'The No-Surprises Standard', what: 'If a Melder is surprised by their review — positively or negatively — the continuous feedback system has failed. A great review should feel like a formal summary of conversations that have already happened.', why: 'Surprise at review time signals that real-time feedback hasn\'t been happening. The Melder has been operating without accurate signal about how they\'re doing — which is unfair to them regardless of the outcome.', how: 'Ask yourself before each review: "Have I told this person, in specific terms, what I\'m about to write?" If any section would surprise them, schedule that conversation before the review, not during it.' }
         ],
         frameworkPrompts: [
           'Block 30 minutes this week to review your direct reports\' current goals in Lattice. For each person, note whether they\'re on track.',
@@ -1433,6 +1433,7 @@ const MGMT_PHASES = [
         duration: '2 hours',
         activities: [
           { text: 'Watch: "Crucial Conversations" overview — the core model for high-stakes dialogue', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY' },
+          { text: 'Read the Meld Guide to Managing Underperformance — the 3-stage framework, when to escalate, and how to document', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2310504451/Guide+to+Managing+Underperformance' },
           { text: 'Read: NeuroLeadership Institute — "The Science of Feedback"', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/' },
           { type: 'divider', label: 'Apply What You\'re Learning' },
           { type: 'build', label: 'Write an SBI Conversation', prompt: 'Use the SBI model on a real situation from the last 30 days', description: 'Situation (when/where specifically) + Behavior (what they did, not who they are) + Impact (what it caused — on you, the team, or the outcome). No generalizations.',
@@ -1443,21 +1444,21 @@ const MGMT_PHASES = [
               { key: 'intent', label: 'What you\'ll say to open the conversation', placeholder: 'e.g. "I want to share something I observed because I think it\'s worth a conversation. Can we take 10 minutes?"' }
             ]
           },
-          { type: 'build', label: 'Your Accountability Ladder', prompt: 'Map your progressive feedback framework for this team', description: 'Having this written means you\'re consistent, not reactive. Fill in what each stage looks like in practice.',
+          { type: 'build', label: 'Your Underperformance Response Map', prompt: 'Map how you will respond at each stage of Meld\'s underperformance framework', description: 'At Meld, we focus on real-time intervention — not traditional PIPs. Write out what each stage looks like in practice for your team.',
             fields: [
-              { key: 'stage1', label: 'Stage 1 — Informal Coaching Conversation', placeholder: 'What triggers it? What\'s the conversation? Where does it get documented (if at all)?' },
-              { key: 'stage2', label: 'Stage 2 — Documented Concern', placeholder: 'What triggers the move from Stage 1? What gets written? Where?' },
-              { key: 'stage3', label: 'Stage 3 — Formal PIP', placeholder: 'What are the specific criteria? What does success and failure look like in the PIP?' },
-              { key: 'stage4', label: 'Stage 4 — Separation Decision', placeholder: 'Who is involved? What\'s the timeline and process from your end?' }
+              { key: 'stage1', label: '🟡 Early Stage (<4 weeks) — curious conversation, coaching', placeholder: 'What triggers it? What\'s the conversation? What am I trying to learn about what\'s contributing to the lapse?' },
+              { key: 'stage2', label: '🟠 Mid Stage (4-6 weeks) — formal 1:1 discussion, documented goals', placeholder: 'What signals move me from early to mid? What do I address: Craft/Skills, Personal Drive, Gravity of the Situation? What gets written in Lattice?' },
+              { key: 'stage3', label: '🔴 Late Stage (8+ weeks) — People Ops involvement, employment decision', placeholder: 'At what point do I engage People Ops? What does a clear employment decision look like from my end — and what process do I follow?' },
+              { key: 'criteria', label: 'Severity Override — when might I skip straight to late stage?', placeholder: 'Meld\'s guide notes that severe underperformance may require earlier decisions. What would that look like on my team?' }
             ]
           },
           { type: 'reflect', label: 'The Avoidance Audit', prompt: 'Is there someone on your team right now who deserves a harder conversation that you\'ve been postponing? Write what you\'re avoiding saying, what you\'re afraid will happen if you say it, and what\'s actually happening to them — and the team — because you haven\'t.', placeholder: 'What I\'ve been avoiding:\n\nWhat I\'m afraid will happen:\n\nWhat\'s actually happening because I haven\'t had this conversation:\n\nWhat I\'m going to do this week:', rows: 7 }
         ],
         frameworks: [
-          'SBI Model (Situation-Behavior-Impact): The cleanest way to deliver performance feedback — no labels, no generalizations, just evidence',
-          'The Coaching vs Managing Distinction: Coaching is for skill gaps. Managing is for will gaps. The intervention differs.',
-          'Progressive Discipline Framework: Informal → Formal Feedback → Written Warning → PIP → Separation — each step requires documentation',
-          'The Ownership Conversation: "Here\'s what I\'ve observed. Here\'s the impact. What do you think is getting in the way?"'
+          { name: 'The Meld 3-Stage Framework', what: 'Stage 1 — Early (<4 weeks): a curious conversation. Something is off; the manager gets curious about what\'s contributing, provides early coaching. Stage 2 — Mid (4-6 weeks): formal 1:1 discussion addressing Craft/Skills, Personal Drive, and Gravity of the Situation. Goals and progress get documented. Stage 3 — Late (8+ weeks): People Ops joins. A clear decision is made about whether a path forward exists.', why: 'Meld doesn\'t use traditional PIPs or 30/60-day plans. We believe that real-time intervention — early and honest — is more humane and more effective. By the time a PIP exists, both sides are usually past the point of recovery.', how: 'The most important move is Stage 1: don\'t wait. A 4-week performance lapse is a coaching opportunity. An 8-week one is a decision. The difference is almost always whether Stage 1 happened.' },
+          { name: 'SBI Model (Situation-Behavior-Impact)', what: 'The cleanest framework for delivering performance feedback. Situation: when and where, specifically. Behavior: what they did — observable, not interpreted. Impact: what it caused, on you, the team, or the outcome. No labels, no generalizations, just evidence.', why: 'Vague feedback ("you need to communicate better") protects the manager, not the Melder. It creates the feeling of feedback without providing the information someone needs to actually change. SBI forces specificity — and specificity is respect.', how: 'Before any underperformance conversation, write out the SBI in full — as if you\'re submitting evidence, not venting. If you can\'t complete all three sections with specific, observable details, you\'re not ready for the conversation yet.' },
+          { name: 'Craft vs. Drive vs. Gravity', what: 'Mid-stage underperformance has three distinct roots. Craft/Skills: they don\'t have the capability yet — the intervention is training and coaching. Personal Drive: the motivation or effort is the gap — harder to coach, requires a direct conversation about fit. Gravity of the Situation: they don\'t understand how serious this is — requires explicit naming of what\'s at stake.', why: 'Most managers treat every performance problem as a skill problem and respond with more resources. But if the root is drive or gravity, more training doesn\'t help — it delays the real conversation. Diagnosing the root changes everything about the intervention.', how: 'Before your Stage 2 conversation, ask: which of the three roots is actually driving this? You may be addressing all three — but lead with the one that\'s most true.' },
+          { name: 'The Ownership Conversation', what: '"Here\'s what I\'ve observed. Here\'s the impact. What do you think is getting in the way?" This structure does three things: names the gap precisely, shows the stakes, and then invites the person into the diagnosis.', why: 'Managers who skip the third question — "what do you think is getting in the way?" — often solve the wrong problem. The person in the role often knows exactly what\'s wrong. Inviting them into the diagnosis creates ownership of the solution.', how: 'Ask the question and then stop talking. The silence after "what do you think is getting in the way?" is where the real information lives. Don\'t rescue them from it.' }
         ],
         reflections: [
           'Have you ever avoided a hard performance conversation? What did it cost — the person, the team, and you?',
@@ -1466,11 +1467,11 @@ const MGMT_PHASES = [
         ],
         deliverable: 'A documented underperformance conversation framework — the questions you\'ll ask, the timeline you\'ll use, the criteria for when you escalate, and the standard for documenting the conversation.',
         resources: [
+          { tier: 'read', label: 'Meld Guide to Managing Underperformance (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2310504451/Guide+to+Managing+Underperformance', desc: 'The official Meld framework — 3 stages (Early/Mid/Late), when to involve People Ops, and how to document. Start here.' },
           { tier: 'watch', label: 'Crucial Conversations: The Core Model', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY', desc: 'A framework for high-stakes dialogue when the stakes are highest.' },
           { tier: 'read', label: 'NeuroLeadership: The Science of Feedback', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/', desc: 'What research says about what actually helps performance — vs what managers think.' },
-          { tier: 'read', label: 'SHRM: Delivering Effective Performance Feedback', url: 'https://www.shrm.org/topics-tools/topics/performance-management', desc: 'The mechanics of performance conversations that lead to real change.' },
           { tier: 'apply', label: 'The SBI Feedback Tool (CCL)', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'The Center for Creative Leadership\'s SBI framework with practice examples.' },
-          { tier: 'practice', label: 'Writing a Performance Improvement Plan', url: 'https://www.shrm.org/resourcesandtools/tools-and-samples/how-to-guides/pages/performanceimprovementplan.aspx', desc: 'The SHRM guide to building a PIP that is specific, measurable, and fair.' }
+          { tier: 'read', label: 'SHRM: Delivering Effective Performance Feedback', url: 'https://www.shrm.org/topics-tools/topics/performance-management', desc: 'The mechanics of performance conversations that lead to real change.' }
         ]
       },
       {
@@ -1482,7 +1483,8 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1920&q=90&auto=format&fit=crop',
         duration: '1 hour',
         activities: [
-          { text: 'Read the Property Meld Hello Meld PTO policy — the collab hours rule, the 2-hour threshold, and Paylocity', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
+          { text: 'Read the Melder Resources — Employee Handbook (People Ops): all leave types, Meldiversaries program, EAP, benefits overview, and the 30-day benefits probationary period for new hires', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2032173066/Property+Meld+People+Operations-+Melder+Resources' },
+          { text: 'Read the Hello Meld onboarding guide — collab hours rule (11am–3pm MT), Paylocity setup, and what counts as a PTO day', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
           { type: 'divider', label: 'Apply What You\'re Learning' },
           { type: 'rate', label: 'Self-Assessment', prompt: 'In the last 90 days, how well have you personally modeled a healthy relationship with time off — taking it fully, disconnecting when out, and not sending signals that create guilt for others who do?',
             anchors: ['I\'ve barely taken time off and I\'m always reachable', 'I take it fully and create clear permission for my team to do the same'],
@@ -1505,10 +1507,11 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'The PTO Audit', prompt: 'Look at your team\'s PTO usage over the last quarter. Who hasn\'t taken time off? Who takes it but stays on Slack? What does the pattern tell you — about the culture, about how safe people feel to fully disconnect, and about what your behavior has been teaching them?', placeholder: 'What the data shows:\n\nWhat I think the culture actually is vs. what it should be:\n\nThe person I\'m most worried about:\n\nThe one thing I will change about my own behavior:', rows: 7 }
         ],
         frameworks: [
-          'Results-Orientation (not hours): PTO management should be outcome-focused — the question isn\'t "are you here?" it\'s "is the work covered?"',
-          'Coverage Planning: For every person, there should be a plan for who handles what when they\'re out — proactive, not reactive',
-          'The Permission Signal: Your behavior gives permission for theirs. If you never disconnect, your team won\'t either.',
-          'Property Meld PTO Rule: Missing 2+ hours of collab time (11am–3pm MT) in a day = a PTO day. Requests go through Paylocity.'
+          { name: 'Results-Orientation, Not Hours', what: 'PTO management at Meld is outcome-focused — the question isn\'t "are you here?" it\'s "is the work covered?" Time off is approved based on whether individual and team performance is solid and whether business needs are met.', why: 'Measuring presence instead of outcomes creates perverse incentives — people stay visible rather than productive, and taking time off feels risky even when nothing is on fire. Outcome-focused PTO removes that friction.', how: 'When someone requests time off, ask: is their work covered and is the team\'s performance in a healthy place? If yes to both, approve it without hesitation.' },
+          { name: 'The Collab Hours Rule', what: 'Missing 2 or more hours of collaboration time (11am–3pm MT) in a day counts as a PTO day. PTO requests are submitted through Paylocity. This applies to all Melders.', why: 'Clear, consistent rules remove ambiguity about what counts as time off. Without a shared definition, some people over-report and others under-report — which creates inconsistency and quiet resentment.', how: 'Make sure every person on your team understands this rule and how to submit in Paylocity. If someone is consistently missing collab hours without logging PTO, address it directly.' },
+          { name: 'The Leave Spectrum', what: 'Meld has seven distinct leave types managers need to know cold: Vacation PTO (rest and rejuvenation), Sick Time (personal health or caring for a loved one), Meld Cares Paid Time (community and philanthropy), 11 Paid Holidays (released annually by People Ops), Maternity/Paternity Leave (protected time for new additions), Bereavement Leave (loss of a loved one), and FMLA (job-protected leave for significant health or family events). State and local leave laws also apply for each employee\'s location.', why: 'Managers who don\'t know the leave spectrum either accidentally deny protected leave or send confused signals that erode trust. Your team will ask you — not People Ops first. You need to be a credible first resource.', how: 'Read the Melder Resources handbook and know which types are policy-based (vacation, sick, Meld Cares) vs. legally protected (FMLA, maternity/paternity). When in doubt on a specific case, loop in People Ops — but you should know enough to have the initial conversation with your team member.' },
+          { name: 'The Meldiversary Responsibility', what: 'People Ops will notify you ahead of every team member\'s birthday and Meldiversary. You then choose to post the celebration yourself or ask People Ops to handle it (with your input on what to include). Meldiversary gifts escalate with tenure: 1st year gets a Meld water bottle + $50 swag credit, 2nd gets a $100 payroll bonus + $50 swag credit, continuing up to $1,800 payroll bonus + custom tech gadget at year seven.', why: 'Meldiversaries are one of the most visible manager touchpoints of the year. A generic message (or a missed one) signals that you don\'t see your people. A specific, warm message signals that you do. This isn\'t a People Ops task with your name on it — it\'s a relationship moment.', how: 'When you get the People Ops notification, write the message yourself. Make it specific — reference a real contribution, a growth you\'ve observed, or a moment that mattered. Two sentences of genuine specificity outweigh two paragraphs of generic praise.' },
+          { name: 'The Permission Signal', what: 'Your behavior as a manager gives your team permission for theirs. If you never disconnect, always respond on Slack during PTO, or make comments that signal guilt around time off — your team will calibrate to that, not to the policy. The EAP is also a tool in your kit: it\'s a confidential service for employees facing personal, emotional, financial, or family challenges. You can mention it as a resource without knowing what\'s going on.', why: 'Culture is set by observed behavior, not stated values. The most powerful thing you can do for your team\'s relationship with rest is model it yourself — fully and visibly. And being the kind of manager who says "hey, if you\'re going through something, EAP is there and it\'s fully confidential" is what psychological safety looks like in practice.', how: 'The next time you take PTO, put up a real OOO, don\'t check Slack, and tell your team explicitly: "I\'m fully offline. Here\'s who to go to." That one act gives more permission than any all-hands slide. Separately: if a team member seems off over several weeks, mentioning EAP is a low-pressure way to signal that you see them and that support exists.' }
         ],
         reflections: [
           'How do you actually feel when a team member requests PTO — be honest with yourself? Does your response give them full permission to take it?',
@@ -1517,7 +1520,8 @@ const MGMT_PHASES = [
         ],
         deliverable: 'A team PTO coverage template — who handles what when each person is out, plus a written "PTO culture statement" you\'ve discussed with your team.',
         resources: [
-          { tier: 'read', label: 'Hello Meld — PTO Policy & Paylocity Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'Meld\'s official PTO structure — collab hours rule, Paylocity setup, what counts as a day.' },
+          { tier: 'read', label: 'Melder Resources — Employee Handbook (People Ops)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2032173066/Property+Meld+People+Operations-+Melder+Resources', desc: 'The foundational Meld handbook: all 7 leave types, Meldiversaries gift structure and manager responsibilities, EAP overview, health/wellness benefits, 30-day benefits probationary period, and more.' },
+          { tier: 'read', label: 'Hello Meld — PTO Policy & Paylocity Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'Meld\'s official PTO policy — collab hours rule (11am–3pm MT), Paylocity setup, and what counts as a PTO day.' },
           { tier: 'read', label: 'BBC Worklife: Why You Should Work Less Than You Think', url: 'https://www.bbc.com/worklife/article/20200817-why-you-should-work-less-than-youre-working-now', desc: 'Why overwork hurts productivity — the Stanford and OECD research summarized.' },
           { tier: 'watch', label: 'Why We All Need to Practice Emotional First Aid — Guy Winch', url: 'https://www.youtube.com/watch?v=F2hc2FLOdhI', desc: 'The importance of recovery and what happens to teams that don\'t prioritize it.' },
           { tier: 'apply', label: 'BetterUp: How to Actually Take a Real Vacation', url: 'https://www.betterup.com/blog/how-to-take-a-real-vacation', desc: 'Practical guide to creating team coverage systems that enable real rest.' },
@@ -1579,6 +1583,64 @@ const MGMT_PHASES = [
           { tier: 'apply', label: 'The Leading vs Lagging Indicator Framework (HBR)', url: 'https://hbr.org/2010/02/the-balanced-scorecard-measures', desc: 'How to build a balanced set of metrics — leading indicators that drive the lagging outcomes you care about.' },
           { tier: 'apply', label: 'Andy Grove on OKRs (Intel — High Output Management Summary)', url: 'https://medium.com/startup-tools/okrs-5afdc298bc28', desc: 'Where OKRs came from — Andy Grove\'s original formulation from High Output Management. The source code.' },
           { tier: 'practice', label: 'OKR Writing Workshop — re:Work by Google', url: 'https://rework.withgoogle.com/guides/set-goals-with-okrs/', desc: 'Google\'s own guide to writing, grading, and iterating on OKRs — includes example OKRs and grading rubric.' }
+        ]
+      },
+      {
+        id: 'mgmt-9', num: 'Milestone 9', title: 'Designing Roles for High Performance & Knowing What to Measure',
+        quote: "A manager's job is to design the conditions for great work — not just evaluate it after the fact.", quoteAttr: "Marcus Buckingham, First, Break All the Rules",
+        desc: 'Most performance problems aren\'t people problems — they\'re design problems. This milestone teaches you how to build a role that sets someone up to win, and how to measure performance in a way that drives real accountability and growth.',
+        tags: ['role design', 'performance', 'expectations', 'measurement', '2hr'],
+        geoZone: 'The Architect\'s Ridge', geoScene: 'A high overlook where you can see both the trail behind you and the terrain ahead — this is where you stop reacting and start designing.',
+        photoUrl: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=90&auto=format&fit=crop',
+        duration: '2 hours',
+        activities: [
+          { type: 'video', platform: 'youtube', videoId: 'u6XAPnuFjJc', label: 'Watch This First', title: 'Marcus Buckingham: The One Thing Great Managers Do', duration: '16 min' },
+          { text: 'Read the Meld MGMT 101 Module — Designing Roles for High Performance & Measuring Performance', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/3633283073' },
+          { text: 'Review the Guide to Managing Underperformance — understanding the role design lens when performance breaks down', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2310504451' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'build', label: 'Design a Role', prompt: 'Choose one role on your team and map it using the four building blocks', description: 'A high-performance role needs four things: Clarity of Purpose (why does this role exist?), Scope & Ownership (what does this person own end-to-end?), Success Milestones (what does "meeting expectations" look like at 30/60/90 days?), and Craft + Behaviors (what skills and ways of working are non-negotiable?).',
+            fields: [
+              { key: 'purpose', label: 'Clarity of Purpose — why does this role exist? What would break if it were vacant?', placeholder: 'e.g. "This role exists to own the post-onboarding customer relationship — without it, customers lose contact after go-live and churn silently."' },
+              { key: 'scope', label: 'Scope & Ownership — what decisions and outputs does this person own end-to-end?', placeholder: 'e.g. "Owns: QBR cadence, health score monitoring, renewal conversations. Does NOT own: initial onboarding, billing disputes."' },
+              { key: 'milestones', label: 'Success Milestones — what does meeting expectations look like at 30 / 60 / 90 days?', placeholder: '30 days: ...\n60 days: ...\n90 days: ...' },
+              { key: 'craft', label: 'Craft + Behaviors — what are the 2-3 non-negotiable skills and ways of working?', placeholder: 'e.g. "Must be able to run a data-backed QBR conversation. Must proactively surface risk — not wait to be asked."' }
+            ]
+          },
+          { type: 'scenario', label: 'Role Design Diagnostic', prompt: 'How do you call it?', scenario: 'Alex has been in the role for 90 days and is consistently missing targets. In 1:1s, they seem engaged and say they understand the goals. When you dig in, you realize the role has no clear owner for two key workflows — they\'ve been splitting time between three different priorities, none of which have defined success metrics. How do you approach this?',
+            options: [
+              { text: 'Have a direct conversation with Alex about their performance and set a 30-day improvement timeline.', quality: 'miss', feedback: 'Before putting the performance pressure on Alex, you need to ask: is this a person problem or a role design problem? Unclear ownership and competing priorities without defined metrics are design failures. A performance timeline on top of a broken role design will likely make things worse, not better.' },
+              { text: 'Pause and diagnose the role first — clarify ownership, eliminate the competing priorities, and set explicit success metrics before evaluating Alex\'s performance.', quality: 'best', feedback: 'Exactly right. When someone is failing in an unclear role, you\'re not seeing their ceiling — you\'re seeing the noise of a poorly designed environment. Fix the design first: define what they own, what they don\'t, and what success looks like. Then evaluate performance against that clear standard.' },
+              { text: 'Reassign the competing priorities to other team members and see if Alex\'s performance improves on its own.', quality: 'ok', feedback: 'Removing the competing priorities is the right instinct, but without explicitly redesigning the role and setting new success milestones, you\'re hoping for improvement rather than engineering it. Be explicit: "Here is what you own now. Here is what meeting expectations looks like in 30 days."' },
+              { text: 'Bring in People Ops to assess whether Alex is the right fit for the role.', quality: 'miss', feedback: 'Escalating to People Ops before you\'ve diagnosed the design problem is premature. People Ops is the right partner when you\'ve ruled out design and coaching issues. Going there first signals that you haven\'t done the manager work yet — and it\'s unfair to Alex.' }
+            ]
+          },
+          { type: 'reflect', label: 'The Measurement Audit', prompt: 'Pick one person on your team. Answer honestly: (1) Does this person know — in specific, measurable terms — what "meeting expectations" looks like in their role right now? (2) Do YOU know? (3) If there\'s a gap between your answer and theirs, what does that gap tell you about your role design?', placeholder: 'Person: ___\n\nWhat I believe their success metrics are:\n\nWhat I think THEY believe their success metrics are:\n\nThe gap I notice:\n\nWhat I need to do differently:', rows: 9 }
+        ],
+        frameworks: [
+          { name: 'The Four Building Blocks of Role Design', what: 'Every high-performance role needs: (1) Clarity of Purpose — why this role exists and what it protects. (2) Scope & Ownership — what the person owns end-to-end, with clear boundaries. (3) Success Milestones — specific, observable definitions of "meeting expectations" at 30, 60, and 90 days. (4) Craft + Behaviors — the non-negotiable skills and ways of working required in the seat.', why: 'Without these four things, you\'re not managing a role — you\'re managing a job description. The gap between what\'s written in a JD and what success actually requires is where most performance problems live. The best managers close that gap before it becomes a problem.', how: 'For each role on your team, ask: can I write down, in specific terms, what "meeting expectations" looks like right now? If you can\'t, your team member definitely can\'t. Start there.' },
+          { name: 'Right Person, Right Seat', what: 'Role fit has three dimensions: Ability (track record and skill to do the job), Willingness (genuine motivation and energy for this type of work), and Fit (values and working style aligned with how Meld operates). All three matter. You can coach skill. You can\'t sustainably manufacture motivation.', why: 'The most common management mistake is treating a "willingness" problem as a skill problem. If someone consistently underperforms despite having the skills, ask: do they actually want this role? Are they energized by this work? A mismatch in willingness burns people out — and it burns out their manager.', how: 'When evaluating a performance issue, work through the three dimensions in order. Ability first: do they have the skills? If yes — Willingness: are they genuinely motivated? If yes — Fit: are they working in a way that aligns with the team? The dimension that fails points to the intervention.' },
+          { name: 'Outcomes vs. Behaviors — The Two Dimensions of Performance', what: 'Performance has two axes: Outcomes (did they hit the target — the "what") and Behaviors (are they demonstrating the skills and ways of working that drive results — the "how"). Measuring only outcomes rewards the wrong behaviors. Measuring only behaviors allows underperformance to hide behind effort.', why: 'A rep who hits quota through aggressive tactics that burn customer relationships is a long-term liability with good short-term numbers. A rep who works incredibly hard but can\'t close is a behavioral asset with an output gap. Great performance measurement sees both — and intervenes at the right level.', how: 'For every performance conversation you have, name which dimension you\'re addressing. "You hit the number but the way you got there is a problem" is a behavior conversation. "You\'re doing all the right things but the results aren\'t there yet" is an outcome conversation. The intervention is completely different.' },
+          { name: 'The Design-First Diagnostic', what: 'Before you label a performance issue as a "person problem," work through three questions in order: (1) Role design — is the scope clear, the ownership defined, the success metrics explicit? (2) Coaching — have they received specific, timely feedback and the resources to improve? (3) Person — given a well-designed role and adequate coaching, is the person still not performing?', why: 'Most performance conversations happen at question 3 before questions 1 and 2 have been answered. The result is unfair performance pressure on top of an unclear role — which creates anxiety, not improvement. The manager who skips design and coaching is solving the wrong problem.', how: 'The next time someone on your team underperforms, write out your answers to all three questions before you have the conversation. It will change what you say — and how they receive it.' }
+        ],
+        frameworkPrompts: [
+          'Pick one role on your team. Write out the four building blocks (Purpose, Scope, Milestones, Craft) as they exist today. Where are the gaps?',
+          'Think about the last time someone on your team underperformed. Which diagnostic did you start with — role design, coaching, or person? What would have changed if you\'d started with role design?',
+          'For one person on your team, write down what "exceeding," "meeting," and "below" expectations looks like right now in specific, measurable terms. Share it with them and ask: does this match what you thought?',
+          'Identify one role on your team where the scope is unclear or overlaps with someone else\'s. What\'s the accountability cost of that ambiguity?'
+        ],
+        reflections: [
+          'Think about a time you were in a role that was unclear or poorly scoped. What did that do to your performance — and your confidence?',
+          'What is the difference between a manager who evaluates performance and a manager who designs conditions for performance? Which one are you right now?',
+          'If your team members were asked to write down what "meeting expectations" looks like in their role, would their answers match yours? What does the gap tell you?'
+        ],
+        deliverable: 'A completed role design map for one person on your team — Clarity of Purpose, Scope & Ownership, Success Milestones at 30/60/90 days, and Craft + Behaviors — plus a written answer to the measurement audit reflection.',
+        resources: [
+          { tier: 'read', label: 'Meld MGMT 101: Designing Roles for High Performance & Measuring Performance (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/3633283073', desc: 'The internal Meld guide for this milestone — covers the four building blocks of role design and the two dimensions of performance measurement.' },
+          { tier: 'read', label: 'Guide to Managing Underperformance (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2310504451', desc: 'The Meld framework for navigating performance issues — includes the three stages and when to engage People Ops.' },
+          { tier: 'watch', label: 'Marcus Buckingham: The One Thing Great Managers Do (TED)', url: 'https://www.youtube.com/watch?v=u6XAPnuFjJc', desc: 'The research-backed case for individualized role design — why the best managers don\'t treat everyone the same.' },
+          { tier: 'apply', label: 'HBR: Reinventing Performance Management', url: 'https://hbr.org/2015/04/reinventing-performance-management', desc: 'How Deloitte redesigned their performance system around individual strengths and clear expectations — a model for outcomes + behaviors measurement.' },
+          { tier: 'apply', label: 'SHRM: Setting Performance Expectations', url: 'https://www.shrm.org/resourcesandtools/tools-and-samples/toolkits/pages/managingemployeeperformance.aspx', desc: 'Practical guide to setting and communicating clear performance expectations — the mechanics of the milestone-setting conversation.' },
+          { tier: 'practice', label: '"First, Break All the Rules" — Buckingham & Coffman (Summary)', url: 'https://www.getabstract.com/en/summary/first-break-all-the-rules/4114', desc: 'The Gallup research on what the world\'s greatest managers do differently — built on the insight that great management is about putting people in roles where they can win, not fixing their weaknesses.' }
         ]
       }
     ]
