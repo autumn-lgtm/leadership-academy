@@ -269,7 +269,8 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 /* ===== DASHBOARD UPCOMING MILESTONES ===== */
 .dash-milestone-list { display: flex; flex-direction: column; gap: 10px; }
 .dash-milestone-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; transition: all var(--transition); }
-.dash-milestone-item:hover { border-color: rgba(255,255,255,0.12); }
+.dash-milestone-item:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.04); transform: translateY(-1px); }
+.progress-path-card:hover { border-color: rgba(255,255,255,0.14) !important; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
 .milestone-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 8px var(--accent-glow); }
 .milestone-text { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-primary); }
 .milestone-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
@@ -677,7 +678,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="qot-footer"><button class="qot-refresh" onclick="nextTrailQuote()">&#8635; New Quote</button></div>
     </div>
     <div class="prog-cards-grid">
-      <div class="progress-path-card" id="dash-mgmt-card" style="border-color:rgba(52,211,153,0.2)">
+      <div class="progress-path-card" id="dash-mgmt-card" style="border-color:rgba(52,211,153,0.2);cursor:pointer" onclick="navigateTo('mgmt')" title="Open MGMT 101">
         <div class="prog-header">
           <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 8 milestones</div></div>
           <div class="prog-pct-big" id="dash-mgmt-pct" style="color:#34D399">0%</div>
@@ -693,7 +694,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px" id="dash-mgmt-phases"></div>
       </div>
-      <div class="progress-path-card" id="dash-lde-card">
+      <div class="progress-path-card" id="dash-lde-card" style="cursor:pointer" onclick="navigateTo('lde')" title="Open Desert Crossing">
         <div class="prog-header">
           <div><div class="prog-title">&#127964; Desert Crossing</div><div class="prog-subtitle">Leadership Development Experience &middot; 26 milestones</div></div>
           <div class="prog-pct-big" id="dash-lde-pct">0%</div>
@@ -709,7 +710,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px" id="dash-lde-phases"></div>
       </div>
-      <div class="progress-path-card" id="dash-alde-card" style="position:relative;overflow:hidden">
+      <div class="progress-path-card" id="dash-alde-card" style="position:relative;overflow:hidden;cursor:pointer" onclick="navigateTo('alde')" title="Open The Ascent">
         <div class="prog-header">
           <div><div class="prog-title">&#127956; The Ascent &mdash; The Summit</div><div class="prog-subtitle">Advanced Leadership &middot; 39 milestones</div></div>
           <div class="prog-pct-big" id="dash-alde-pct" style="color:var(--accent)">0%</div>
@@ -3513,7 +3514,7 @@ function refreshUpcomingMilestones() {
   for (const phase of MGMT_PHASES) {
     for (const m of phase.milestones) {
       if (!state.mgmt.milestones[m.id]) {
-        items.push({ icon: '🌱', text: m.title, sub: 'MGMT 101 · ' + phase.name + ' · ' + m.num, tag: 'Start Here', color: '#34D399' });
+        items.push({ icon: '🌱', text: m.title, sub: 'MGMT 101 · ' + phase.name + ' · ' + m.num, tag: 'Start Here', color: '#34D399', action: `navigateTo('mgmt');setTimeout(()=>openZoneModal('${m.id}','mgmt',${phase.id}),400)` });
         break;
       }
     }
@@ -3523,7 +3524,7 @@ function refreshUpcomingMilestones() {
   for (const phase of LDE_PHASES) {
     for (const m of phase.milestones) {
       if (!state.lde.milestones[m.id]) {
-        items.push({ icon: '🏜', text: m.title, sub: 'LDE · ' + phase.name + ' · ' + m.num, tag: 'Next Up', color: 'var(--accent)' });
+        items.push({ icon: '🏜', text: m.title, sub: 'LDE · ' + phase.name + ' · ' + m.num, tag: 'Next Up', color: 'var(--accent)', action: `navigateTo('lde');setTimeout(()=>openZoneModal('${m.id}','lde',${phase.id}),400)` });
         break;
       }
     }
@@ -3531,28 +3532,29 @@ function refreshUpcomingMilestones() {
   }
 
   if (state.journal.length === 0) {
-    items.push({ icon: '🔥', text: 'Light the Campfire', sub: 'Write your first journal entry', tag: 'Journal', color: '#F97316' });
+    items.push({ icon: '🔥', text: 'Light the Campfire', sub: 'Write your first journal entry', tag: 'Journal', color: '#F97316', action: `navigateTo('journal');setTimeout(()=>newJournalEntry(),300)` });
   } else if (state.journal.length < 5) {
-    items.push({ icon: '📝', text: 'Keep Reflecting', sub: state.journal.length + ' entries — keep the fire going', tag: 'Journal', color: '#F97316' });
+    items.push({ icon: '📝', text: 'Keep Reflecting', sub: state.journal.length + ' entries — keep the fire going', tag: 'Journal', color: '#F97316', action: `navigateTo('journal')` });
   }
 
   const booksRead = Object.values(state.booksRead).filter(Boolean).length;
   if (booksRead < 3) {
-    items.push({ icon: '📚', text: 'Pick Up the Field Guide', sub: booksRead + ' of 16 books read — keep going', tag: 'Reading', color: '#4D7C0F' });
+    items.push({ icon: '📚', text: 'Pick Up the Field Guide', sub: booksRead + ' of 16 books read — keep going', tag: 'Reading', color: '#4D7C0F', action: `navigateTo('resources')` });
   }
 
+  const name = state.name || 'Explorer';
   if (items.length === 0) {
-    items.push({ icon: '⭐', text: 'You\'re ahead of the pack, Melder', sub: 'Keep the momentum — check your ALDE progress', tag: 'On Track', color: '#60A5FA' });
+    items.push({ icon: '⭐', text: 'You\'re ahead of the pack, ' + name, sub: 'Keep the momentum — check your ALDE progress', tag: 'On Track', color: '#60A5FA', action: `navigateTo('alde')` });
   }
 
   list.innerHTML = items.map(item => `
-    <div class="dash-milestone-item">
+    <div class="dash-milestone-item" onclick="${item.action}" style="cursor:pointer">
       <div style="font-size:20px">${item.icon}</div>
       <div style="flex:1">
         <div class="milestone-text">${item.text}</div>
         <div class="milestone-sub">${item.sub}</div>
       </div>
-      <span class="milestone-tag" style="background:${item.color}22;border-color:${item.color}44;color:${item.color}">${item.tag}</span>
+      <span class="milestone-tag" style="background:${item.color}22;border-color:${item.color}44;color:${item.color}">${item.tag} →</span>
     </div>
   `).join('');
 }
@@ -3698,10 +3700,22 @@ function toggleMilestone(milestoneId, programKey, phaseId) {
 // =============================================
 // MGMT 101 PROGRAM
 // =============================================
+function autoExpandFirstPhase(programKey) {
+  // Expand first incomplete phase, or first phase if all complete
+  const phases = programKey === 'mgmt' ? MGMT_PHASES : programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
+  const firstIncomplete = phases.find(p => calcPhaseProgress(p, programKey).pct < 100);
+  const target = firstIncomplete || phases[0];
+  if (target) {
+    const card = document.getElementById('phase-card-' + programKey + '-' + target.id);
+    if (card && !card.classList.contains('expanded')) card.classList.add('expanded');
+  }
+}
+
 function refreshMGMT() {
   const container = document.getElementById('mgmt-phases-container');
   if (!container) return;
   container.innerHTML = MGMT_PHASES.map(p => renderPhaseCard(p, 'mgmt')).join('');
+  autoExpandFirstPhase('mgmt');
   const mgmt = calcMGMTProgress();
   const chip = document.getElementById('mgmt-chip-progress');
   if (chip) chip.textContent = mgmt.pct === 0 ? 'Start Milestone 1' : mgmt.pct + '% Complete';
@@ -3713,6 +3727,7 @@ function refreshLDE() {
   const container = document.getElementById('lde-phases-container');
   if (!container) return;
   container.innerHTML = LDE_PHASES.map(p => renderPhaseCard(p, 'lde')).join('');
+  autoExpandFirstPhase('lde');
   const lde = calcLDEProgress();
   const chip = document.getElementById('lde-chip-progress');
   if (chip) chip.textContent = lde.pct === 0 ? 'Enter the Desert' : lde.pct + '% Complete';
@@ -3736,6 +3751,7 @@ function refreshALDE() {
   if (lockLabel) lockLabel.textContent = 'Desert Crossing: ' + lde.pct + '% complete — need 80%';
   if (unlocked) {
     container.innerHTML = ALDE_STAGES.map(s => renderPhaseCard(s, 'alde')).join('');
+    autoExpandFirstPhase('alde');
     const alde = calcALDEProgress();
     const chip = document.getElementById('alde-chip-progress');
     if (chip) chip.textContent = alde.pct === 0 ? 'Begin the Ascent' : alde.pct + '% Complete';
