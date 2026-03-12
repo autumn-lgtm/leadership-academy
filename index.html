@@ -291,8 +291,39 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
 .zone-framework-item { display: flex; flex-direction: column; gap: 4px; }
 .zone-framework-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .zone-framework-how { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
-.zone-reflections { display: flex; flex-direction: column; gap: 14px; }
-.zone-reflection-item { font-size: 14px; color: var(--text-primary); line-height: 1.6; padding: 14px 18px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; font-style: italic; }
+.zone-reflections { display: flex; flex-direction: column; gap: 20px; }
+.zone-reflection-item { display: flex; flex-direction: column; gap: 10px; }
+.zone-reflection-prompt { font-size: 13.5px; color: var(--text-primary); line-height: 1.6; padding: 12px 16px; background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; font-style: italic; }
+.zone-reflection-textarea { width: 100%; min-height: 100px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px; font-family: "Inter", sans-serif; font-size: 13.5px; color: var(--text-primary); outline: none; resize: vertical; transition: border-color 0.2s; line-height: 1.65; box-sizing: border-box; }
+.zone-reflection-textarea:focus { border-color: var(--accent); }
+.zone-reflection-meta { display: flex; align-items: center; justify-content: space-between; }
+.zone-reflection-wordcount { font-size: 11px; color: var(--text-muted); }
+.zone-reflection-wordcount.good { color: var(--accent); }
+.zone-reflect-actions { display: flex; gap: 10px; align-items: center; margin-top: 4px; }
+.zone-reflect-save-btn { padding: 8px 18px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); border-radius: 8px; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.zone-reflect-save-btn:hover { background: rgba(255,255,255,0.12); border-color: var(--accent); }
+.zone-reflect-assess-btn { padding: 8px 18px; background: var(--accent-glow); border: 1px solid var(--accent); border-radius: 8px; color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.zone-reflect-assess-btn:hover { background: var(--accent); color: #000; }
+.zone-reflect-saved-note { font-size: 11px; color: var(--accent); opacity: 0; transition: opacity 0.4s; }
+.zone-reflect-saved-note.show { opacity: 1; }
+/* Assessment panel */
+.zone-assessment { margin-top: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px; display: none; flex-direction: column; gap: 16px; }
+.zone-assessment.visible { display: flex; }
+.zone-assessment-header { display: flex; align-items: center; justify-content: space-between; }
+.zone-assessment-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.zone-assessment-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.badge-surface { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+.badge-developing { background: rgba(251,146,60,0.2); color: #fdba74; border: 1px solid rgba(251,146,60,0.3); }
+.badge-strong { background: rgba(250,204,21,0.2); color: #fde047; border: 1px solid rgba(250,204,21,0.3); }
+.badge-deep { background: rgba(74,222,128,0.2); color: #86efac; border: 1px solid rgba(74,222,128,0.3); }
+.badge-gold { background: rgba(253,230,138,0.25); color: #fde68a; border: 1px solid rgba(253,230,138,0.4); }
+.zone-assessment-overall { font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; }
+.zone-assessment-prompts { display: flex; flex-direction: column; gap: 12px; }
+.zone-assessment-prompt-row { display: flex; flex-direction: column; gap: 4px; }
+.zone-assessment-prompt-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.zone-assessment-prompt-feedback { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+.zone-assessment-score-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); margin-top: 4px; overflow: hidden; }
+.zone-assessment-score-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.6s ease; }
 .zone-deliverable { font-size: 14px; color: var(--text-primary); line-height: 1.65; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 16px; border: 1px dashed rgba(255,255,255,0.1); }
 .zone-footer { padding-top: 8px; }
 .zone-complete-toggle { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 18px 24px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); transition: all 0.25s; font-size: 15px; font-weight: 600; color: var(--text-primary); }
@@ -716,6 +747,19 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
       <div class="zone-block">
         <div class="zone-block-label">&#128293; Reflection Prompts</div>
         <div class="zone-reflections" id="zone-reflections"></div>
+        <div class="zone-reflect-actions">
+          <button class="zone-reflect-save-btn" onclick="saveModalReflections()">&#128190; Save Responses</button>
+          <button class="zone-reflect-assess-btn" onclick="assessModalReflections()">&#127775; Assess My Reflection</button>
+          <span class="zone-reflect-saved-note" id="zone-reflect-saved-note">Saved.</span>
+        </div>
+        <div class="zone-assessment" id="zone-assessment">
+          <div class="zone-assessment-header">
+            <div class="zone-assessment-title">&#128202; Writing Assessment</div>
+            <div class="zone-assessment-badge" id="zone-assessment-badge"></div>
+          </div>
+          <div class="zone-assessment-overall" id="zone-assessment-overall"></div>
+          <div class="zone-assessment-prompts" id="zone-assessment-prompts"></div>
+        </div>
       </div>
       <div class="zone-block">
         <div class="zone-block-label">&#128230; Your Deliverable</div>
@@ -741,8 +785,8 @@ const defaultState = {
   startDate: new Date().toISOString().split('T')[0],
   role: '',
   program: 'lde',
-  lde: { milestones: {} },
-  alde: { milestones: {} },
+  lde: { milestones: {}, reflections: {} },
+  alde: { milestones: {}, reflections: {} },
   journal: [],
   booksRead: {},
   notifications: { weekly: true, journal: true, milestones: true },
@@ -758,10 +802,12 @@ function loadState() {
       const parsed = JSON.parse(saved);
       state = Object.assign({}, defaultState, parsed);
       // backward compat: support old "weeks" key
-      state.lde = Object.assign({ milestones: {} }, parsed.lde || {});
+      state.lde = Object.assign({ milestones: {}, reflections: {} }, parsed.lde || {});
       state.lde.milestones = parsed.lde?.milestones || parsed.lde?.weeks || {};
-      state.alde = Object.assign({ milestones: {} }, parsed.alde || {});
+      state.lde.reflections = parsed.lde?.reflections || {};
+      state.alde = Object.assign({ milestones: {}, reflections: {} }, parsed.alde || {});
       state.alde.milestones = parsed.alde?.milestones || parsed.alde?.weeks || {};
+      state.alde.reflections = parsed.alde?.reflections || {};
       state.notifications = Object.assign({ weekly: true, journal: true, milestones: true }, parsed.notifications || {});
     }
   } catch(e) { console.warn('State load error', e); }
@@ -3014,7 +3060,24 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   }
 
   const refEl = document.getElementById('zone-reflections');
-  refEl.innerHTML = (milestone.reflections || []).map(r => '<div class="zone-reflection-item">' + escHtml(r) + '</div>').join('');
+  const savedRefs = (state[programKey].reflections || {})[milestoneId] || [];
+  refEl.innerHTML = (milestone.reflections || []).map((r, i) => {
+    const saved = savedRefs[i] || '';
+    const wc = saved.trim() ? saved.trim().split(/\s+/).length : 0;
+    const wcClass = wc >= 40 ? ' good' : '';
+    return `<div class="zone-reflection-item">
+      <div class="zone-reflection-prompt">${escHtml(r)}</div>
+      <textarea class="zone-reflection-textarea" data-idx="${i}" placeholder="Write your response here..." oninput="updateReflectionWordCount(this)">${escHtml(saved)}</textarea>
+      <div class="zone-reflection-meta">
+        <span class="zone-reflection-wordcount${wcClass}" id="zone-wc-${i}">${wc > 0 ? wc + ' words' : 'Start writing…'}</span>
+      </div>
+    </div>`;
+  }).join('');
+  // Reset assessment panel
+  const assessEl = document.getElementById('zone-assessment');
+  if (assessEl) { assessEl.classList.remove('visible'); assessEl.style.display = 'none'; }
+  const savedNote = document.getElementById('zone-reflect-saved-note');
+  if (savedNote) savedNote.classList.remove('show');
 
   document.getElementById('zone-deliverable').textContent = milestone.deliverable || '';
 
@@ -3054,6 +3117,133 @@ function closeZoneModal() {
   if (zonePSystem) { zonePSystem.stop(); zonePSystem = null; }
   if (zoneModalProgram === 'lde') refreshLDE();
   if (zoneModalProgram === 'alde') refreshALDE();
+}
+
+function updateReflectionWordCount(ta) {
+  const idx = ta.dataset.idx;
+  const wc = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+  const el = document.getElementById('zone-wc-' + idx);
+  if (!el) return;
+  el.textContent = wc > 0 ? wc + ' words' : 'Start writing…';
+  el.className = 'zone-reflection-wordcount' + (wc >= 40 ? ' good' : '');
+}
+
+function saveModalReflections() {
+  if (!zoneModalProgram || !zoneModalMilestoneId) return;
+  const textareas = document.querySelectorAll('.zone-reflection-textarea');
+  const responses = Array.from(textareas).map(ta => ta.value);
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  state[zoneModalProgram].reflections[zoneModalMilestoneId] = responses;
+  saveState();
+  const note = document.getElementById('zone-reflect-saved-note');
+  if (note) { note.classList.add('show'); setTimeout(() => note.classList.remove('show'), 2000); }
+}
+
+function assessModalReflections() {
+  saveModalReflections();
+  const textareas = document.querySelectorAll('.zone-reflection-textarea');
+  const responses = Array.from(textareas).map(ta => ta.value.trim());
+  const assessEl = document.getElementById('zone-assessment');
+  if (!assessEl) return;
+
+  // Score each response
+  const scores = responses.map(r => scoreReflection(r));
+  const avgScore = scores.reduce((a, b) => a + b, 0) / Math.max(scores.length, 1);
+  const roundedAvg = Math.round(avgScore);
+
+  // Determine badge
+  const badges = [
+    { min: 0, label: 'Surface Reflection', cls: 'badge-surface', desc: 'Your responses are brief. Leadership growth lives in the details — push yourself to go deeper on each prompt.' },
+    { min: 1.5, label: 'Developing Depth', cls: 'badge-developing', desc: 'You\'re engaging but holding back. Name specific people, situations, and decisions. The more concrete, the more useful.' },
+    { min: 2.5, label: 'Strong Insight', cls: 'badge-strong', desc: 'Solid reflection. You\'re showing self-awareness and specificity. Look for places where you can name an action you\'ll take.' },
+    { min: 3.5, label: 'Deep Work', cls: 'badge-deep', desc: 'Excellent. You\'re going beyond the surface — naming real situations, owning outcomes, and thinking in actions. This is what growth looks like.' },
+    { min: 4.5, label: 'Campfire Gold', cls: 'badge-gold', desc: 'Outstanding reflection. You demonstrate genuine self-examination, specific examples, and clear commitment to change. Rare work.' }
+  ];
+  const badge = [...badges].reverse().find(b => avgScore >= b.min) || badges[0];
+
+  document.getElementById('zone-assessment-badge').textContent = badge.label;
+  document.getElementById('zone-assessment-badge').className = 'zone-assessment-badge ' + badge.cls;
+  document.getElementById('zone-assessment-overall').textContent = badge.desc;
+
+  // Per-prompt feedback
+  const promptFeedback = responses.map((r, i) => {
+    const s = scores[i];
+    const feedback = getPromptFeedback(r, s, i);
+    const pct = Math.round((s / 5) * 100);
+    return `<div class="zone-assessment-prompt-row">
+      <div class="zone-assessment-prompt-label">Prompt ${i + 1} — ${getScoreLabel(s)}</div>
+      <div class="zone-assessment-score-bar"><div class="zone-assessment-score-fill" style="width:${pct}%"></div></div>
+      <div class="zone-assessment-prompt-feedback">${escHtml(feedback)}</div>
+    </div>`;
+  });
+
+  document.getElementById('zone-assessment-prompts').innerHTML = promptFeedback.join('');
+  assessEl.style.display = 'flex';
+  assessEl.classList.add('visible');
+  assessEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function scoreReflection(text) {
+  if (!text || text.length < 5) return 0;
+  const words = text.trim().split(/\s+/);
+  const wc = words.length;
+  let score = 0;
+
+  // Length score (0–2 pts)
+  if (wc >= 120) score += 2;
+  else if (wc >= 70) score += 1.5;
+  else if (wc >= 40) score += 1;
+  else if (wc >= 20) score += 0.5;
+
+  // Specificity signals: names, numbers, quotes (0–1 pt)
+  const specificitySignals = (text.match(/\b[A-Z][a-z]+\b/g) || []).length
+    + (text.match(/\b\d+\b/g) || []).length
+    + (text.match(/["']/g) || []).length;
+  score += Math.min(specificitySignals * 0.15, 1);
+
+  // Ownership language (0–1 pt)
+  const ownershipWords = ['i will', 'i am', 'i have', 'i realize', 'i need', 'i want', 'my team', 'my role', 'i commit', 'i struggle', 'i noticed', 'i learned'];
+  const ownershipHits = ownershipWords.filter(w => text.toLowerCase().includes(w)).length;
+  score += Math.min(ownershipHits * 0.4, 1);
+
+  // Depth/reasoning language (0–1 pt)
+  const depthWords = ['because', 'however', 'but ', 'although', 'specifically', 'for example', 'in contrast', 'as a result', 'which means', 'this led', 'the reason', 'what i'];
+  const depthHits = depthWords.filter(w => text.toLowerCase().includes(w)).length;
+  score += Math.min(depthHits * 0.35, 1);
+
+  return Math.min(Math.round(score * 10) / 10, 5);
+}
+
+function getScoreLabel(s) {
+  if (s >= 4.5) return 'Campfire Gold';
+  if (s >= 3.5) return 'Deep Work';
+  if (s >= 2.5) return 'Strong';
+  if (s >= 1.5) return 'Developing';
+  return 'Surface';
+}
+
+function getPromptFeedback(text, score, idx) {
+  if (!text || text.length < 5) return 'No response yet. This prompt is worth sitting with — even a few sentences of honest thinking will move you forward.';
+  const wc = text.trim().split(/\s+/).length;
+  const hasSpecific = /\b[A-Z][a-z]{2,}\b/.test(text);
+  const hasOwnership = /\b(I will|I am|I realize|I commit|I need)\b/i.test(text);
+  const hasDepth = /\b(because|however|although|specifically|for example)\b/i.test(text);
+
+  if (score >= 4.5) return 'Exceptional. You named specifics, owned your role, and showed reasoning. This is exactly the quality of reflection that produces real change.';
+  if (score >= 3.5) {
+    if (!hasOwnership) return 'Strong and detailed. To push it further: end with a concrete commitment — "I will ___" — so this reflection produces an action.';
+    return 'Deep, specific, and honest. This response shows you\'re doing the real work of self-examination. Keep this standard.';
+  }
+  if (score >= 2.5) {
+    if (!hasSpecific) return 'Good engagement. Make it more powerful by naming a specific person or situation — vague reflections produce vague growth.';
+    if (!hasDepth) return 'Good. Add one layer of "because" — explain the why behind what you noticed. That\'s where insight lives.';
+    return 'Solid response. Consider adding what you\'ll actually do differently as a result of this insight.';
+  }
+  if (score >= 1.5) {
+    if (wc < 30) return 'You\'re starting to engage but this needs more. Write 2–3 more sentences: what specifically happened, and what does it mean for how you lead?';
+    return 'Developing. You\'re touching the surface — go one level deeper. Ask yourself: "Why does this matter, and what will I do about it?"';
+  }
+  return 'Brief response. Leadership journals aren\'t graded — they\'re for you. Try writing for 3 minutes without stopping and see what comes out.';
 }
 
 function toggleMilestoneFromModal() {
