@@ -284,7 +284,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .zone-modal { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: stretch; opacity: 0; pointer-events: none; transform: scale(1.06); transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
 .zone-modal.open { opacity: 1; pointer-events: all; transform: scale(1); }
 .zone-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; }
-.zone-modal-inner { position: relative; z-index: 10; width: 100%; max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; overflow-y: auto; padding: 36px 48px 72px; gap: 28px; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 100%); backdrop-filter: blur(2px); border-right: 1px solid rgba(255,255,255,0.05); border-left: 1px solid rgba(255,255,255,0.05); }
+.zone-modal-inner { position: relative; z-index: 10; width: 100%; max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; overflow-y: auto; padding: 36px 60px 72px; gap: 28px; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 100%); backdrop-filter: blur(2px); border-right: 1px solid rgba(255,255,255,0.05); border-left: 1px solid rgba(255,255,255,0.05); }
 .zone-close { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: var(--text-secondary); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: "Inter", sans-serif; font-weight: 500; align-self: flex-start; transition: all 0.2s; letter-spacing: 0.3px; }
 .zone-close:hover { background: rgba(255,255,255,0.14); color: var(--text-primary); }
 .zone-geo-label { font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); opacity: 0.8; }
@@ -499,6 +499,61 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .ex-video-iframe-wrap.r169 { aspect-ratio: 16/9; }
 .ex-video-iframe-wrap.r916 { aspect-ratio: 9/16; max-width: 260px; }
 .ex-video-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+/* Framework rich sections */
+.zone-fw-section { margin-bottom: 14px; }
+.zone-fw-section:last-of-type { margin-bottom: 4px; }
+.zone-fw-section-label { font-size: 9px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); opacity: 0.75; margin-bottom: 6px; }
+.zone-fw-desc { font-size: 13.5px; color: rgba(255,255,255,0.75); line-height: 1.72; padding: 0; }
+/* Assessment block after resources */
+.zone-assess-block { background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.2); border-radius: 16px; padding: 28px 32px; }
+.zone-assess-title { font-family: "Playfair Display", serif; font-size: 1.25rem; color: rgba(255,255,255,0.92); margin-bottom: 6px; }
+.zone-assess-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 24px; line-height: 1.5; }
+.zone-assess-q { margin-bottom: 22px; }
+.zone-assess-q-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.6; margin-bottom: 12px; }
+.zone-assess-options { display: flex; flex-direction: column; gap: 7px; }
+.zone-assess-opt { padding: 11px 15px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.72); font-size: 13px; font-family: "Inter", sans-serif; cursor: pointer; text-align: left; line-height: 1.45; transition: all 0.15s; width: 100%; }
+.zone-assess-opt:hover:not([disabled]) { border-color: rgba(167,139,250,0.5); background: rgba(167,139,250,0.08); color: rgba(255,255,255,0.92); }
+.zone-assess-opt.ao-correct { border-color: rgba(52,211,153,0.8); background: rgba(52,211,153,0.1); color: rgba(255,255,255,0.95); }
+.zone-assess-opt.ao-wrong { border-color: rgba(251,113,133,0.5); background: rgba(251,113,133,0.07); color: rgba(255,255,255,0.6); }
+.zone-assess-fb { margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; padding: 10px 14px; border-radius: 8px; display: none; }
+.zone-assess-fb.show { display: block; animation: fadeSlideUp 0.3s ease; }
+.zone-assess-fb.af-correct { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25); }
+.zone-assess-fb.af-wrong { background: rgba(251,113,133,0.08); border: 1px solid rgba(251,113,133,0.2); }
+.zone-assess-score { text-align: center; padding: 20px; display: none; }
+.zone-assess-score.show { display: block; animation: fadeSlideUp 0.4s ease; }
+.zone-assess-score-num { font-size: 3rem; font-weight: 800; color: var(--accent); }
+.zone-assess-score-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+/* 9-Box Grid Exercise */
+.zone-exercise.ex-9box { background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.2); }
+.zone-exercise.ex-9box .zone-exercise-eyebrow { color: rgba(99,102,241,0.9); }
+.zone-exercise.ex-9box .zone-exercise-saved { color: rgba(99,102,241,0.9); }
+.ex-9box-container { overflow-x: auto; margin-top: 4px; }
+.ex-9box-layout { display: flex; gap: 10px; min-width: 520px; }
+.ex-9box-y-axis { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); white-space: nowrap; display: flex; align-items: center; }
+.ex-9box-main { flex: 1; }
+.ex-9box-top-row { display: grid; grid-template-columns: 38px 1fr 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+.ex-9box-col-hdr { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.32); text-align: center; padding-bottom: 3px; }
+.ex-9box-grid-rows { display: flex; flex-direction: column; gap: 4px; }
+.ex-9box-row { display: grid; grid-template-columns: 38px 1fr 1fr 1fr; gap: 4px; }
+.ex-9box-row-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.32); display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; text-align: right; line-height: 1.2; }
+.ex-9box-cell { border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.ex-9box-cell-title { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.3; }
+.ex-9box-cell-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: rgba(255,255,255,0.85); font-family: "Inter", sans-serif; font-size: 12px; padding: 6px 8px; resize: none; height: 64px; outline: none; flex: 1; transition: border-color 0.2s; width: 100%; box-sizing: border-box; line-height: 1.5; }
+.ex-9box-cell-input:focus { border-color: rgba(255,255,255,0.3); }
+.ex-9box-cell-input::placeholder { color: rgba(255,255,255,0.2); font-size: 11px; }
+.ex-9box-x-axis { font-size: 9px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); text-align: center; padding: 8px 0 0 48px; }
+.ex-9box-cell.b-green { background: rgba(52,211,153,0.14); border: 1px solid rgba(52,211,153,0.3); }
+.ex-9box-cell.b-green .ex-9box-cell-title { color: #34D399; }
+.ex-9box-cell.b-green-s { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.18); }
+.ex-9box-cell.b-green-s .ex-9box-cell-title { color: rgba(52,211,153,0.8); }
+.ex-9box-cell.b-amber { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.24); }
+.ex-9box-cell.b-amber .ex-9box-cell-title { color: rgba(251,191,36,0.9); }
+.ex-9box-cell.b-amber-s { background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.14); }
+.ex-9box-cell.b-amber-s .ex-9box-cell-title { color: rgba(251,191,36,0.7); }
+.ex-9box-cell.b-red { background: rgba(251,113,133,0.12); border: 1px solid rgba(251,113,133,0.28); }
+.ex-9box-cell.b-red .ex-9box-cell-title { color: rgba(251,113,133,0.9); }
+.ex-9box-cell.b-red-s { background: rgba(251,113,133,0.06); border: 1px solid rgba(251,113,133,0.16); }
+.ex-9box-cell.b-red-s .ex-9box-cell-title { color: rgba(251,113,133,0.75); }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -1001,6 +1056,10 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
         <div class="zone-block-label">&#127775; Learning Pyramid Resources</div>
         <div class="zone-resources" id="zone-resources"></div>
       </div>
+      <div class="zone-block" id="zone-assess-block" style="display:none">
+        <div class="zone-block-label">&#129504; Knowledge Check</div>
+        <div id="zone-assess"></div>
+      </div>
       <div class="zone-block">
         <div class="zone-block-label">&#128230; Your Deliverable</div>
         <div class="zone-deliverable" id="zone-deliverable"></div>
@@ -1102,9 +1161,9 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'Honest Audit', prompt: 'What assumptions are you already making about this team? Write them down — who you think is the strongest, who you think is struggling, what you think needs to change. Be honest. These are the lenses that will distort what you see until you name them.', placeholder: 'My current assumptions about this team:\n\n1.\n2.\n3.\n\nWhich of these might be wrong?', rows: 7 }
         ],
         frameworks: [
-          'The 4-Phase Cognitive Onboarding Model (Understand System → Understand Customer → Understand Levers → Drive Outcomes)',
-          'New Leader Assimilation (Watkins): Secure early wins without breaking what\'s working',
-          'The 5 Conversations: Purpose, Priorities, People, Process, Presence'
+          { name: 'The 4-Phase Cognitive Onboarding Model', what: 'New employees move through four cognitive phases: Understand the System (how things work), Understand the Customer (who you serve), Understand the Levers (what actually moves the metrics), and Drive Outcomes (now you can contribute at full power).', why: 'Most managers rush new reports to Phase 4 before they\'ve built the foundation. The result: work that misses the context, decisions that don\'t land, and frustration on both sides.', how: 'For each direct report, ask yourself: what phase are they actually in? Then calibrate what you ask of them accordingly. Don\'t ask someone in Phase 1 to drive outcomes — they don\'t have the map yet.' },
+          { name: 'New Leader Assimilation (Watkins)', what: 'The First 90 Days framework: before you can lead, you must learn. New managers who move to action before building situational understanding create invisible resistance.', why: 'Leaders who change things too fast before understanding why they exist trigger defensiveness. People stop sharing information. Problems go underground. You lose the very intelligence you need to lead well.', how: 'In your first 30 days: listen 80% of the time, ask more than you answer, and hold your opinions about what needs to change. You\'re building a map. You can act once you understand the territory.' },
+          { name: 'The 5 Conversations', what: 'Five specific conversations every new manager must have with each direct report in the first 30 days: Purpose (why their work matters), Priorities (what to focus on first), People (the key relationships), Process (how decisions get made), and Presence (how you show up as their manager).', why: 'Most leaders have none of these conversations explicitly. They assume shared understanding that doesn\'t exist. That misalignment surfaces as performance and morale problems months later — by which point it feels personal.', how: 'Don\'t do all 5 at once. Spread them across your first 5 1:1s — one per meeting, the whole meeting devoted to that conversation. It signals that you\'re investing, not just onboarding.' }
         ],
         reflections: [
           'What assumptions are you walking in with about this team? Which ones might be wrong?',
@@ -1112,6 +1171,11 @@ const MGMT_PHASES = [
           'What does "starting a working relationship" mean to you vs what it might mean to your reports?'
         ],
         deliverable: 'A 30/60/90-day listening plan — with the 5 questions you will ask every team member in your first 1:1, and what you are listening for.',
+        assessment: [
+          { q: 'In the 4-Phase Cognitive Onboarding Model, what is the biggest mistake new managers make with their team?', options: [{ text: 'Not scheduling enough 1:1s in the first week' }, { text: 'Rushing people to Phase 4 before they\'ve built the foundation of phases 1–3', feedback: 'Exactly. Phase 4 is "Drive Outcomes" — but you can\'t drive outcomes without understanding the system, customer, and levers first. Most managers skip straight to "deliver" and create frustrating misalignment.' }, { text: 'Being too friendly before establishing authority' }, { text: 'Sharing their strategy before listening' }], correct: 1 },
+          { q: 'According to Watkins\' First 90 Days framework, what should dominate a new leader\'s first 30 days?', options: [{ text: 'Announcing changes to establish authority early' }, { text: 'Identifying the weakest team members to address quickly' }, { text: 'Listening and learning — asking more than answering, building situational understanding before acting', feedback: 'Right. The discipline is delaying action until you understand the system you\'re in. Leaders who move too fast create invisible resistance before they\'ve built the credibility to lead through it.' }, { text: 'Shipping a quick win to prove your value' }], correct: 2 },
+          { q: 'A direct report you just inherited tells you they applied for your role. What\'s the highest-value response?', options: [{ text: 'Thank them and move on to keep the relationship smooth' }, { text: 'Reassure them you\'re not threatened' }, { text: 'Get curious — ask what drew them to the role and what they\'re hoping to grow into', feedback: 'They took a risk telling you directly. The highest-value move is to meet that trust with genuine curiosity. This becomes your most important relationship if you handle it well.' }, { text: 'Document it with HR to protect yourself' }], correct: 2 }
+        ],
         resources: [
           { tier: 'watch', label: 'The First 90 Days — Michael Watkins', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc', desc: 'The definitive framework for transitioning into a new leadership role.' },
           { tier: 'read', label: 'Property Meld 90-Day Cognitive Onboarding Map', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260', desc: 'The 4-phase cognitive model Meld uses for new joiners.' },
@@ -1144,9 +1208,9 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'Trust Audit', prompt: 'Pick one person on your team where trust feels unsteady — either you don\'t fully trust them, or you sense they don\'t fully trust you. Write what you actually know about why that gap exists, and one specific behavior you\'ve displayed that may have contributed to it.', placeholder: 'The person: \n\nWhat I observe about the trust gap:\n\nOne behavior of mine that may have contributed:\n\nOne thing I will do differently:', rows: 7 }
         ],
         frameworks: [
-          'The Trust Equation (Maister): (Credibility + Reliability + Intimacy) / Self-Orientation',
-          'BRAVING Inventory (Brown): Boundaries, Reliability, Accountability, Vault, Integrity, Non-judgment, Generosity',
-          'Circle of Safety (Sinek): Leaders set the conditions — people decide whether to follow'
+          { name: 'The Trust Equation', what: 'Trust = (Credibility + Reliability + Intimacy) ÷ Self-Orientation. The denominator is the hidden variable most leaders never examine.', why: 'You can be highly credible, consistently reliable, and build real intimacy — and still destroy trust if everything is filtered through how you look, what you get, or protecting your position. Self-orientation is the silent trust killer.', how: 'For your most important relationships, rate yourself 1–5 on each component. Your lowest score is your highest leverage point. For most new managers, Self-Orientation is the one to focus on first.' },
+          { name: 'BRAVING Inventory (Brown)', what: 'Seven specific behaviors that build trust: Boundaries (you say what\'s ok and not ok), Reliability (you do what you say, every time), Accountability (you own your mistakes), Vault (you keep confidences), Integrity (you choose courage over comfort), Non-judgment (they can struggle without your evaluation), Generosity (you extend the most generous interpretation of their intent).', why: 'Trust isn\'t one thing — it\'s a composite of observable behaviors. When trust breaks, it breaks on exactly one of these seven. Knowing which one tells you what to repair — specifically.', how: 'Rate yourself on each of the seven with each direct report in mind. Find the one you\'re weakest on. Practice that one deliberately for 30 days before moving to the next.' },
+          { name: 'Circle of Safety (Sinek)', what: 'Great leaders extend a "Circle of Safety" around their people — a protected zone where team members can take risks, admit problems, and ask for help without fear of political or social consequences.', why: 'When people spend energy protecting themselves from each other, none of that energy goes to the mission. The circle isn\'t soft — it\'s the precondition for all real performance, candid communication, and team accountability.', how: 'Ask yourself one honest question: do the people on my team feel safe bringing me bad news? If they wait, soften it, or hide it — the circle isn\'t closed yet. That\'s your signal.' }
         ],
         reflections: [
           'Where do you currently have high trust with your team? What specific behaviors built it?',
@@ -1154,6 +1218,11 @@ const MGMT_PHASES = [
           'What does "earned authority" mean to you, and how long do you think it takes to earn it?'
         ],
         deliverable: 'A trust-building commitment document for your first 90 days — three specific behaviors you will practice consistently, and how you will know they\'re working.',
+        assessment: [
+          { q: 'In the Trust Equation, which factor most commonly undermines trust in new managers — even when they\'re highly competent?', options: [{ text: 'Low credibility — they don\'t know enough yet' }, { text: 'Low reliability — they miss commitments', feedback: 'Reliability matters, but it\'s rarely the primary trust killer for new managers who genuinely care.' }, { text: 'High self-orientation — centering their own performance, reputation, or appearance', feedback: 'Exactly. Self-orientation is the denominator — it divides all the good things. A manager who is credible and reliable but filters everything through "how does this make me look?" destroys trust faster than incompetence.' }, { text: 'Low intimacy — they don\'t share enough about themselves' }], correct: 2 },
+          { q: 'The BRAVING inventory identifies 7 behaviors that build trust. Which one do most new managers violate first — often without realizing it?', options: [{ text: 'Vault — sharing confidences from one team member\'s 1:1 in conversations with another, even casually', feedback: 'Yes. "Did you know that Sarah is frustrated about X?" seems harmless. It isn\'t. People track who tells them what about others — and they learn quickly whether their own conversations are safe with you.' }, { text: 'Non-judgment — evaluating people\'s struggles instead of listening' }, { text: 'Boundaries — saying yes when you mean no' }, { text: 'Generosity — assuming negative intent' }], correct: 0 },
+          { q: 'What does Simon Sinek\'s "Circle of Safety" tell us about why some teams withhold bad news from their manager?', options: [{ text: 'The team doesn\'t respect the manager\'s authority yet' }, { text: 'The team is disorganized and doesn\'t track problems well' }, { text: 'The manager hasn\'t created conditions where delivering bad news feels safe — people protect themselves first', feedback: 'Correct. When people fear consequences for honesty — even unintentional consequences — they manage information. Silence isn\'t loyalty. It\'s self-protection. The manager\'s job is to make truth-telling safer than concealment.' }, { text: 'The team is waiting to see if the problem resolves itself' }], correct: 2 }
+        ],
         resources: [
           { tier: 'watch', label: 'Brené Brown: The Anatomy of Trust (BRAVING)', url: 'https://brenebrown.com/videos/anatomy-trust-video/', desc: 'The BRAVING inventory — what trust actually requires.' },
           { tier: 'watch', label: 'Simon Sinek: Why Leaders Eat Last', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y', desc: 'The Circle of Safety and what makes people feel safe enough to follow.' },
@@ -1173,6 +1242,7 @@ const MGMT_PHASES = [
           { type: 'video', platform: 'youtube', videoId: 'rrkrvAUbU9Y', label: 'Watch This First', title: 'The Puzzle of Motivation — Daniel Pink', duration: '18 min' },
           { text: 'Review the Meld People Leader and IC Growth Path with your manager or People Ops', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/299731533' },
           { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: '9box', label: '9-Box Team Map', prompt: 'Place each team member in the grid', description: 'Be honest — this is a private tool for you, not a label for them. Use first names or initials. The point is to see your team\'s composition clearly so you can invest your development attention where it actually matters.'},
           { type: 'scenario', label: 'Situation Lab', prompt: 'What do you do?', scenario: 'Your top performer tells you in a 1:1: "I love the work, but I\'ve been doing this role for 2 years and I feel like I\'m not growing anymore. I\'m starting to get calls from other companies." They\'re not threatening to leave — they\'re being honest with you.',
             options: [
               { text: 'Reassure them they\'re valued and bring it up in the next performance review.', quality: 'miss', feedback: 'Deferring to a future review is the most common — and most costly — management mistake. They just told you they\'re actively considering leaving. The next action needs to happen this week, not in Q4.' },
@@ -1184,9 +1254,9 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'Development Audit', prompt: 'Pick your most important direct report. Write what you actually know about what they care about in their career right now — not what\'s in their job description, but what they want to build, where they want to go, and what\'s getting in the way. Be honest about the gaps in your knowledge.', placeholder: 'What I know about what [name] wants:\n\nWhat I don\'t actually know yet:\n\nHow I found out (or: I assumed it because...):\n\nWhat I will ask them this week:', rows: 7 }
         ],
         frameworks: [
-          'Self-Determination Theory (Deci & Ryan): Autonomy, Mastery, Purpose as the core human motivators',
-          'Individual Development Plan (IDP): Current role strengths + development gaps + growth goals + resources + timeline',
-          '9-Box Performance/Potential Grid: Where is each person now, and where are they going?'
+          { name: 'Self-Determination Theory', what: 'Three innate human needs drive intrinsic motivation: Autonomy (I choose this), Mastery (I\'m getting better), and Purpose (this matters). When all three are present, external rewards become secondary.', why: 'Most organizations manage through extrinsic rewards — pay, titles, bonuses. The research is clear: these work for simple tasks and actively demotivate complex work. Leaders who only use extrinsic levers will always have a retention problem, no matter what they pay.', how: 'For each direct report: which of the three is weakest right now? Autonomy — are they micromanaged? Mastery — are they growing? Purpose — do they know why their work matters? The weakest is your immediate development priority.' },
+          { name: 'Individual Development Plan (IDP)', what: 'A living document that captures where someone is growing, what they\'re building, and what support they need. Not a performance document — a forward-looking growth contract between you and your direct report.', why: 'Without an IDP, development conversations are episodic, forgettable, and feel generic. Strong performers don\'t leave companies — they leave managers who don\'t have a credible plan for their growth.', how: 'Start with what they want, not what you think they need. Build around 2 areas maximum. Connect each area to a real, near-term opportunity — not just a book recommendation or training. Review it every quarter, not once a year.' },
+          { name: '9-Box Performance / Potential Grid', what: 'A 3×3 grid mapping current performance (low/medium/high) against growth potential (low/medium/high) to understand where to invest your development attention across the team.', why: 'Different people need fundamentally different things from their manager. A high performer with high potential needs different challenges and visibility than a solid contributor in steady state. The grid makes invisible decisions explicit.', how: 'Use the exercise above. Fill in your team honestly. Then ask: where is my attention actually going vs. where it should go? Most managers over-invest in the extremes (Stars + At-Risk) and under-invest in the middle — which is where most of the team lives.' }
         ],
         reflections: [
           'What do you know about each team member\'s career goals? What surprised you from the conversations?',
@@ -1233,10 +1303,10 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'The Questions You Avoid', prompt: 'Write 3 questions you\'ve never asked a direct report but probably should. Not status questions. Questions that would actually change how you manage them — about what they need from you, what they\'re afraid to say, or what\'s getting in their way.', placeholder: 'Question 1: (and why I haven\'t asked it)\n\nQuestion 2:\n\nQuestion 3:', rows: 6 }
         ],
         frameworks: [
-          'The Meld 1:1 Structure: Start with Iteration (5 min) → Focus on Outcomes (10-15 min) → Coaching & Support (10-15 min) → Growth & Development (5-10 min) → Commitments & Takeaways (2-5 min)',
-          'The 70/30 Rule: Listen 70% of the time. Talk 30%. Your job in a 1:1 is to create space, not fill it.',
-          'Don\'t Solve Everything: Sometimes space to think is enough. Resist the urge to immediately fix what they bring.',
-          'Pattern Tracking: Review last week\'s notes before every 1:1. Coaching themes only appear when you look across time, not just at the moment.'
+          { name: 'The Meld 1:1 Structure', what: 'Five sections that build on each other: Iteration (5 min — what did we commit to last time?) → Outcomes (10-15 min — their work, their words) → Coaching & Support (10-15 min — what\'s hard?) → Growth (5-10 min — where are they going?) → Commitments (2-5 min — what\'s the one thing?)', why: 'Without structure, 1:1s default to status updates. Status updates are the lowest-value use of your time together. Structure is what turns the meeting from a report to a relationship.', how: 'Set up the 5-section template in Lattice before your next 1:1. Time each section with a phone timer if needed. After 3 reps it becomes natural. The goal is for them to eventually run the meeting themselves.' },
+          { name: 'The 70/30 Rule', what: 'In a 1:1, you should speak 30% of the time and listen 70%. Your job is to create space — not fill it. Every question you ask should invite more words from them, not fewer.', why: 'The moment a manager starts talking more than their direct report in a 1:1, the meeting has flipped. Now it\'s the manager\'s meeting, not theirs. What you lose is the real signal — what\'s actually happening with them.', how: 'Try one 1:1 where you commit to not speaking for the first 5 minutes. Ask one opening question, then wait. The silence is uncomfortable — but it\'s where the real conversation begins.' },
+          { name: 'Don\'t Solve Everything', what: 'When a direct report brings you a problem, the instinct is to fix it. The better move is almost always to ask: "What options are you considering?" Let them work it through before you weigh in.', why: 'Every time you solve their problem, you train them to bring you more problems. You become the bottleneck. Worse — you deny them the growth that comes from solving it themselves.', how: 'Keep a sticky note near your laptop for 1:1s that says "What options are you considering?" Use it every time the urge to solve strikes. You can still offer your view — but only after they\'ve thought it through.' },
+          { name: 'Pattern Tracking', what: 'Review the last 3 sets of notes for a direct report before every 1:1. Coaching themes — the things someone is working through — only become visible when you look across time, not just at the current moment.', why: 'Without longitudinal notes, every 1:1 starts from scratch. You miss the through-lines. You can\'t help someone grow through a challenge if you don\'t notice the challenge repeating.', how: 'Use Granola to capture notes automatically. After each 1:1, spend 2 minutes writing one sentence: "The thing I noticed today that I want to track." In 3 months, those sentences are your coaching map.' }
         ],
         frameworkPrompts: [
           'Open Lattice right now. Create the 5-section template for your next 1:1. Estimate your time allocation for each section.',
@@ -1267,11 +1337,28 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Read the Meld Excellence in Outcomes — Annual Performance Reviews guide (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2373091333/Excellence+in+Outcomes+-+Annual+Performance+ReviewsPowered+by+Lattice' },
-          'Understand the Meld review cadence: Annual reviews in February + Quarterly Performance & Development Snapshots throughout the year — both in Lattice',
-          'Review the 7 evaluation dimensions: Role Domain Competencies, Execution of Metrics/KPIs, Customer-Centric Decision Making, Customer Insight & Knowledge, Communication, Teamwork, Grit',
-          'Identify the "surprise risk" on your team — which team member might be confused about how their performance is perceived right now?',
-          'Run a mock Performance Calibration Sync for one direct report: write their self-assessment alongside your manager assessment — where do they diverge and why?'
+          { text: 'Read the Meld Excellence in Outcomes — Annual Performance Reviews guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2373091333/Excellence+in+Outcomes+-+Annual+Performance+ReviewsPowered+by+Lattice' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'build', label: 'Pre-Review Prep', prompt: 'Write your assessment of one direct report across the 7 Meld dimensions', description: 'Do this before looking at anything they\'ve submitted. Write what YOU actually observe. The goal is to find the gaps between your perception and theirs.',
+            fields: [
+              { key: 'd1', label: 'Role Domain Competencies', placeholder: 'How well do they demonstrate the core skills their role requires?' },
+              { key: 'd2', label: 'Execution of Metrics / KPIs', placeholder: 'Are they hitting their targets? What\'s the pattern?' },
+              { key: 'd3', label: 'Customer-Centric Decision Making', placeholder: 'Do they put the customer at the center of tradeoffs?' },
+              { key: 'd4', label: 'Communication', placeholder: 'How do they communicate across teams — written, verbal, proactive?' },
+              { key: 'd5', label: 'Teamwork & Collaboration', placeholder: 'Do they make the people around them better?' },
+              { key: 'd6', label: 'Grit', placeholder: 'How do they respond when things are hard, ambiguous, or behind?' },
+              { key: 'd7', label: 'Biggest Strength + Biggest Development Area', placeholder: 'One of each — be specific, not general' }
+            ]
+          },
+          { type: 'scenario', label: 'Calibration Lab', prompt: 'How do you handle this?', scenario: 'You\'re running a review calibration. The Melder rated themselves 4/5 across the board. Your honest assessment is 3/5 in two key areas. They\'ve been working extremely hard and genuinely believe they\'re performing well.',
+            options: [
+              { text: 'Round up your scores to avoid the awkward gap — they have been working hard.', quality: 'miss', feedback: 'Inflating scores to manage discomfort is the most common review failure. You\'re not protecting them — you\'re denying them the information they need to grow. The kindest thing you can do is be precise and clear.' },
+              { text: 'Open with their self-assessment first. Ask them to walk you through the 3/5 areas before you share your view.', quality: 'best', feedback: 'Starting with their perspective first does two things: it shows respect, and it surfaces whether the gap is about awareness, information, or standards. Often the conversation that follows is the most valuable one they\'ve had all year.' },
+              { text: 'Share your scores directly and explain your reasoning right away.', quality: 'ok', feedback: 'Directness is right, but leading with your scores before hearing theirs closes the conversation prematurely. The calibration sync is designed to create alignment — and alignment requires both people to surface their view before reconciling.' },
+              { text: 'Acknowledge the hard work first, then gently lower their expectations.', quality: 'ok', feedback: '"Gently lower expectations" is vague and often lands as softening the truth to the point of meaninglessness. Acknowledge the effort specifically, then be clear about the gap specifically. Vagueness protects no one.' }
+            ]
+          },
+          { type: 'reflect', label: 'The Surprise Risk Audit', prompt: 'Think about each direct report. For which one is there the biggest gap between how they see their own performance and how you see it? Write what you think they believe about where they stand — then write what you actually see. If those are different, that gap is your most important conversation to have before their next review.', placeholder: 'Name:\n\nWhat I think they believe about their performance:\n\nWhat I actually observe:\n\nThe specific gap:\n\nWhen I will close it:', rows: 8 }
         ],
         frameworks: [
           'The Meld Review Cadence: Annual (February) + Quarterly Snapshots — reviews in Lattice, documentation in Paylocity',
@@ -1309,10 +1396,25 @@ const MGMT_PHASES = [
         duration: '2 hours',
         activities: [
           { text: 'Watch: "Crucial Conversations" overview — the core model for high-stakes dialogue', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY' },
-          { text: 'Read: NeuroLeadership Institute — "The Science of Feedback" (what actually helps vs what we think helps)', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/' },
-          'Practice the SBI model on a recent performance situation — write out the full Situation, Behavior, and Impact without generalizing',
-          'Map the "Coaching vs Managing vs Disciplining" distinction — write one example of each from your current team context',
-          'Draft a progressive feedback framework for your team: informal conversation → documented concern → formal PIP → separation decision'
+          { text: 'Read: NeuroLeadership Institute — "The Science of Feedback"', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'build', label: 'Write an SBI Conversation', prompt: 'Use the SBI model on a real situation from the last 30 days', description: 'Situation (when/where specifically) + Behavior (what they did, not who they are) + Impact (what it caused — on you, the team, or the outcome). No generalizations.',
+            fields: [
+              { key: 'situation', label: 'Situation — When and where, specifically', placeholder: 'e.g. "In Tuesday\'s sprint planning, when you presented the roadmap update..."' },
+              { key: 'behavior', label: 'Behavior — What they did (observable, not interpreted)', placeholder: 'e.g. "...you spoke over two team members who tried to ask clarifying questions..."' },
+              { key: 'impact', label: 'Impact — What it caused', placeholder: 'e.g. "...the team left the meeting without alignment on the priorities, and I heard afterward that two people felt dismissed."' },
+              { key: 'intent', label: 'What you\'ll say to open the conversation', placeholder: 'e.g. "I want to share something I observed because I think it\'s worth a conversation. Can we take 10 minutes?"' }
+            ]
+          },
+          { type: 'build', label: 'Your Accountability Ladder', prompt: 'Map your progressive feedback framework for this team', description: 'Having this written means you\'re consistent, not reactive. Fill in what each stage looks like in practice.',
+            fields: [
+              { key: 'stage1', label: 'Stage 1 — Informal Coaching Conversation', placeholder: 'What triggers it? What\'s the conversation? Where does it get documented (if at all)?' },
+              { key: 'stage2', label: 'Stage 2 — Documented Concern', placeholder: 'What triggers the move from Stage 1? What gets written? Where?' },
+              { key: 'stage3', label: 'Stage 3 — Formal PIP', placeholder: 'What are the specific criteria? What does success and failure look like in the PIP?' },
+              { key: 'stage4', label: 'Stage 4 — Separation Decision', placeholder: 'Who is involved? What\'s the timeline and process from your end?' }
+            ]
+          },
+          { type: 'reflect', label: 'The Avoidance Audit', prompt: 'Is there someone on your team right now who deserves a harder conversation that you\'ve been postponing? Write what you\'re avoiding saying, what you\'re afraid will happen if you say it, and what\'s actually happening to them — and the team — because you haven\'t.', placeholder: 'What I\'ve been avoiding:\n\nWhat I\'m afraid will happen:\n\nWhat\'s actually happening because I haven\'t had this conversation:\n\nWhat I\'m going to do this week:', rows: 7 }
         ],
         frameworks: [
           'SBI Model (Situation-Behavior-Impact): The cleanest way to deliver performance feedback — no labels, no generalizations, just evidence',
@@ -1343,11 +1445,27 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1920&q=90&auto=format&fit=crop',
         duration: '1 hour',
         activities: [
-          { text: 'Read the Property Meld Hello Meld PTO policy — understand the collab hours rule, the 2-hour threshold, and Paylocity', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
-          'Review how PTO requests are currently flowing on your team — are people using it? Are some never taking it? What does the pattern tell you?',
-          'Create a team coverage plan template — how will work be covered when someone is out, and who is responsible for handoffs?',
-          'Have an open conversation with your team about PTO norms — not the policy, the culture: what does "actually disconnecting" look like here?',
-          'Audit your own PTO and out-of-office habits in the last 90 days — what message does your behavior send?'
+          { text: 'Read the Property Meld Hello Meld PTO policy — the collab hours rule, the 2-hour threshold, and Paylocity', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'rate', label: 'Self-Assessment', prompt: 'In the last 90 days, how well have you personally modeled a healthy relationship with time off — taking it fully, disconnecting when out, and not sending signals that create guilt for others who do?',
+            anchors: ['I\'ve barely taken time off and I\'m always reachable', 'I take it fully and create clear permission for my team to do the same'],
+            feedbacks: [
+              'Your behavior is your team\'s permission structure. If you never disconnect, they never will either — even if you tell them to. This is worth addressing before anything else.',
+              'You\'re modeling availability over recovery. Your team is watching you to calibrate what\'s really expected — and what they see is: don\'t fully disconnect.',
+              'Somewhere in the middle — inconsistent modeling creates inconsistent norms. Decide what you want to stand for here and be deliberate about demonstrating it.',
+              'You\'re mostly walking the talk. The key question now: are you actively creating permission for your team, or just quietly taking time off yourself?',
+              'You\'re modeling recovery and trust well. The next level: are you actively advocating for people who haven\'t taken time off in a while?'
+            ]
+          },
+          { type: 'build', label: 'Your Team Coverage Plan', prompt: 'Build your team\'s coverage playbook for PTO', description: 'When someone is out, who does what? This exists so people can actually disconnect.',
+            fields: [
+              { key: 'primary', label: 'Primary Coverage Owner (for your own absences)', placeholder: 'Who handles escalations when you\'re out? What decisions can they make?' },
+              { key: 'handoff', label: 'Standard Handoff Protocol', placeholder: 'What must be documented before someone goes out? Where does it live?' },
+              { key: 'escalation', label: 'Escalation Path', placeholder: 'If something urgent happens, what\'s the chain? What qualifies as "interrupt them"?' },
+              { key: 'norm', label: 'Your Team\'s PTO Culture Commitment', placeholder: 'In one sentence: what do you want your team to believe about taking time off here?' }
+            ]
+          },
+          { type: 'reflect', label: 'The PTO Audit', prompt: 'Look at your team\'s PTO usage over the last quarter. Who hasn\'t taken time off? Who takes it but stays on Slack? What does the pattern tell you — about the culture, about how safe people feel to fully disconnect, and about what your behavior has been teaching them?', placeholder: 'What the data shows:\n\nWhat I think the culture actually is vs. what it should be:\n\nThe person I\'m most worried about:\n\nThe one thing I will change about my own behavior:', rows: 7 }
         ],
         frameworks: [
           'Results-Orientation (not hours): PTO management should be outcome-focused — the question isn\'t "are you here?" it\'s "is the work covered?"',
@@ -1400,11 +1518,10 @@ const MGMT_PHASES = [
           { type: 'reflect', label: 'Leading vs. Lagging Audit', prompt: 'List the top 3 numbers you look at most on your team. For each one: Is it a leading indicator (predicts what will happen) or lagging (confirms what already happened)? If it\'s lagging, what leading indicator would actually help you act earlier?', placeholder: 'Metric 1: ___\nLeading or lagging? Why:\nThe leading indicator I\'m missing:\n\nMetric 2: ___\nLeading or lagging? Why:\nThe leading indicator I\'m missing:\n\nMetric 3:', rows: 9 }
         ],
         frameworks: [
-          'OKR Structure: Objectives are qualitative and inspiring — they answer "where are we going?" Key Results are specific, measurable outcomes — they answer "how will we know we arrived?"',
-          'Leading vs Lagging: A lagging indicator tells you what happened (revenue closed, churn rate, NPS). A leading indicator predicts what will happen (pipeline coverage, product adoption rate, response time). Lead with leading.',
-          'Meld Pace System: <90% = Red (intervention needed) · 90–99% = Yellow (on track, monitor) · 100–110% = Green (healthy execution) · >110% = Blue (exceeded, examine why)',
-          'The Cobra Effect: A metric unmoored from the goal it was meant to measure will be gamed. British colonial India offered bounties for dead cobras — so people bred cobras for the bounty. Always ask: what happens when someone games this number?',
-          'The 10x Rule for Key Results: A Key Result should be ambitious enough that 70% achievement feels meaningful. If you\'re hitting 100% every quarter, your KRs aren\'t stretching enough.'
+          { name: 'OKR Structure', what: 'Objectives answer "where are we going?" — they\'re qualitative, inspiring, and directional. Key Results answer "how will we know we arrived?" — they\'re specific, measurable, and time-bound. One Objective, 2-4 Key Results.', why: 'Most teams confuse activities with outcomes. "Launch the new dashboard" is not a Key Result — it\'s a task. "85% of users activate the dashboard within 7 days of launch" is a Key Result. The difference is everything: one measures output, the other measures impact.', how: 'For each Key Result you write, ask: could we hit this number while the underlying goal failed? If yes, it\'s measuring the wrong thing. The best KRs are hard to game because they\'re tied directly to the outcome that matters.' },
+          { name: 'Leading vs. Lagging Indicators', what: 'A lagging indicator confirms what already happened (revenue closed, NPS score, churn rate). A leading indicator predicts what\'s about to happen (pipeline coverage, product adoption rate, time-to-first-value). Leaders who only track lagging indicators are managing by looking in the rearview mirror.', why: 'By the time a lagging indicator turns red, it\'s usually too late to course-correct in the current quarter. Leading indicators give you time to act — they\'re the early warning system of your operation.', how: 'For every lagging metric you own, ask: what behavior, 30 days upstream, predicts this number? That upstream behavior is your leading indicator. Track it weekly. Intervene early, not late.' },
+          { name: 'The Cobra Effect', what: 'A British colonial-era story: the government offered bounties for dead cobras to reduce their population. People began breeding cobras to collect the bounty — creating more cobras than before. The policy was well-intentioned and exactly counterproductive.', why: 'Any metric divorced from the goal it was meant to measure will eventually be optimized for in ways that destroy the goal. This happens in every organization, at every level. You\'re not immune. Neither is your team.', how: 'For each of your leading indicators, ask: "If someone wanted to hit this number while the underlying goal failed, how would they do it?" If you can answer that question easily, your metric has a Cobra Effect risk. Redesign it.' },
+          { name: 'Meld Pace System', what: 'OKR grading at Meld: <90% = Red (intervention needed) · 90–99% = Yellow (on track, watch) · 100–110% = Green (healthy execution) · >110% = Blue (exceeded — examine why).', why: 'Grading OKRs consistently is what makes them trustworthy. If Red gets reframed as "near-miss success," the system loses its signal. Teams stop using the grades to learn — they use them to manage perception.', how: 'The rule: call the grade what it is, honor the effort specifically, and turn every Red or Yellow into a learning question: "What did we discover that makes our next KR more accurate?" The grade is data, not judgment.' }
         ],
         frameworkPrompts: [
           'List the three numbers you look at most often on your team. For each: is it leading or lagging? If it\'s lagging, what\'s the leading indicator that predicts it?',
@@ -3942,25 +4059,28 @@ function openZoneModal(milestoneId, programKey, phaseId) {
     const savedFw = (state[programKey].reflections || {})[milestoneId + '_fw'] || [];
     fwEl.innerHTML = milestone.frameworks.map((f, i) => {
       const isApplied = !!savedFw[i];
-      let name, desc;
+      let fw;
       if (typeof f === 'string') {
         const colonIdx = f.indexOf(':');
-        name = colonIdx > -1 ? f.slice(0, colonIdx).trim() : f;
-        desc = colonIdx > -1 ? f.slice(colonIdx + 1).trim() : '';
+        fw = { name: colonIdx > -1 ? f.slice(0, colonIdx).trim() : f, what: colonIdx > -1 ? f.slice(colonIdx + 1).trim() : '', why: '', how: '' };
       } else {
-        name = f.name || '';
-        desc = f.how || '';
+        fw = { name: f.name || '', what: f.what || f.desc || '', why: f.why || '', how: f.how || '' };
       }
       const prompt = (milestone.frameworkPrompts && milestone.frameworkPrompts[i]) || 'Before your next team interaction, find one opportunity to apply this framework intentionally.';
+      const sections = [
+        fw.what ? `<div class="zone-fw-section"><div class="zone-fw-section-label">What It Is</div><div class="zone-fw-desc">${escHtml(fw.what)}</div></div>` : '',
+        fw.why  ? `<div class="zone-fw-section"><div class="zone-fw-section-label">Why It Matters</div><div class="zone-fw-desc">${escHtml(fw.why)}</div></div>` : '',
+        fw.how  ? `<div class="zone-fw-section"><div class="zone-fw-section-label">How to Use It</div><div class="zone-fw-desc">${escHtml(fw.how)}</div></div>` : ''
+      ].filter(Boolean).join('');
       return `<div class="zone-fw-card${isApplied ? ' fw-applied' : ''}" id="zone-fw-${i}">
         <div class="zone-fw-header" onclick="toggleFramework(${i})">
           <div class="zone-fw-num">${i + 1}</div>
-          <div class="zone-fw-title">${escHtml(name)}</div>
+          <div class="zone-fw-title">${escHtml(fw.name)}</div>
           <span class="zone-fw-applied-pill">Applied</span>
           <span class="zone-fw-chevron">▼</span>
         </div>
         <div class="zone-fw-body">
-          ${desc ? '<div class="zone-fw-desc">' + escHtml(desc) + '</div>' : ''}
+          ${sections}
           <div class="zone-fw-practice-label">Try This</div>
           <div class="zone-fw-practice">${escHtml(prompt)}</div>
           <div class="zone-fw-foot">
@@ -4018,6 +4138,17 @@ function openZoneModal(milestoneId, programKey, phaseId) {
     resBlock.style.display = 'block';
   } else {
     resBlock.style.display = 'none';
+  }
+
+  // Assessment block
+  const assessEl = document.getElementById('zone-assess');
+  const assessBlock = document.getElementById('zone-assess-block');
+  if (milestone.assessment && milestone.assessment.length && assessEl && assessBlock) {
+    const savedAssess = (state[programKey].reflections || {})[milestoneId + '_assess'] || {};
+    assessEl.innerHTML = renderAssessment(milestone.assessment, savedAssess, milestoneId);
+    assessBlock.style.display = 'block';
+  } else if (assessBlock) {
+    assessBlock.style.display = 'none';
   }
 
   const refEl = document.getElementById('zone-reflections');
@@ -4167,9 +4298,29 @@ function answerScenario(idx, optIdx, quality, feedback) {
 }
 function renderActivityItem(a, i, savedActs, savedExData) {
   if (typeof a === 'string' || !a.type || a.type === 'checkbox') {
-    const done = !!savedActs[i];
-    const text = typeof a === 'object' ? (a.text || '') : a;
+    const text = typeof a === 'object' ? (a.text || '') : (typeof a === 'string' ? a : '');
     const url = typeof a === 'object' ? a.url : null;
+    // Auto-upgrade Watch: activities to video cards
+    if (url && /^Watch[:\s"]/.test(text)) {
+      const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s?#]+)/);
+      const videoId = ytMatch ? ytMatch[1] : null;
+      const thumbUrl = videoId ? 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg' : '';
+      const cleanTitle = text.replace(/^Watch[:\s"]+/, '').replace(/"\s*$/, '').replace(/\s*—.*$/, '').trim();
+      const thumbInner = thumbUrl
+        ? '<img src="' + thumbUrl + '" alt="" loading="lazy" />'
+        : '<div style="width:100%;height:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box"><span style="color:rgba(255,255,255,0.35);font-size:13px;font-weight:600;text-align:center;line-height:1.5">' + escHtml(text.replace(/^Watch[:\s"]+/, '')) + '</span></div>';
+      return '<div class="zone-exercise ex-video">' +
+        '<div class="zone-exercise-eyebrow">\u25B6 Watch</div>' +
+        '<div class="ex-video-thumb r169" onclick="window.open(\'' + escHtml(url) + '\',\'_blank\')" style="cursor:pointer">' +
+        thumbInner +
+        '<div class="ex-video-overlay"></div>' +
+        '<div class="ex-video-play"><div class="ex-video-play-btn"><div class="ex-video-play-icon"></div></div></div>' +
+        (cleanTitle ? '<div class="ex-video-title-overlay"><div class="ex-video-title-text">' + escHtml(text.replace(/^Watch[:\s"]+/, '')) + '</div></div>' : '') +
+        '</div>' +
+        '<div class="ex-video-meta"><span class="ex-video-badge yt">YouTube</span><span class="ex-video-duration" style="margin-left:auto;opacity:0.4;font-size:11px">Opens YouTube \u2197</span></div>' +
+        '</div>';
+    }
+    const done = !!savedActs[i];
     const inner = url
       ? '<a href="' + escHtml(url) + '" target="_blank" rel="noopener" class="zone-act-link" onclick="event.stopPropagation()">' + escHtml(text) + ' \u2197</a>'
       : escHtml(text);
@@ -4233,19 +4384,53 @@ function renderActivityItem(a, i, savedActs, savedExData) {
       <span class="zone-exercise-saved" id="ex-saved-${i}">\u2713 Saved</span>
     </div>`;
   }
+  if (a.type === '9box') {
+    const saved = (sv && typeof sv === 'object') ? sv : {};
+    const cells = [
+      { key:'3-1', title:'Emerging Star',    color:'b-amber',   ph:'High potential, needs development...' },
+      { key:'3-2', title:'Growth Leader',    color:'b-green-s', ph:'High potential, solid performer...'   },
+      { key:'3-3', title:'Star Performer',   color:'b-green',   ph:'Highest priority to retain...'        },
+      { key:'2-1', title:'Question Mark',    color:'b-red-s',   ph:'Diagnose: skill, fit, or clarity?...' },
+      { key:'2-2', title:'Core Contributor', color:'b-amber-s', ph:'Reliable backbone of the team...'     },
+      { key:'2-3', title:'High Impact',      color:'b-green-s', ph:'Consistent high performer...'         },
+      { key:'1-1', title:'At Risk',          color:'b-red',     ph:'Have the honest conversation...'      },
+      { key:'1-2', title:'Needs Direction',  color:'b-red-s',   ph:'May need role adjustment...'          },
+      { key:'1-3', title:'Specialist',       color:'b-amber-s', ph:'Reliable in defined scope...'         },
+    ];
+    const rowLabels = ['High','Med','Low'];
+    const rowsHtml = [0,1,2].map(row => {
+      const cellsHtml = cells.slice(row*3,(row+1)*3).map(c =>
+        `<div class="ex-9box-cell ${c.color}"><div class="ex-9box-cell-title">${c.title}</div><textarea class="ex-9box-cell-input" placeholder="${escHtml(c.ph)}" oninput="saveBuildField(${i},'${c.key}',this.value)">${escHtml(saved[c.key]||'')}</textarea></div>`
+      ).join('');
+      return `<div class="ex-9box-row"><div class="ex-9box-row-lbl">${rowLabels[row]}</div>${cellsHtml}</div>`;
+    }).join('');
+    return `<div class="zone-exercise ex-9box" data-ex-idx="${i}">
+      <div class="zone-exercise-eyebrow">&#9632; ${escHtml(a.label||'9-Box Team Map')}</div>
+      <div class="zone-exercise-prompt">${escHtml(a.prompt||'Map your team\'s performance and potential')}</div>
+      ${a.description?`<div class="ex-build-desc">${escHtml(a.description)}</div>`:''}
+      <div class="ex-9box-container">
+        <div class="ex-9box-layout">
+          <div class="ex-9box-y-axis">Potential \u2191</div>
+          <div class="ex-9box-main">
+            <div class="ex-9box-top-row"><div></div><div class="ex-9box-col-hdr">Low Perf</div><div class="ex-9box-col-hdr">Med Perf</div><div class="ex-9box-col-hdr">High Perf</div></div>
+            <div class="ex-9box-grid-rows">${rowsHtml}</div>
+          </div>
+        </div>
+        <div class="ex-9box-x-axis">Performance \u2192</div>
+      </div>
+      <span class="zone-exercise-saved" id="ex-saved-${i}">\u2713 Saved</span>
+    </div>`;
+  }
   if (a.type === 'video') {
     const isTT = a.platform === 'tiktok';
     const ratio = isTT ? 'r916' : 'r169';
     const badgeCls = isTT ? 'tt' : 'yt';
     const badgeLabel = isTT ? 'TikTok' : 'YouTube';
     const thumbUrl = !isTT ? `https://img.youtube.com/vi/${a.videoId}/maxresdefault.jpg` : '';
-    const embedUrl = isTT
-      ? `https://www.tiktok.com/embed/v2/${a.videoId}`
-      : `https://www.youtube.com/embed/${a.videoId}?autoplay=1&rel=0`;
-    const safeEmbed = escHtml(embedUrl);
+    const watchUrl = isTT ? `https://www.tiktok.com/video/${a.videoId}` : `https://www.youtube.com/watch?v=${a.videoId}`;
     return `<div class="zone-exercise ex-video">
       <div class="zone-exercise-eyebrow">\u25B6 ${escHtml(a.label||'Watch')}</div>
-      <div class="ex-video-thumb ${ratio}" id="vthumb-${i}" onclick="loadVideoEmbed(${i},'${safeEmbed}','${ratio}')">
+      <div class="ex-video-thumb ${ratio}" onclick="window.open('${escHtml(watchUrl)}','_blank')" style="cursor:pointer">
         ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy" />` : '<div style="width:100%;height:100%;background:#0a0a0a"></div>'}
         <div class="ex-video-overlay"></div>
         <div class="ex-video-play"><div class="ex-video-play-btn"><div class="ex-video-play-icon"></div></div></div>
@@ -4254,6 +4439,7 @@ function renderActivityItem(a, i, savedActs, savedExData) {
       <div class="ex-video-meta">
         <span class="ex-video-badge ${badgeCls}">${badgeLabel}</span>
         ${a.duration ? `<span class="ex-video-duration">${escHtml(a.duration)}</span>` : ''}
+        <span class="ex-video-duration" style="margin-left:auto;opacity:0.45;font-size:11px">Opens YouTube \u2197</span>
       </div>
     </div>`;
   }
@@ -4271,6 +4457,93 @@ function loadVideoEmbed(idx, url, ratio) {
   iframe.allowFullscreen = true;
   wrap.appendChild(iframe);
   thumb.replaceWith(wrap);
+}
+
+// =============================================
+// KNOWLEDGE ASSESSMENT
+// =============================================
+function renderAssessment(questions, savedAssess, milestoneId) {
+  const qs = questions.map((q, qi) => {
+    const answered = savedAssess[qi] !== undefined;
+    const selectedIdx = answered ? savedAssess[qi] : -1;
+    const opts = q.options.map((opt, oi) => {
+      let cls = 'zone-assess-opt';
+      if (answered) {
+        cls += oi === q.correct ? ' ao-correct' : (oi === selectedIdx ? ' ao-wrong' : '');
+      }
+      const safeFb = (opt.feedback || q.feedback || '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<button class="${cls}"${answered?' disabled':''} onclick="answerAssess('${escHtml(milestoneId)}',${qi},${oi},${q.correct},'${safeFb}')">${escHtml(opt.text)}</button>`;
+    }).join('');
+    let fbHtml = '';
+    if (answered) {
+      const correct = selectedIdx === q.correct;
+      const sel = q.options[selectedIdx];
+      const fbText = (sel && sel.feedback) ? sel.feedback : (q.feedback || '');
+      fbHtml = `<div class="zone-assess-fb show ${correct?'af-correct':'af-wrong'}">${escHtml(fbText)}</div>`;
+    }
+    return `<div class="zone-assess-q" id="assess-q-${milestoneId}-${qi}">
+      <div class="zone-assess-q-text">${qi+1}. ${escHtml(q.q)}</div>
+      <div class="zone-assess-options">${opts}</div>
+      ${fbHtml}
+    </div>`;
+  }).join('');
+  const total = questions.length;
+  const answered = Object.keys(savedAssess).length;
+  const correct = Object.entries(savedAssess).filter(([qi, oi]) => questions[qi] && questions[qi].correct === oi).length;
+  const scorePct = answered === total ? Math.round((correct/total)*100) : null;
+  const scoreHtml = scorePct !== null ? `<div class="zone-assess-score show"><div class="zone-assess-score-num">${scorePct}%</div><div class="zone-assess-score-label">${correct} of ${total} correct</div></div>` : '';
+  return `<div class="zone-assess-block">
+    <div class="zone-assess-title">Test Your Understanding</div>
+    <div class="zone-assess-sub">After working through the resources and activities, see how much landed.</div>
+    ${qs}
+    ${scoreHtml}
+  </div>`;
+}
+
+function answerAssess(milestoneId, qi, oi, correct, feedback) {
+  if (!zoneModalProgram) return;
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  const key = milestoneId + '_assess';
+  if (!state[zoneModalProgram].reflections[key]) state[zoneModalProgram].reflections[key] = {};
+  state[zoneModalProgram].reflections[key][qi] = oi;
+  saveState();
+  // Update UI for this question
+  const qEl = document.getElementById('assess-q-' + milestoneId + '-' + qi);
+  if (!qEl) return;
+  qEl.querySelectorAll('.zone-assess-opt').forEach((b, j) => {
+    b.disabled = true;
+    b.classList.remove('ao-correct','ao-wrong');
+    if (j === correct) b.classList.add('ao-correct');
+    else if (j === oi) b.classList.add('ao-wrong');
+  });
+  let fb = qEl.querySelector('.zone-assess-fb');
+  if (!fb) { fb = document.createElement('div'); qEl.appendChild(fb); }
+  fb.className = 'zone-assess-fb show ' + (oi === correct ? 'af-correct' : 'af-wrong');
+  fb.textContent = feedback;
+  // Check if all answered → show score
+  const allQs = document.querySelectorAll('[id^="assess-q-' + milestoneId + '-"]');
+  const savedAssess = state[zoneModalProgram].reflections[key];
+  const total = allQs.length;
+  if (Object.keys(savedAssess).length >= total) {
+    const milestone = findMilestone(zoneModalProgram, zoneModalMilestoneId);
+    const correctCount = Object.entries(savedAssess).filter(([q, o]) => milestone && milestone.assessment && milestone.assessment[q] && milestone.assessment[q].correct === o).length;
+    const pct = Math.round((correctCount / total) * 100);
+    let scoreEl = document.querySelector('.zone-assess-score');
+    if (!scoreEl) { scoreEl = document.createElement('div'); document.querySelector('.zone-assess-block').appendChild(scoreEl); }
+    scoreEl.className = 'zone-assess-score show';
+    scoreEl.innerHTML = `<div class="zone-assess-score-num">${pct}%</div><div class="zone-assess-score-label">${correctCount} of ${total} correct</div>`;
+  }
+}
+
+function findMilestone(programKey, milestoneId) {
+  const prog = getProgramData(programKey);
+  if (!prog) return null;
+  for (const phase of prog.phases || []) {
+    for (const m of phase.milestones || []) {
+      if (m.id === milestoneId) return m;
+    }
+  }
+  return null;
 }
 
 function setValueStar(key, n) {
