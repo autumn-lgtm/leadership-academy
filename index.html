@@ -62,8 +62,8 @@ body[data-section="settings"] { --accent: #60A5FA; --accent-glow: rgba(96,165,25
 
 /* ===== SECTION HERO ===== */
 .section-hero { position: relative; height: 380px; overflow: hidden; flex-shrink: 0; background: linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%); }
-.section-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 100%); }
+.section-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 100%); z-index: 3; }
 .hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 60px; text-align: center; z-index: 2; }
 .hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--hero-accent); margin-bottom: 12px; opacity: 0.9; }
 .hero-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--hero-text); line-height: 1.1; margin-bottom: 12px; text-shadow: 0 2px 30px rgba(0,0,0,0.5); }
@@ -272,8 +272,8 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 /* ===== ZONE MODAL ===== */
 .zone-modal { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: stretch; opacity: 0; pointer-events: none; transform: scale(1.06); transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1); overflow: hidden; }
 .zone-modal.open { opacity: 1; pointer-events: all; transform: scale(1); }
-.zone-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-.zone-modal-inner { position: relative; z-index: 1; width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; overflow-y: auto; padding: 32px 40px 60px; gap: 28px; }
+.zone-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; }
+.zone-modal-inner { position: relative; z-index: 10; width: 100%; max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; overflow-y: auto; padding: 32px 40px 60px; gap: 28px; }
 .zone-close { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: var(--text-secondary); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: "Inter", sans-serif; font-weight: 500; align-self: flex-start; transition: all 0.2s; letter-spacing: 0.3px; }
 .zone-close:hover { background: rgba(255,255,255,0.14); color: var(--text-primary); }
 .zone-geo-label { font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); opacity: 0.8; }
@@ -361,6 +361,50 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .section-content { padding: 32px 24px; } .prog-cards-grid { grid-template-columns: 1fr; } .two-col { grid-template-columns: 1fr; } }
 @media (max-width: 768px) { #sidebar { transform: translateX(-100%); } #sidebar.open { transform: translateX(0); } #hamburger { display: flex; } #sidebar-overlay.visible { display: block; } #main { margin-left: 0; } .hero-content { padding: 40px 24px; } .journal-layout { grid-template-columns: 1fr; } .welcome-strip { padding: 16px 24px 0; } .zone-modal-inner { padding: 20px 20px 40px; } }
 @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr 1fr; } .section-content { padding: 24px 16px; } .hero-title { font-size: 1.8rem; } .three-col { grid-template-columns: 1fr; } .journey-summary-card { grid-template-columns: 1fr; } .tab-bar { width: 100%; } }
+/* ===== CINEMATIC PHOTO BACKGROUNDS ===== */
+.section-hero-photo { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center center; animation: kenBurns1 32s ease-in-out infinite alternate; will-change: transform; }
+.zone-photo-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center center; will-change: transform; }
+.zone-photo-bg.kb1 { animation: kenBurns1 22s ease-in-out infinite alternate; }
+.zone-photo-bg.kb2 { animation: kenBurns2 28s ease-in-out infinite alternate; }
+.zone-photo-bg.kb3 { animation: kenBurns3 20s ease-in-out infinite alternate; }
+.zone-photo-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(160deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 40%, rgba(0,0,0,0.28) 65%, rgba(0,0,0,0.88) 100%); }
+@keyframes kenBurns1 { 0% { transform: scale(1.0) translate(0%,0%); } 100% { transform: scale(1.12) translate(-2%,-1.2%); } }
+@keyframes kenBurns2 { 0% { transform: scale(1.1) translate(1.5%,0.8%); } 100% { transform: scale(1.0) translate(-1%,1.5%); } }
+@keyframes kenBurns3 { 0% { transform: scale(1.06) translate(-1.5%,0.5%); } 100% { transform: scale(1.13) translate(1%,-0.8%); } }
+
+/* ===== INTERACTIVE FRAMEWORK CARDS ===== */
+.zone-frameworks { display: flex; flex-direction: column; gap: 8px; }
+.zone-fw-card { border: 1px solid rgba(255,255,255,0.09); border-radius: 12px; overflow: hidden; transition: border-color 0.25s, box-shadow 0.25s; }
+.zone-fw-card:hover { border-color: rgba(255,255,255,0.18); }
+.zone-fw-card.fw-applied { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+.zone-fw-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; user-select: none; background: rgba(255,255,255,0.03); transition: background 0.15s; }
+.zone-fw-header:hover { background: rgba(255,255,255,0.06); }
+.zone-fw-num { width: 26px; height: 26px; border-radius: 50%; background: var(--accent-glow); border: 1.5px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+.zone-fw-title { flex: 1; font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+.zone-fw-applied-pill { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 12px; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent); display: none; flex-shrink: 0; }
+.zone-fw-card.fw-applied .zone-fw-applied-pill { display: block; }
+.zone-fw-chevron { font-size: 11px; color: var(--text-muted); transition: transform 0.22s; flex-shrink: 0; }
+.zone-fw-card.fw-open .zone-fw-chevron { transform: rotate(180deg); }
+.zone-fw-body { display: none; padding: 0 16px 16px; }
+.zone-fw-card.fw-open .zone-fw-body { display: block; }
+.zone-fw-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; padding: 12px 0 8px; }
+.zone-fw-practice-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 7px; }
+.zone-fw-practice { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.65; font-style: italic; padding: 10px 14px; background: rgba(255,255,255,0.04); border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+.zone-fw-foot { display: flex; justify-content: flex-end; }
+.zone-fw-apply-btn { padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); color: var(--text-secondary); font-family: "Inter", sans-serif; letter-spacing: 0.5px; }
+.zone-fw-apply-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.zone-fw-apply-btn.on { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+
+/* ===== INTERACTIVE ACTIVITY LIST ===== */
+.zone-act-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 8px; border-radius: 8px; margin: 0 -8px 2px; cursor: pointer; transition: background 0.15s; }
+.zone-act-row:hover { background: rgba(255,255,255,0.04); }
+.zone-act-cb { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 2px; transition: all 0.2s; pointer-events: none; }
+.zone-act-row.act-done .zone-act-cb { background: var(--accent); border-color: var(--accent); color: #000; }
+.zone-act-text { flex: 1; font-size: 14px; color: var(--text-primary); line-height: 1.55; transition: color 0.2s; }
+.zone-act-row.act-done .zone-act-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.25); }
+.zone-act-link { color: var(--accent); text-decoration: none; font-weight: 500; }
+.zone-act-link:hover { text-decoration: underline; }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
@@ -431,6 +475,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 <!-- ===================== DASHBOARD SECTION ===================== -->
 <section class="section active" id="section-dashboard">
   <div class="section-hero">
+    <div class="section-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1920&q=90&auto=format&fit=crop')"></div>
     <canvas id="canvas-dashboard"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -532,6 +577,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 <!-- ===================== MGMT 101 SECTION ===================== -->
 <section class="section" id="section-mgmt">
   <div class="section-hero">
+    <div class="section-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=90&auto=format&fit=crop')"></div>
     <canvas id="canvas-mgmt"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -560,6 +606,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 <!-- ===================== LDE SECTION ===================== -->
 <section class="section" id="section-lde">
   <div class="section-hero">
+    <div class="section-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=90&auto=format&fit=crop')"></div>
     <canvas id="canvas-lde"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -588,6 +635,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 <!-- ===================== ALDE SECTION ===================== -->
 <section class="section" id="section-alde">
   <div class="section-hero">
+    <div class="section-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=90&auto=format&fit=crop')"></div>
     <canvas id="canvas-alde"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -620,6 +668,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 <!-- ===================== JOURNAL SECTION ===================== -->
 <section class="section" id="section-journal">
   <div class="section-hero">
+    <div class="section-hero-photo" style="background-image:url('https://images.unsplash.com/photo-1515942400420-2b98fed1f515?w=1920&q=90&auto=format&fit=crop')"></div>
     <canvas id="canvas-journal"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -796,6 +845,8 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 
 <!-- ZONE MODAL -->
 <div id="zone-modal" class="zone-modal">
+  <div id="zone-photo-bg" class="zone-photo-bg kb1"></div>
+  <div class="zone-photo-overlay"></div>
   <canvas id="zone-canvas" class="zone-canvas"></canvas>
   <div class="zone-modal-inner">
     <button class="zone-close" id="zone-close-btn" onclick="closeZoneModal()">&#8592; Back</button>
@@ -919,6 +970,7 @@ const MGMT_PHASES = [
         desc: 'You have a team. Now what? The first 30 days aren\'t about proving yourself — they\'re about listening, mapping, and earning the right to lead.',
         tags: ['orientation', 'trust', 'new leader', '2hr'],
         geoZone: 'The Trailhead', geoScene: 'A forest clearing at dawn — fresh trail markers, dew on the leaves, everything ahead of you.',
+        photoUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Watch: "How to Start a New Manager Role" — Michael Watkins on The First 90 Days', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc' },
@@ -950,6 +1002,7 @@ const MGMT_PHASES = [
         desc: 'Authority isn\'t trust. The title gets you in the room. Trust is what gets people to follow you when things get hard.',
         tags: ['trust', 'culture', 'foundation', '2hr'],
         geoZone: 'The Root System', geoScene: 'Ancient trees whose roots interlock underground — strength built invisibly over time.',
+        photoUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Watch: Brené Brown — "The Anatomy of Trust" (BRAVING inventory, SuperSoul Sessions)', url: 'https://brenebrown.com/videos/anatomy-trust-video/' },
@@ -982,6 +1035,7 @@ const MGMT_PHASES = [
         desc: 'One-size-fits-all development doesn\'t fit anyone. The leaders who retain and grow talent are the ones who actually know what their people care about.',
         tags: ['idp', 'development', 'motivation', '2hr'],
         geoZone: 'The Listening Post', geoScene: 'A high ridge where wind carries voices from the valley — the place leaders go to understand before they act.',
+        photoUrl: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Watch: Daniel Pink on motivation — Autonomy, Mastery, Purpose (TED Talk)', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y' },
@@ -1013,19 +1067,26 @@ const MGMT_PHASES = [
         desc: 'The 1:1 is the most powerful tool a manager has. Most managers run it wrong — they make it a status update. It\'s not. It\'s a coaching conversation.',
         tags: ['1:1', 'connection', 'communication', '2hr'],
         geoZone: 'The Crossroads Fire', geoScene: 'A campfire at a trail junction — where two paths meet, where real conversations happen.',
+        photoUrl: 'https://images.unsplash.com/photo-1515942400420-2b98fed1f515?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Read the Meld Guide to 1:1s — the full Meld template, Lattice setup steps, and note-taking practices', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s' },
           'Set up recurring 1:1s in Lattice for every direct report — apply the Meld 1:1 Template (Iteration → Outcomes → Coaching → Growth → Commitments)',
           'Schedule weekly 1:1s for new team members, biweekly for established ones — consistency builds the relationship',
           'In your next 1:1, ask: "What\'s feeling heavy or misaligned right now?" — then listen for 5 full minutes before responding',
-          'After each 1:1, log private notes in Lattice — track coaching themes across your direct reports over time'
+          'After each 1:1, use Granola to auto-capture AI meeting notes — then surface the key coaching themes and log them to Lattice to track patterns over time'
         ],
         frameworks: [
           'The Meld 1:1 Structure: Start with Iteration (5 min) → Focus on Outcomes (10-15 min) → Coaching & Support (10-15 min) → Growth & Development (5-10 min) → Commitments & Takeaways (2-5 min)',
           'The 70/30 Rule: Listen 70% of the time. Talk 30%. Your job in a 1:1 is to create space, not fill it.',
           'Don\'t Solve Everything: Sometimes space to think is enough. Resist the urge to immediately fix what they bring.',
           'Pattern Tracking: Review last week\'s notes before every 1:1. Coaching themes only appear when you look across time, not just at the moment.'
+        ],
+        frameworkPrompts: [
+          'Open Lattice right now. Create the 5-section template for your next 1:1. Estimate your time allocation for each section.',
+          'In your next 1:1, commit to not speaking for the first 3 minutes. Ask the opening question, then wait.',
+          'Next time someone brings you a problem, respond with: "What options are you considering?" — not a solution.',
+          'Right now, open the last 3 sets of Granola notes from one direct report. Write down one recurring coaching theme you see.'
         ],
         reflections: [
           'What does your current 1:1 approach look like — be honest. Is it a status meeting or a coaching conversation?',
@@ -1034,7 +1095,7 @@ const MGMT_PHASES = [
         ],
         deliverable: 'Your 1:1s set up in Lattice with the Meld template applied for every direct report — plus your first round of private notes documenting what you heard.',
         resources: [
-          { tier: 'read', label: 'Meld Guide to 1:1s (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s', desc: 'The official Meld 1:1 template, Lattice setup, and note-taking options (Otter.ai, Fathom, manual).' },
+          { tier: 'read', label: 'Meld Guide to 1:1s (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s', desc: 'The official Meld 1:1 template, Lattice setup, and note-taking options (Granola, Otter.ai, manual).' },
           { tier: 'read', label: 'Radical Candor: 1:1 Question Bank', url: 'https://www.radicalcandor.com/blog/1-on-1-meeting-questions/', desc: 'Questions that surface what matters — for the person, not the project.' },
           { tier: 'apply', label: 'The SBI Feedback Model (CCL)', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'Situation-Behavior-Impact — the cleanest feedback delivery model to use inside 1:1s.' },
           { tier: 'watch', label: 'Brené Brown: The Power of Vulnerability (TED)', url: 'https://www.youtube.com/watch?v=iCvmsMzlF7o', desc: 'Why psychological safety in 1:1s unlocks the real conversation — not the performance.' },
@@ -1046,6 +1107,7 @@ const MGMT_PHASES = [
         desc: 'Most performance reviews are a waste of time because they\'re built backward. Great reviews don\'t surprise anyone — because great managers have been having the conversation all along.',
         tags: ['performance', 'review', 'accountability', '2hr'],
         geoZone: 'Summit Calibration Point', geoScene: 'A survey marker high on a ridge — the place you stop to confirm you\'re on the right trail.',
+        photoUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Read the Meld Excellence in Outcomes — Annual Performance Reviews guide (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2373091333/Excellence+in+Outcomes+-+Annual+Performance+ReviewsPowered+by+Lattice' },
@@ -1059,6 +1121,12 @@ const MGMT_PHASES = [
           'Self-Assessment First: Melders evaluate themselves before the manager review — this surfaces gaps in perception before the calibration conversation',
           'The Performance Calibration Sync: Mutual alignment → personalized feedback → goal setting → open communication → problem-solving → engagement check',
           'No Surprises Standard: If a Melder is shocked by their review, the system failed. The calibration sync exists to close that gap.'
+        ],
+        frameworkPrompts: [
+          'Block 30 minutes this week to review your direct reports\' current goals in Lattice. For each person, note whether they\'re on track.',
+          'Write your own assessment of one direct report\'s last quarter — before looking at anything they\'ve submitted. What do you predict they\'ll say?',
+          'Draft 3 open questions you\'ll bring to your next calibration sync. Focus on where you and the Melder might see things differently.',
+          'Ask yourself right now: is there anyone on my team who doesn\'t know where they stand? Schedule a 20-minute clarity conversation this week.'
         ],
         reflections: [
           'What does "meeting expectations" actually mean on your team — can you describe it in observable, specific terms?',
@@ -1079,6 +1147,7 @@ const MGMT_PHASES = [
         desc: 'The most human thing a manager can do for an underperforming team member is have the honest conversation early. Avoidance isn\'t kindness — it\'s a slow disservice to everyone.',
         tags: ['underperformance', 'accountability', 'coaching', '2hr'],
         geoZone: 'The Hard Pass', geoScene: 'A narrow mountain pass in low cloud — requires full attention, there\'s no easy route around it.',
+        photoUrl: 'https://images.unsplash.com/photo-1509506489701-dfe23b067808?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
           { text: 'Watch: "Crucial Conversations" overview — the core model for high-stakes dialogue', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY' },
@@ -1112,6 +1181,7 @@ const MGMT_PHASES = [
         desc: 'How you handle time off is a direct signal of whether you trust your team. And your team is watching whether you actually take it yourself.',
         tags: ['pto', 'policy', 'culture', '1hr'],
         geoZone: 'Base Camp Rest', geoScene: 'A well-maintained camp at the end of a long day\'s hike — fire lit, gear stowed, the next trail can wait.',
+        photoUrl: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1920&q=90&auto=format&fit=crop',
         duration: '1 hour',
         activities: [
           { text: 'Read the Property Meld Hello Meld PTO policy — understand the collab hours rule, the 2-hour threshold, and Paylocity', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
@@ -3557,10 +3627,20 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   zoneModalMilestoneId = milestoneId;
 
   const modal = document.getElementById('zone-modal');
-  const bg = programKey === 'lde'
-    ? 'linear-gradient(160deg, #1C0A00 0%, #3D1C00 50%, #1C0A00 100%)'
-    : 'linear-gradient(160deg, #060B18 0%, #0F2240 50%, #060B18 100%)';
-  modal.style.background = bg;
+  const photoBg = document.getElementById('zone-photo-bg');
+  if (milestone.photoUrl && photoBg) {
+    photoBg.style.backgroundImage = 'url(' + milestone.photoUrl + ')';
+    photoBg.style.display = 'block';
+    const kbClasses = ['kb1','kb2','kb3'];
+    photoBg.classList.remove(...kbClasses);
+    photoBg.classList.add(kbClasses[Math.floor(Math.random()*3)]);
+    modal.style.background = programKey === 'mgmt' ? '#010D08' : programKey === 'lde' ? '#0A0500' : '#040810';
+  } else {
+    if (photoBg) { photoBg.style.backgroundImage = ''; photoBg.style.display = 'none'; }
+    modal.style.background = programKey === 'lde'
+      ? 'linear-gradient(160deg, #1C0A00 0%, #3D1C00 50%, #1C0A00 100%)'
+      : 'linear-gradient(160deg, #060B18 0%, #0F2240 50%, #060B18 100%)';
+  }
 
   const backLabel = programKey === 'lde' ? '← Back to Desert' : '← Back to Summit Trail';
   const closeBtn = document.getElementById('zone-close-btn');
@@ -3573,24 +3653,54 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   document.getElementById('zone-chips').innerHTML = (milestone.tags || []).map(t => '<span class="zone-chip">' + escHtml(t) + '</span>').join('');
 
   const actEl = document.getElementById('zone-activities');
-  actEl.innerHTML = (milestone.activities || []).map(a => {
-    if (typeof a === 'object' && a.url) {
-      return '<li><a href="' + escHtml(a.url) + '" target="_blank" rel="noopener" class="zone-activity-link">' + escHtml(a.text) + ' ↗</a></li>';
-    }
-    return '<li>' + escHtml(typeof a === 'object' ? a.text : a) + '</li>';
+  const savedActs = (state[programKey].reflections || {})[milestoneId + '_acts'] || [];
+  actEl.innerHTML = (milestone.activities || []).map((a, i) => {
+    const done = !!savedActs[i];
+    const text = typeof a === 'object' ? a.text : a;
+    const url = typeof a === 'object' ? a.url : null;
+    const inner = url
+      ? '<a href="' + escHtml(url) + '" target="_blank" rel="noopener" class="zone-act-link" onclick="event.stopPropagation()">' + escHtml(text) + ' ↗</a>'
+      : escHtml(text);
+    return '<div class="zone-act-row' + (done ? ' act-done' : '') + '" data-act-idx="' + i + '" onclick="toggleActivityDone(this,' + i + ')">' +
+      '<div class="zone-act-cb">' + (done ? '✓' : '') + '</div>' +
+      '<div class="zone-act-body"><div class="zone-act-text">' + inner + '</div></div>' +
+      '</div>';
   }).join('');
 
   const fwEl = document.getElementById('zone-frameworks');
   const fwBlock = document.getElementById('zone-frameworks-block');
   if (milestone.frameworks && milestone.frameworks.length) {
-    fwEl.innerHTML = milestone.frameworks.map(f => {
+    const savedFw = (state[programKey].reflections || {})[milestoneId + '_fw'] || [];
+    fwEl.innerHTML = milestone.frameworks.map((f, i) => {
+      const isApplied = !!savedFw[i];
+      let name, desc;
       if (typeof f === 'string') {
         const colonIdx = f.indexOf(':');
-        const name = colonIdx > -1 ? f.slice(0, colonIdx).trim() : f;
-        const how = colonIdx > -1 ? f.slice(colonIdx + 1).trim() : '';
-        return `<div class="zone-framework-item"><div class="zone-framework-name">${escHtml(name)}</div>${how ? '<div class="zone-framework-how">' + escHtml(how) + '</div>' : ''}</div>`;
+        name = colonIdx > -1 ? f.slice(0, colonIdx).trim() : f;
+        desc = colonIdx > -1 ? f.slice(colonIdx + 1).trim() : '';
+      } else {
+        name = f.name || '';
+        desc = f.how || '';
       }
-      return `<div class="zone-framework-item"><div class="zone-framework-name">${escHtml(f.name)}</div><div class="zone-framework-how">${escHtml(f.how)}</div></div>`;
+      const prompt = (milestone.frameworkPrompts && milestone.frameworkPrompts[i]) || 'Before your next team interaction, find one opportunity to apply this framework intentionally.';
+      return `<div class="zone-fw-card${isApplied ? ' fw-applied' : ''}" id="zone-fw-${i}">
+        <div class="zone-fw-header" onclick="toggleFramework(${i})">
+          <div class="zone-fw-num">${i + 1}</div>
+          <div class="zone-fw-title">${escHtml(name)}</div>
+          <span class="zone-fw-applied-pill">Applied</span>
+          <span class="zone-fw-chevron">▼</span>
+        </div>
+        <div class="zone-fw-body">
+          ${desc ? '<div class="zone-fw-desc">' + escHtml(desc) + '</div>' : ''}
+          <div class="zone-fw-practice-label">Try This</div>
+          <div class="zone-fw-practice">${escHtml(prompt)}</div>
+          <div class="zone-fw-foot">
+            <button class="zone-fw-apply-btn${isApplied ? ' on' : ''}" onclick="toggleFwApplied(${i},this)" id="zone-fw-btn-${i}">
+              ${isApplied ? '✓ Applied' : '○ Mark Applied'}
+            </button>
+          </div>
+        </div>
+      </div>`;
     }).join('');
     fwBlock.style.display = 'block';
   } else {
@@ -3702,6 +3812,41 @@ function closeZoneModal() {
   if (zoneModalProgram === 'mgmt') refreshMGMT();
   if (zoneModalProgram === 'lde') refreshLDE();
   if (zoneModalProgram === 'alde') refreshALDE();
+}
+
+function toggleFramework(idx) {
+  const card = document.getElementById('zone-fw-' + idx);
+  if (!card) return;
+  card.classList.toggle('fw-open');
+}
+
+function toggleFwApplied(idx, btn) {
+  if (!zoneModalProgram || !zoneModalMilestoneId) return;
+  const fwKey = zoneModalMilestoneId + '_fw';
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  const arr = state[zoneModalProgram].reflections[fwKey] || [];
+  arr[idx] = !arr[idx];
+  state[zoneModalProgram].reflections[fwKey] = arr;
+  saveState();
+  const card = document.getElementById('zone-fw-' + idx);
+  if (card) card.classList.toggle('fw-applied', !!arr[idx]);
+  if (btn) {
+    btn.classList.toggle('on', !!arr[idx]);
+    btn.textContent = arr[idx] ? '✓ Applied' : '○ Mark Applied';
+  }
+}
+
+function toggleActivityDone(row, idx) {
+  if (!zoneModalProgram || !zoneModalMilestoneId) return;
+  const actsKey = zoneModalMilestoneId + '_acts';
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  const arr = state[zoneModalProgram].reflections[actsKey] || [];
+  arr[idx] = !arr[idx];
+  state[zoneModalProgram].reflections[actsKey] = arr;
+  saveState();
+  row.classList.toggle('act-done', !!arr[idx]);
+  const cb = row.querySelector('.zone-act-cb');
+  if (cb) cb.textContent = arr[idx] ? '✓' : '';
 }
 
 function setValueStar(key, n) {
