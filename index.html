@@ -70,7 +70,17 @@ body[data-section="settings"] { --accent: #60A5FA; --accent-glow: rgba(96,165,25
 .hero-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--hero-text); line-height: 1.1; margin-bottom: 12px; text-shadow: 0 1px 2px rgba(0,0,0,1), 0 3px 10px rgba(0,0,0,0.95), 0 8px 28px rgba(0,0,0,0.75), 0 16px 48px rgba(0,0,0,0.5); }
 .hero-subtitle { font-size: clamp(0.9rem, 2vw, 1.1rem); color: rgba(255,255,255,0.92); margin-bottom: 20px; font-weight: 400; max-width: 600px; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 3px 12px rgba(0,0,0,0.8); }
 .hero-quote { font-style: italic; font-size: clamp(0.8rem, 1.5vw, 0.95rem); color: rgba(255,255,255,0.78); max-width: 560px; line-height: 1.6; margin-bottom: 24px; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 3px 10px rgba(0,0,0,0.7); }
+.hero-quote-attr { display: block; font-style: normal; font-size: 0.82em; letter-spacing: 1.2px; color: rgba(255,255,255,0.52); margin-top: 7px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 .hero-chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+/* Dashboard quote-of-trail widget */
+.quote-of-trail { background: linear-gradient(135deg, rgba(251,191,36,0.07) 0%, rgba(251,191,36,0.02) 100%); border: 1px solid rgba(251,191,36,0.18); border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
+.quote-of-trail::before { content: "\201C"; position: absolute; top: -10px; left: 16px; font-family: "Playfair Display", serif; font-size: 120px; color: rgba(251,191,36,0.08); line-height: 1; pointer-events: none; }
+.qot-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); opacity: 0.75; }
+.qot-text { font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(1.05rem, 2vw, 1.3rem); color: rgba(255,255,255,0.92); line-height: 1.6; max-width: 680px; margin: 0; }
+.qot-attr { font-size: 11.5px; font-weight: 600; color: var(--accent); opacity: 0.8; letter-spacing: 0.5px; }
+.qot-footer { display: flex; align-items: center; justify-content: flex-end; margin-top: 4px; }
+.qot-refresh { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-family: "Inter", sans-serif; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; }
+.qot-refresh:hover { border-color: var(--accent); color: var(--accent); }
 .hero-chip { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.92); letter-spacing: 0.5px; backdrop-filter: blur(8px); transition: transform 0.15s ease, background 0.15s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 .hero-chip.accent { background: var(--accent-glow); border-color: var(--accent); color: var(--hero-accent); }
 @keyframes chipPulse { 0% { transform: scale(1); } 40% { transform: scale(1.12); background: var(--accent-glow); } 100% { transform: scale(1); } }
@@ -279,6 +289,11 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .zone-close:hover { background: rgba(255,255,255,0.14); color: var(--text-primary); }
 .zone-geo-label { font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); opacity: 0.8; }
 .zone-hero { display: flex; flex-direction: column; gap: 10px; }
+/* Pull-quote inside zone modal */
+.zone-pull-quote { display: none; margin: 4px 0 0; padding: 18px 24px; border-left: 3px solid var(--accent); background: linear-gradient(90deg, var(--accent-glow) 0%, transparent 100%); border-radius: 0 10px 10px 0; }
+.zone-pull-quote.visible { display: block; }
+.zone-pull-quote-text { font-family: "Playfair Display", serif; font-style: italic; font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(255,255,255,0.9); line-height: 1.55; }
+.zone-pull-quote-attr { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-top: 10px; opacity: 0.85; }
 .zone-milestone-num { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
 .zone-title { font-family: "Playfair Display", serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--hero-text); line-height: 1.15; }
 .zone-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.65; max-width: 600px; }
@@ -483,7 +498,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">Property Meld &middot; Leadership Academy</div>
       <h1 class="hero-title">THE BASE CAMP</h1>
       <p class="hero-subtitle">You are a Melder. Now become a leader.</p>
-      <p class="hero-quote">&ldquo;Your compass is set. Your pack is ready. The path is yours.&rdquo;</p>
+      <p class="hero-quote">&ldquo;Leadership is not about being in charge. It is about taking care of those in your charge.&rdquo;<span class="hero-quote-attr">&mdash; Simon Sinek, Leaders Eat Last</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="dash-chip-phases">Begin your first phase</span>
         <span class="hero-chip" id="dash-chip-hours">Your journey starts now</span>
@@ -509,10 +524,16 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="stat-card"><div class="stat-icon">&#9989;</div><div class="stat-value" id="stat-lessons">0</div><div class="stat-label">Lessons Done</div></div>
       <div class="stat-card"><div class="stat-icon">&#128221;</div><div class="stat-value" id="stat-entries">0</div><div class="stat-label">Journal Entries</div></div>
     </div>
+    <div class="quote-of-trail" id="quote-of-trail">
+      <div class="qot-eyebrow">Wisdom from the Trail</div>
+      <blockquote class="qot-text" id="qot-text"></blockquote>
+      <div class="qot-attr" id="qot-attr"></div>
+      <div class="qot-footer"><button class="qot-refresh" onclick="nextTrailQuote()">&#8635; New Quote</button></div>
+    </div>
     <div class="prog-cards-grid">
       <div class="progress-path-card" id="dash-mgmt-card" style="border-color:rgba(52,211,153,0.2)">
         <div class="prog-header">
-          <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 7 milestones</div></div>
+          <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 8 milestones</div></div>
           <div class="prog-pct-big" id="dash-mgmt-pct" style="color:#34D399">0%</div>
         </div>
         <div class="trail-container">
@@ -585,7 +606,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">New Leader Foundations &middot; Property Meld</div>
       <h1 class="hero-title">THE TRAILHEAD</h1>
       <p class="hero-subtitle">MGMT 101 &middot; New Leader Foundations &middot; 8 Milestones</p>
-      <p class="hero-quote">&ldquo;Every trail starts somewhere. This is where leaders learn to show up — before they lead anyone anywhere.&rdquo;</p>
+      <p class="hero-quote">&ldquo;Before you are a leader, success is all about growing yourself. When you become a leader, success is all about growing others.&rdquo;<span class="hero-quote-attr">&mdash; Jack Welch</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="mgmt-chip-progress">Start Milestone 1</span>
         <span class="hero-chip">1 Module</span>
@@ -614,7 +635,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">Desert Crossing &middot; Property Meld</div>
       <h1 class="hero-title">THE DESERT CROSSING</h1>
       <p class="hero-subtitle">Leadership Development Experience &middot; 6 Months &middot; 26 Milestones</p>
-      <p class="hero-quote">&ldquo;The desert strips away everything that isn&apos;t you. What&apos;s left is what you lead with.&rdquo;</p>
+      <p class="hero-quote">&ldquo;Vulnerability is not winning or losing; it&apos;s having the courage to show up and be seen when we have no control over the outcome.&rdquo;<span class="hero-quote-attr">&mdash; Bren&eacute; Brown, Dare to Lead</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="lde-chip-progress">Enter the Desert</span>
         <span class="hero-chip">6 Phases</span>
@@ -643,7 +664,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">The Ascent &middot; Property Meld</div>
       <h1 class="hero-title">THE SUMMIT</h1>
       <p class="hero-subtitle">Navigating Complexity &amp; Change &middot; 9 Months &middot; 39 Milestones</p>
-      <p class="hero-quote">&ldquo;You crossed the desert. Now we climb. The air is thin up here. So is the patience for mediocrity.&rdquo;</p>
+      <p class="hero-quote">&ldquo;The first responsibility of a leader is to define reality. The last is to say thank you. In between, the leader is a servant.&rdquo;<span class="hero-quote-attr">&mdash; Max DePree</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="alde-chip-progress">Begin the Ascent</span>
         <span class="hero-chip">5 Stages</span>
@@ -676,7 +697,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">The Campfire</div>
       <h1 class="hero-title">REFLECTION LIVES HERE</h1>
       <p class="hero-subtitle">Campfire Journal &middot; Where Leaders Get Honest</p>
-      <p class="hero-quote">&ldquo;The campfire is where leaders get honest. No audience. Just you and the page.&rdquo;</p>
+      <p class="hero-quote">&ldquo;We do not learn from experience. We learn from reflecting on experience.&rdquo;<span class="hero-quote-attr">&mdash; John Dewey</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent" id="journal-chip-count">Write your first entry</span>
         <span class="hero-chip">Gibbs&apos; Reflective Cycle</span>
@@ -729,7 +750,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">The Field Guide</div>
       <h1 class="hero-title">YOUR FIELD GUIDE</h1>
       <p class="hero-subtitle">Books &middot; Frameworks &middot; Assessments</p>
-      <p class="hero-quote">&ldquo;Every great leader carries a field guide. These are yours.&rdquo;</p>
+      <p class="hero-quote">&ldquo;Not all readers are leaders, but all leaders are readers.&rdquo;<span class="hero-quote-attr">&mdash; Harry S. Truman</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent">16 Books</span>
         <span class="hero-chip">5 Frameworks</span>
@@ -770,7 +791,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="hero-eyebrow">Expedition HQ</div>
       <h1 class="hero-title">EXPEDITION HQ</h1>
       <p class="hero-subtitle">Profile &middot; Preferences &middot; Data</p>
-      <p class="hero-quote">&ldquo;Every expedition starts with the right gear.&rdquo;</p>
+      <p class="hero-quote">&ldquo;Knowing yourself is the beginning of all wisdom.&rdquo;<span class="hero-quote-attr">&mdash; Aristotle</span></p>
       <div class="hero-chips">
         <span class="hero-chip accent">Your Setup</span>
         <span class="hero-chip">Export &amp; Sync</span>
@@ -856,6 +877,10 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="zone-milestone-num" id="zone-milestone-num"></div>
       <h1 class="zone-title" id="zone-title"></h1>
       <p class="zone-desc" id="zone-desc"></p>
+      <div class="zone-pull-quote" id="zone-pull-quote">
+        <div class="zone-pull-quote-text" id="zone-pull-quote-text"></div>
+        <div class="zone-pull-quote-attr" id="zone-pull-quote-attr"></div>
+      </div>
       <div class="zone-chips" id="zone-chips"></div>
     </div>
     <div class="zone-content">
@@ -968,6 +993,7 @@ const MGMT_PHASES = [
     milestones: [
       {
         id: 'mgmt-1', num: 'Milestone 1', title: 'Your First 30 Days — Starting a Working Relationship',
+        quote: "Before you are a leader, success is all about growing yourself. When you become a leader, success is all about growing others.", quoteAttr: "Jack Welch",
         desc: 'You have a team. Now what? The first 30 days aren\'t about proving yourself — they\'re about listening, mapping, and earning the right to lead.',
         tags: ['orientation', 'trust', 'new leader', '2hr'],
         geoZone: 'The Trailhead', geoScene: 'A forest clearing at dawn — fresh trail markers, dew on the leaves, everything ahead of you.',
@@ -1000,6 +1026,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-2', num: 'Milestone 2', title: 'Building Trust & Respect as a Foundation',
+        quote: "Trust is the foundation of real teamwork. And so the first dysfunction of a team is the absence of trust.", quoteAttr: "Patrick Lencioni, The Five Dysfunctions of a Team",
         desc: 'Authority isn\'t trust. The title gets you in the room. Trust is what gets people to follow you when things get hard.',
         tags: ['trust', 'culture', 'foundation', '2hr'],
         geoZone: 'The Root System', geoScene: 'Ancient trees whose roots interlock underground — strength built invisibly over time.',
@@ -1033,6 +1060,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-3', num: 'Milestone 3', title: 'Understanding What Your Team Members Value', valuesAssessment: true,
+        quote: "Autonomy, mastery, purpose. These are the building blocks of intrinsic motivation — and the reason carrots and sticks are a relic of the last century.", quoteAttr: "Daniel H. Pink, Drive",
         desc: 'One-size-fits-all development doesn\'t fit anyone. The leaders who retain and grow talent are the ones who actually know what their people care about.',
         tags: ['idp', 'development', 'motivation', '2hr'],
         geoZone: 'The Listening Post', geoScene: 'A high ridge where wind carries voices from the valley — the place leaders go to understand before they act.',
@@ -1065,6 +1093,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-4', num: 'Milestone 4', title: 'The Art of the 1:1 — Structure, Cadence & The Right Questions',
+        quote: "You can make more friends in two months by becoming genuinely interested in other people than in two years by trying to get them interested in you.", quoteAttr: "Dale Carnegie, How to Win Friends and Influence People",
         desc: 'The 1:1 is the most powerful tool a manager has. Most managers run it wrong — they make it a status update. It\'s not. It\'s a coaching conversation.',
         tags: ['1:1', 'connection', 'communication', '2hr'],
         geoZone: 'The Crossroads Fire', geoScene: 'A campfire at a trail junction — where two paths meet, where real conversations happen.',
@@ -1105,6 +1134,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-5', num: 'Milestone 5', title: 'Performance Reviews That Actually Mean Something',
+        quote: "Great vision without great people is irrelevant. Getting the right people — and developing the ones you have — is the whole game.", quoteAttr: "Jim Collins, Good to Great",
         desc: 'Most performance reviews are a waste of time because they\'re built backward. Great reviews don\'t surprise anyone — because great managers have been having the conversation all along.',
         tags: ['performance', 'review', 'accountability', '2hr'],
         geoZone: 'Summit Calibration Point', geoScene: 'A survey marker high on a ridge — the place you stop to confirm you\'re on the right trail.',
@@ -1145,6 +1175,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-6', num: 'Milestone 6', title: 'The Honest Conversation — Managing Underperformance',
+        quote: "Caring personally while challenging directly — that's the whole game. Without the caring, it's just aggression. Without the challenge, it's just coddling.", quoteAttr: "Kim Scott, Radical Candor",
         desc: 'The most human thing a manager can do for an underperforming team member is have the honest conversation early. Avoidance isn\'t kindness — it\'s a slow disservice to everyone.',
         tags: ['underperformance', 'accountability', 'coaching', '2hr'],
         geoZone: 'The Hard Pass', geoScene: 'A narrow mountain pass in low cloud — requires full attention, there\'s no easy route around it.',
@@ -1179,6 +1210,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-7', num: 'Milestone 7', title: 'Managing PTO & Protecting the Culture of Rest',
+        quote: "Almost everything will work again if you unplug it for a few minutes — including you.", quoteAttr: "Anne Lamott",
         desc: 'How you handle time off is a direct signal of whether you trust your team. And your team is watching whether you actually take it yourself.',
         tags: ['pto', 'policy', 'culture', '1hr'],
         geoZone: 'Base Camp Rest', geoScene: 'A well-maintained camp at the end of a long day\'s hike — fire lit, gear stowed, the next trail can wait.',
@@ -1213,6 +1245,7 @@ const MGMT_PHASES = [
       },
       {
         id: 'mgmt-8', num: 'Milestone 8', title: 'OKRs, Leading Indicators & the Art of Measuring What Matters',
+        quote: "If you try to focus on everything, you focus on nothing. The art is in choosing the few things that actually move the needle — and measuring them relentlessly.", quoteAttr: "John Doerr, Measure What Matters",
         desc: 'Most managers track what already happened. Great ones track what is about to happen. This milestone teaches the difference between a lagging metric (the scoreboard) and a leading indicator (the plays that change the score).',
         tags: ['okr', 'metrics', 'strategy', 'measurement', '2hr'],
         geoZone: 'The Navigation Point', geoScene: 'A ridge above the treeline — the first place you can finally see the whole valley, where you came from and where you\'re going.',
@@ -2844,6 +2877,43 @@ const FRAMEWORKS = [
   }
 ];
 
+const TRAIL_QUOTES = [
+  { text: "Leadership is not about being in charge. It is about taking care of those in your charge.", attr: "Simon Sinek", book: "Leaders Eat Last" },
+  { text: "Great vision without great people is irrelevant.", attr: "Jim Collins", book: "Good to Great" },
+  { text: "People don't buy what you do; they buy why you do it. And what you do simply proves what you believe.", attr: "Simon Sinek", book: "Start With Why" },
+  { text: "Before you are a leader, success is all about growing yourself. When you become a leader, success is all about growing others.", attr: "Jack Welch", book: "" },
+  { text: "The ability to subordinate an impulse to a value is the essence of the proactive person.", attr: "Stephen R. Covey", book: "The 7 Habits of Highly Effective People" },
+  { text: "Vulnerability is not winning or losing; it's having the courage to show up and be seen when we have no control over the outcome.", attr: "Brené Brown", book: "Dare to Lead" },
+  { text: "IQ gets you hired. EQ gets you promoted — and gets others to follow.", attr: "Daniel Goleman", book: "Emotional Intelligence" },
+  { text: "Give control, create leaders. The goal is not to motivate people. The goal is to create an environment where people motivate themselves.", attr: "L. David Marquet", book: "Turn the Ship Around!" },
+  { text: "Autonomy, mastery, purpose. These are the building blocks of a new way of doing things — and a new way of being.", attr: "Daniel H. Pink", book: "Drive" },
+  { text: "The secret of joy in work is contained in one word — excellence. To know how to do something well is to enjoy it.", attr: "Pearl Buck", book: "" },
+  { text: "You can make more friends in two months by becoming genuinely interested in other people than in two years by trying to get them interested in you.", attr: "Dale Carnegie", book: "How to Win Friends and Influence People" },
+  { text: "We do not learn from experience. We learn from reflecting on experience.", attr: "John Dewey", book: "" },
+  { text: "The first responsibility of a leader is to define reality. The last is to say thank you. In between, the leader is a servant.", attr: "Max DePree", book: "" },
+  { text: "Trust is the foundation of real teamwork. And so the first dysfunction of a team is the absence of trust.", attr: "Patrick Lencioni", book: "The Five Dysfunctions of a Team" },
+  { text: "No bad teams, only bad leaders.", attr: "Jocko Willink", book: "Extreme Ownership" },
+  { text: "The most dangerous leadership myth is that leaders are born — that there is a genetic factor to leadership. That's nonsense; in fact, the opposite is true. Leaders are made rather than born.", attr: "Warren Bennis", book: "" },
+  { text: "Not all readers are leaders, but all leaders are readers.", attr: "Harry S. Truman", book: "" },
+  { text: "Knowing yourself is the beginning of all wisdom.", attr: "Aristotle", book: "" },
+  { text: "Ideas are easy. Execution is everything. It takes a team to win.", attr: "John Doerr", book: "Measure What Matters" },
+  { text: "Culture eats strategy for breakfast.", attr: "Peter Drucker", book: "" }
+];
+let trailQuoteIndex = Math.floor(Math.random() * TRAIL_QUOTES.length);
+
+function nextTrailQuote() {
+  trailQuoteIndex = (trailQuoteIndex + 1) % TRAIL_QUOTES.length;
+  renderTrailQuote();
+}
+
+function renderTrailQuote() {
+  const q = TRAIL_QUOTES[trailQuoteIndex];
+  const textEl = document.getElementById('qot-text');
+  const attrEl = document.getElementById('qot-attr');
+  if (textEl) textEl.textContent = '\u201C' + q.text + '\u201D';
+  if (attrEl) attrEl.textContent = '\u2014 ' + q.attr + (q.book ? ', ' + q.book : '');
+}
+
 const ASSESSMENTS = [
   { icon: '🧩', title: '16 Personalities (MBTI)', desc: 'Discover your personality type and how it shapes your leadership style. Reference this throughout your program — from your LDE presentation to your ALDE playbook. Self-awareness starts here.', tag: 'Self-Awareness · Foundation' },
   { icon: '⭐', title: 'High5 Strengths Assessment', desc: 'Identify your top 5 natural strengths. At PM, we lead from strength. This assessment tells you where you shine — and gives you a framework for delegating what you don\'t.', tag: 'Strengths · LDE + ALDE' },
@@ -3096,6 +3166,7 @@ function refreshDashboard() {
   animateCounter(document.getElementById('stat-hours'), hours);
   animateCounter(document.getElementById('stat-lessons'), lessons);
   animateCounter(document.getElementById('stat-entries'), entries);
+  renderTrailQuote();
 
   const mgmtPct = document.getElementById('dash-mgmt-pct');
   if (mgmtPct) mgmtPct.textContent = mgmt.pct + '%';
@@ -3707,6 +3778,16 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   document.getElementById('zone-milestone-num').textContent = milestone.num;
   document.getElementById('zone-title').textContent = milestone.title;
   document.getElementById('zone-desc').textContent = milestone.desc;
+  const pullQuote = document.getElementById('zone-pull-quote');
+  const pullQuoteText = document.getElementById('zone-pull-quote-text');
+  const pullQuoteAttr = document.getElementById('zone-pull-quote-attr');
+  if (milestone.quote && pullQuote && pullQuoteText && pullQuoteAttr) {
+    pullQuoteText.textContent = '\u201C' + milestone.quote + '\u201D';
+    pullQuoteAttr.textContent = '\u2014 ' + milestone.quoteAttr;
+    pullQuote.classList.add('visible');
+  } else if (pullQuote) {
+    pullQuote.classList.remove('visible');
+  }
   document.getElementById('zone-chips').innerHTML = (milestone.tags || []).map(t => '<span class="zone-chip">' + escHtml(t) + '</span>').join('');
 
   const actEl = document.getElementById('zone-activities');
