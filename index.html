@@ -585,6 +585,26 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
 .empty-state p { font-size: 13px; }
+/* ---- Link Checker ---- */
+.link-dead::after { content: ' ⚠'; color: #f97316; font-size: 11px; }
+#lcp { position:fixed; bottom:20px; right:20px; z-index:9999; background:#111827; border:1px solid rgba(255,255,255,0.1); border-radius:10px; min-width:230px; max-width:360px; font-size:13px; box-shadow:0 4px 24px rgba(0,0,0,0.5); color:#fff; }
+#lcp .lcp-hd { display:flex; align-items:center; gap:8px; padding:10px 14px; cursor:pointer; user-select:none; }
+#lcp .lcp-icon { font-size:15px; }
+#lcp.ok .lcp-icon { color:#22c55e; }
+#lcp.warn .lcp-icon { color:#f97316; }
+#lcp.checking .lcp-icon { color:#94a3b8; }
+#lcp .lcp-title { flex:1; font-weight:600; font-size:13px; }
+#lcp .lcp-caret { color:rgba(255,255,255,0.3); transition:transform .2s; font-size:11px; }
+#lcp.open .lcp-caret { transform:rotate(180deg); }
+#lcp .lcp-bd { display:none; border-top:1px solid rgba(255,255,255,0.08); padding:10px 14px 12px; }
+#lcp.open .lcp-bd { display:block; }
+#lcp .lcp-item { display:flex; align-items:flex-start; gap:6px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+#lcp .lcp-tag { font-size:9px; font-weight:700; text-transform:uppercase; padding:2px 5px; border-radius:3px; margin-top:1px; white-space:nowrap; }
+#lcp .lcp-tag.dead { background:rgba(239,68,68,.2); color:#f87171; }
+#lcp .lcp-tag.timeout { background:rgba(249,115,22,.2); color:#fb923c; }
+#lcp .lcp-lbl { color:rgba(255,255,255,.7); font-size:12px; line-height:1.4; word-break:break-all; }
+#lcp .lcp-note { color:rgba(255,255,255,.3); font-size:10px; margin-top:8px; line-height:1.5; }
+#lcp .lcp-dismiss { margin-top:10px; background:rgba(255,255,255,.07); border:none; color:rgba(255,255,255,.45); padding:4px 10px; border-radius:4px; cursor:pointer; font-size:11px; display:block; width:100%; }
 </style>
 </head>
 <body data-section="dashboard">
@@ -4927,6 +4947,82 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoneMod
 // =============================================
 // INITIALIZATION
 // =============================================
+// LINK CHECKER
+// Detects unreachable/dead links. NOTE: browser CORS restrictions prevent
+// reading HTTP status codes for cross-origin requests, so 404s on live
+// servers cannot be detected client-side without a proxy.
+// =============================================
+function lcpCollectUrls() {
+  const map = {}; // url -> label
+  for (const phase of MGMT_PHASES) {
+    for (const ms of (phase.milestones || [])) {
+      for (const r of (ms.resources || [])) {
+        if (r.url) map[r.url] = r.label || r.url;
+      }
+      for (const a of (ms.activities || [])) {
+        const url = typeof a === 'object' ? a.url : null;
+        if (url) map[url] = (typeof a === 'object' ? a.text : null) || url;
+      }
+    }
+  }
+  return map;
+}
+
+function lcpShowPanel(state, broken, total) {
+  let panel = document.getElementById('lcp');
+  if (!panel) { panel = document.createElement('div'); panel.id = 'lcp'; document.body.appendChild(panel); }
+  const isChecking = state === 'checking';
+  const hasWarn = broken.length > 0;
+  panel.className = isChecking ? 'checking' : (hasWarn ? 'warn' : 'ok');
+  const icon = isChecking ? '…' : (hasWarn ? '⚠' : '✓');
+  const title = isChecking
+    ? 'Checking links…'
+    : (hasWarn ? `${broken.length} unreachable link${broken.length !== 1 ? 's' : ''}` : `All ${total} links reachable`);
+  panel.innerHTML = `
+    <div class="lcp-hd" onclick="document.getElementById('lcp').classList.toggle('open')">
+      <span class="lcp-icon">${icon}</span>
+      <span class="lcp-title">${title}</span>
+      <span class="lcp-caret">▾</span>
+    </div>
+    <div class="lcp-bd">
+      ${broken.map(([url, status, label]) => `
+        <div class="lcp-item">
+          <span class="lcp-tag ${status}">${status}</span>
+          <span class="lcp-lbl">${escHtml(label)}</span>
+        </div>`).join('')}
+      ${!broken.length ? '<div style="color:#4ade80;font-size:12px;padding:4px 0">No unreachable links found.</div>' : ''}
+      <div class="lcp-note">Detects unreachable servers only. 404s on live servers require server-side checking.</div>
+      <button class="lcp-dismiss" onclick="document.getElementById('lcp').remove()">Dismiss</button>
+    </div>`;
+}
+
+async function runLinkCheck() {
+  const urlMap = lcpCollectUrls();
+  const urls = Object.keys(urlMap);
+  lcpShowPanel('checking', [], urls.length);
+  const results = {};
+  await Promise.allSettled(urls.map(async url => {
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 8000);
+      await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal });
+      clearTimeout(tid);
+      results[url] = 'ok';
+    } catch(e) {
+      results[url] = e.name === 'AbortError' ? 'timeout' : 'dead';
+    }
+  }));
+  const broken = urls.filter(u => results[u] !== 'ok').map(u => [u, results[u], urlMap[u]]);
+  // Mark broken links in DOM
+  broken.forEach(([url]) => {
+    document.querySelectorAll('a[href]').forEach(a => {
+      if (a.getAttribute('href') === url) a.classList.add('link-dead');
+    });
+  });
+  lcpShowPanel('done', broken, urls.length);
+}
+
+// =============================================
 function init() {
   loadState();
   document.body.setAttribute('data-section', 'dashboard');
@@ -4944,6 +5040,7 @@ function init() {
     updateTrail('lde-trail-fill', 'lde-trail-dot', lde.pct);
     if (lde.pct >= 80) updateTrail('alde-trail-fill', 'alde-trail-dot', alde.pct);
   }, 300);
+  runLinkCheck();
 }
 
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
