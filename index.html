@@ -63,14 +63,15 @@ body[data-section="settings"] { --accent: #60A5FA; --accent-glow: rgba(96,165,25
 /* ===== SECTION HERO ===== */
 .section-hero { position: relative; height: 380px; overflow: hidden; flex-shrink: 0; background: linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-end) 100%); }
 .section-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.05) 100%); z-index: 3; }
-.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 60px; text-align: center; z-index: 2; }
-.hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--hero-accent); margin-bottom: 12px; opacity: 0.9; }
-.hero-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--hero-text); line-height: 1.1; margin-bottom: 12px; text-shadow: 0 2px 30px rgba(0,0,0,0.5); }
-.hero-subtitle { font-size: clamp(0.9rem, 2vw, 1.1rem); color: rgba(255,255,255,0.7); margin-bottom: 20px; font-weight: 400; max-width: 600px; }
-.hero-quote { font-style: italic; font-size: clamp(0.8rem, 1.5vw, 0.95rem); color: rgba(255,255,255,0.5); max-width: 560px; line-height: 1.6; margin-bottom: 24px; }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.62) 35%, rgba(0,0,0,0.68) 55%, rgba(0,0,0,0.78) 100%); z-index: 3; }
+.hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 60px; text-align: center; z-index: 4; }
+.hero-content::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0.45) 0%, transparent 70%); pointer-events: none; z-index: -1; }
+.hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--hero-accent); margin-bottom: 12px; opacity: 0.95; text-shadow: 0 1px 4px rgba(0,0,0,0.95), 0 3px 14px rgba(0,0,0,0.8); }
+.hero-title { font-family: "Playfair Display", serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--hero-text); line-height: 1.1; margin-bottom: 12px; text-shadow: 0 1px 2px rgba(0,0,0,1), 0 3px 10px rgba(0,0,0,0.95), 0 8px 28px rgba(0,0,0,0.75), 0 16px 48px rgba(0,0,0,0.5); }
+.hero-subtitle { font-size: clamp(0.9rem, 2vw, 1.1rem); color: rgba(255,255,255,0.92); margin-bottom: 20px; font-weight: 400; max-width: 600px; text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 3px 12px rgba(0,0,0,0.8); }
+.hero-quote { font-style: italic; font-size: clamp(0.8rem, 1.5vw, 0.95rem); color: rgba(255,255,255,0.78); max-width: 560px; line-height: 1.6; margin-bottom: 24px; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 3px 10px rgba(0,0,0,0.7); }
 .hero-chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.hero-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.8); letter-spacing: 0.5px; backdrop-filter: blur(4px); transition: transform 0.15s ease, background 0.15s ease; }
+.hero-chip { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.22); border-radius: 20px; padding: 5px 14px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.92); letter-spacing: 0.5px; backdrop-filter: blur(8px); transition: transform 0.15s ease, background 0.15s ease; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 .hero-chip.accent { background: var(--accent-glow); border-color: var(--accent); color: var(--hero-accent); }
 @keyframes chipPulse { 0% { transform: scale(1); } 40% { transform: scale(1.12); background: var(--accent-glow); } 100% { transform: scale(1); } }
 .hero-chip.pulse { animation: chipPulse 0.5s ease; }
@@ -450,8 +451,8 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <div class="nav-section-label">Navigation</div>
     <div class="nav-item active" data-nav="dashboard"><span class="nav-icon">&#9978;</span><span>Base Camp</span></div>
     <div class="nav-item" data-nav="mgmt"><span class="nav-icon">&#127807;</span><span>MGMT 101</span></div>
-    <div class="nav-item" data-nav="lde"><span class="nav-icon">&#127964;</span><span>LDE Program</span></div>
-    <div class="nav-item" data-nav="alde"><span class="nav-icon">&#127956;</span><span>ALDE Program</span></div>
+    <div class="nav-item" data-nav="lde"><span class="nav-icon">&#127964;</span><span>Desert Crossing</span></div>
+    <div class="nav-item" data-nav="alde"><span class="nav-icon">&#127956;</span><span>The Ascent</span></div>
     <div class="divider" style="margin:10px 0"></div>
     <div class="nav-section-label">Tools</div>
     <div class="nav-item" data-nav="journal"><span class="nav-icon">&#128293;</span><span>Campfire Journal</span><span class="nav-badge" id="journal-badge">0</span></div>
@@ -484,9 +485,9 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <p class="hero-subtitle">You are a Melder. Now become a leader.</p>
       <p class="hero-quote">&ldquo;Your compass is set. Your pack is ready. The path is yours.&rdquo;</p>
       <div class="hero-chips">
-        <span class="hero-chip accent" id="dash-chip-phases">0 Phases Done</span>
-        <span class="hero-chip" id="dash-chip-hours">0 hrs invested</span>
-        <span class="hero-chip" id="dash-chip-milestones">0 milestones complete</span>
+        <span class="hero-chip accent" id="dash-chip-phases">Begin your first phase</span>
+        <span class="hero-chip" id="dash-chip-hours">Your journey starts now</span>
+        <span class="hero-chip" id="dash-chip-milestones">First milestone awaits</span>
       </div>
     </div>
   </div>
@@ -527,7 +528,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       </div>
       <div class="progress-path-card" id="dash-lde-card">
         <div class="prog-header">
-          <div><div class="prog-title">&#127964; Desert Crossing &mdash; LDE</div><div class="prog-subtitle">Leadership Development Experience &middot; 26 milestones</div></div>
+          <div><div class="prog-title">&#127964; Desert Crossing</div><div class="prog-subtitle">Leadership Development Experience &middot; 26 milestones</div></div>
           <div class="prog-pct-big" id="dash-lde-pct">0%</div>
         </div>
         <div class="trail-container">
@@ -543,7 +544,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       </div>
       <div class="progress-path-card" id="dash-alde-card" style="position:relative;overflow:hidden">
         <div class="prog-header">
-          <div><div class="prog-title">&#127956; The Summit &mdash; ALDE</div><div class="prog-subtitle">Advanced Leadership &middot; 39 milestones</div></div>
+          <div><div class="prog-title">&#127956; The Ascent &mdash; The Summit</div><div class="prog-subtitle">Advanced Leadership &middot; 39 milestones</div></div>
           <div class="prog-pct-big" id="dash-alde-pct" style="color:var(--accent)">0%</div>
         </div>
         <div class="trail-container">
@@ -558,10 +559,10 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
         <div id="dash-alde-locked" class="locked-overlay">
           <div class="locked-mountain">&#127956;</div>
           <div class="locked-title">The Summit Awaits</div>
-          <div class="locked-desc">Complete 80% of the LDE to earn the right to climb.</div>
+          <div class="locked-desc">Complete 80% of the Desert Crossing to earn the right to climb.</div>
           <div class="locked-progress-wrap">
             <div class="locked-progress-bar"><div class="locked-progress-fill" id="locked-fill" style="width:0%"></div></div>
-            <div class="locked-progress-label" id="locked-label">LDE: 0% complete</div>
+            <div class="locked-progress-label" id="locked-label">Desert Crossing: 0% complete</div>
           </div>
         </div>
       </div>
@@ -583,12 +584,12 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <div class="hero-content">
       <div class="hero-eyebrow">New Leader Foundations &middot; Property Meld</div>
       <h1 class="hero-title">THE TRAILHEAD</h1>
-      <p class="hero-subtitle">MGMT 101 &middot; Before the Desert Crossing &middot; 7 Milestones</p>
+      <p class="hero-subtitle">MGMT 101 &middot; New Leader Foundations &middot; 8 Milestones</p>
       <p class="hero-quote">&ldquo;Every trail starts somewhere. This is where leaders learn to show up — before they lead anyone anywhere.&rdquo;</p>
       <div class="hero-chips">
-        <span class="hero-chip accent" id="mgmt-chip-progress">0% Complete</span>
+        <span class="hero-chip accent" id="mgmt-chip-progress">Start Milestone 1</span>
         <span class="hero-chip">1 Module</span>
-        <span class="hero-chip">7 Milestones</span>
+        <span class="hero-chip">8 Milestones</span>
         <span class="hero-chip" id="mgmt-chip-milestones">0 milestones done</span>
       </div>
     </div>
@@ -610,12 +611,12 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <canvas id="canvas-lde"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Leadership Development Experience</div>
+      <div class="hero-eyebrow">Desert Crossing &middot; Property Meld</div>
       <h1 class="hero-title">THE DESERT CROSSING</h1>
       <p class="hero-subtitle">Leadership Development Experience &middot; 6 Months &middot; 26 Milestones</p>
       <p class="hero-quote">&ldquo;The desert strips away everything that isn&apos;t you. What&apos;s left is what you lead with.&rdquo;</p>
       <div class="hero-chips">
-        <span class="hero-chip accent" id="lde-chip-progress">0% Complete</span>
+        <span class="hero-chip accent" id="lde-chip-progress">Enter the Desert</span>
         <span class="hero-chip">6 Phases</span>
         <span class="hero-chip">26 Milestones</span>
         <span class="hero-chip" id="lde-chip-milestones">0 milestones done</span>
@@ -624,7 +625,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
   </div>
   <div class="section-content">
     <div class="section-header">
-      <div class="section-label">LDE Program</div>
+      <div class="section-label">Desert Crossing</div>
       <div class="section-title-text">Your Desert Crossing</div>
       <div class="section-desc">Not every Melder who enters the desert completes the crossing. Those who do come out forged. With discomfort comes growth. Lean into it.</div>
     </div>
@@ -639,12 +640,12 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <canvas id="canvas-alde"></canvas>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Advanced Leadership Development Experience</div>
+      <div class="hero-eyebrow">The Ascent &middot; Property Meld</div>
       <h1 class="hero-title">THE SUMMIT</h1>
       <p class="hero-subtitle">Navigating Complexity &amp; Change &middot; 9 Months &middot; 39 Milestones</p>
       <p class="hero-quote">&ldquo;You crossed the desert. Now we climb. The air is thin up here. So is the patience for mediocrity.&rdquo;</p>
       <div class="hero-chips">
-        <span class="hero-chip accent" id="alde-chip-progress">0% Complete</span>
+        <span class="hero-chip accent" id="alde-chip-progress">Begin the Ascent</span>
         <span class="hero-chip">5 Stages</span>
         <span class="hero-chip">39 Milestones</span>
         <span class="hero-chip" id="alde-chip-milestones">0 milestones done</span>
@@ -655,10 +656,10 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
     <div id="alde-lock-notice" class="alde-lock-note" style="display:none">
       <div class="mountain-big">&#127956;</div>
       <h3>The Summit Doesn&apos;t Open for Everyone</h3>
-      <p>&ldquo;Cross the desert first. Complete 80% of the LDE to earn the right to climb. The summit awaits Melders who&apos;ve proven themselves.&rdquo;</p>
+      <p>&ldquo;Cross the desert first. Complete 80% of the Desert Crossing to earn the right to climb. The summit awaits Melders who&apos;ve proven themselves.&rdquo;</p>
       <div style="margin-top:24px;max-width:280px;margin-left:auto;margin-right:auto">
         <div class="locked-progress-bar" style="height:6px"><div class="locked-progress-fill" id="alde-page-lock-fill" style="width:0%"></div></div>
-        <div class="locked-progress-label" id="alde-page-lock-label" style="margin-top:6px;font-size:12px">LDE: 0% complete &mdash; need 80%</div>
+        <div class="locked-progress-label" id="alde-page-lock-label" style="margin-top:6px;font-size:12px">Desert Crossing: 0% complete &mdash; need 80%</div>
       </div>
     </div>
     <div id="alde-stages-container"></div>
@@ -677,7 +678,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <p class="hero-subtitle">Campfire Journal &middot; Where Leaders Get Honest</p>
       <p class="hero-quote">&ldquo;The campfire is where leaders get honest. No audience. Just you and the page.&rdquo;</p>
       <div class="hero-chips">
-        <span class="hero-chip accent" id="journal-chip-count">0 Entries</span>
+        <span class="hero-chip accent" id="journal-chip-count">Write your first entry</span>
         <span class="hero-chip">Gibbs&apos; Reflective Cycle</span>
         <span class="hero-chip">Your Story</span>
       </div>
@@ -744,9 +745,9 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <button class="tab-btn" onclick="switchTab('assessments', this)">&#127919; Assessments</button>
     </div>
     <div class="tab-pane active" id="tab-books">
-      <div class="section-header mb-4"><div class="section-label">LDE Reading List</div><div class="section-title-text">Leadership Canon</div><div class="section-desc">The books that shaped great leaders. Your mission: read, reflect, apply.</div></div>
+      <div class="section-header mb-4"><div class="section-label">Desert Crossing Reading List</div><div class="section-title-text">Leadership Canon</div><div class="section-desc">The books that shaped great leaders. Your mission: read, reflect, apply.</div></div>
       <div class="book-grid" id="books-grid-lde"></div>
-      <div class="section-header mb-4 mt-6"><div class="section-label">ALDE Additions</div><div class="section-title-text">The Advanced Stack</div><div class="section-desc">For Melders who lead leaders. These go deeper.</div></div>
+      <div class="section-header mb-4 mt-6"><div class="section-label">The Ascent — Advanced Stack</div><div class="section-title-text">The Advanced Stack</div><div class="section-desc">For Melders who lead leaders. These go deeper.</div></div>
       <div class="book-grid" id="books-grid-alde"></div>
     </div>
     <div class="tab-pane" id="tab-mindsets">
@@ -784,7 +785,7 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
           <div class="settings-field"><label class="settings-label">Your Name</label><input type="text" class="settings-input" id="settings-name" placeholder="Enter your name..." /></div>
           <div class="settings-field"><label class="settings-label">Program Start Date</label><input type="date" class="settings-input" id="settings-start-date" /></div>
           <div class="settings-field"><label class="settings-label">Role / Cohort</label><input type="text" class="settings-input" id="settings-role" placeholder="e.g., Product Manager &middot; Cohort 3" /></div>
-          <div class="settings-field"><label class="settings-label">Current Program</label><select class="settings-input" id="settings-program"><option value="mgmt">MGMT 101 &mdash; New Leader Foundations</option><option value="lde">LDE &mdash; Leadership Development Experience</option><option value="alde">ALDE &mdash; Advanced Leadership Development</option></select></div>
+          <div class="settings-field"><label class="settings-label">Current Program</label><select class="settings-input" id="settings-program"><option value="mgmt">MGMT 101 &mdash; New Leader Foundations</option><option value="lde">Desert Crossing &mdash; Leadership Development Experience</option><option value="alde">The Ascent &mdash; Advanced Leadership Development</option></select></div>
           <button class="btn btn-primary mt-4" onclick="saveSettings()">Save Profile</button>
         </div>
         <div class="settings-section">
@@ -1208,6 +1209,48 @@ const MGMT_PHASES = [
           { tier: 'watch', label: 'Why We All Need to Practice Emotional First Aid — Guy Winch', url: 'https://www.youtube.com/watch?v=F2hc2FLOdhI', desc: 'The importance of recovery and what happens to teams that don\'t prioritize it.' },
           { tier: 'apply', label: 'BetterUp: How to Actually Take a Real Vacation', url: 'https://www.betterup.com/blog/how-to-take-a-real-vacation', desc: 'Practical guide to creating team coverage systems that enable real rest.' },
           { tier: 'discuss', label: 'Discuss: What does "fully disconnecting" mean on our team?', url: '#', desc: 'Bring this question to your next team meeting. The conversation itself is the deliverable.' }
+        ]
+      },
+      {
+        id: 'mgmt-8', num: 'Milestone 8', title: 'OKRs, Leading Indicators & the Art of Measuring What Matters',
+        desc: 'Most managers track what already happened. Great ones track what is about to happen. This milestone teaches the difference between a lagging metric (the scoreboard) and a leading indicator (the plays that change the score).',
+        tags: ['okr', 'metrics', 'strategy', 'measurement', '2hr'],
+        geoZone: 'The Navigation Point', geoScene: 'A ridge above the treeline — the first place you can finally see the whole valley, where you came from and where you\'re going.',
+        photoUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=90&auto=format&fit=crop',
+        duration: '2 hours',
+        activities: [
+          { text: 'Review the Meld 1Q26 Growth Execution OKRs — understand the company-level objectives and how your team\'s work connects to them', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution' },
+          'For each of your team\'s current metrics, classify each one: Is it a leading indicator (predicts the future) or a lagging indicator (confirms the past)?',
+          'Write one OKR for your team in proper format: 1 Objective (qualitative, inspiring direction) + 2–3 Key Results (specific, measurable, time-bound outcomes)',
+          'Map the Cobra Effect risk for your leading indicators — what perverse behavior could emerge if someone optimized purely for the number you\'re tracking?',
+          { text: 'Understand Meld\'s OKR pace system: <90% = Red · 90–99% = Yellow · 100–110% = Green · >110% = Blue. Discuss: what does each color signal — and what does your team do differently in each state?', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution' }
+        ],
+        frameworks: [
+          'OKR Structure: Objectives are qualitative and inspiring — they answer "where are we going?" Key Results are specific, measurable outcomes — they answer "how will we know we arrived?"',
+          'Leading vs Lagging: A lagging indicator tells you what happened (revenue closed, churn rate, NPS). A leading indicator predicts what will happen (pipeline coverage, product adoption rate, response time). Lead with leading.',
+          'Meld Pace System: <90% = Red (intervention needed) · 90–99% = Yellow (on track, monitor) · 100–110% = Green (healthy execution) · >110% = Blue (exceeded, examine why)',
+          'The Cobra Effect: A metric unmoored from the goal it was meant to measure will be gamed. British colonial India offered bounties for dead cobras — so people bred cobras for the bounty. Always ask: what happens when someone games this number?',
+          'The 10x Rule for Key Results: A Key Result should be ambitious enough that 70% achievement feels meaningful. If you\'re hitting 100% every quarter, your KRs aren\'t stretching enough.'
+        ],
+        frameworkPrompts: [
+          'List the three numbers you look at most often on your team. For each: is it leading or lagging? If it\'s lagging, what\'s the leading indicator that predicts it?',
+          'Write a draft OKR for your team this quarter. Share it with your manager and ask: "Does this connect to what the company is trying to do?"',
+          'Look at Meld\'s current 1Q26 OKRs. Identify one Key Result your team directly influences. What would moving the needle on that KR require from you this week?',
+          'Identify one metric on your team that could be Cobra-Effect'd. What behavior would emerge if someone only optimized for that number?'
+        ],
+        reflections: [
+          'What is the difference between a team that is "busy" and a team that is "effective"? How do your current metrics tell that story?',
+          'Have you ever hit a goal but felt like something was off — that the result didn\'t represent real progress? What was missing from the way the goal was measured?',
+          'What would it feel like to lead a team that had complete clarity on what mattered most this quarter — and why?'
+        ],
+        deliverable: 'A written team OKR for the current quarter — one Objective and 2–3 Key Results — plus a leading/lagging indicator audit of your team\'s current top 5 metrics.',
+        resources: [
+          { tier: 'read', label: 'Meld 1Q26 Growth Execution OKRs (Confluence)', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution', desc: 'The live Meld company OKRs for Q1 2026 — understand what the company is optimizing for and where your team fits.' },
+          { tier: 'read', label: 'Measure What Matters — John Doerr (Summary)', url: 'https://www.whatmatters.com/faqs/okr-meaning-definition-example', desc: 'The foundational OKR framework from the investor who introduced them to Google. Essential reading for any manager building a metrics culture.' },
+          { tier: 'watch', label: 'John Doerr: Why the Secret to Success is Setting the Right Goals (TED)', url: 'https://www.youtube.com/watch?v=L4N1q4RNi9I', desc: 'The clearest 11-minute explanation of OKRs and why the goal-setting system matters more than just having goals.' },
+          { tier: 'apply', label: 'The Leading vs Lagging Indicator Framework (HBR)', url: 'https://hbr.org/2010/02/the-balanced-scorecard-measures', desc: 'How to build a balanced set of metrics — leading indicators that drive the lagging outcomes you care about.' },
+          { tier: 'apply', label: 'Andy Grove on OKRs (Intel — High Output Management Summary)', url: 'https://medium.com/startup-tools/okrs-5afdc298bc28', desc: 'Where OKRs came from — Andy Grove\'s original formulation from High Output Management. The source code.' },
+          { tier: 'practice', label: 'OKR Writing Workshop — re:Work by Google', url: 'https://rework.withgoogle.com/guides/set-goals-with-okrs/', desc: 'Google\'s own guide to writing, grading, and iterating on OKRs — includes example OKRs and grading rubric.' }
         ]
       }
     ]
@@ -2857,9 +2900,21 @@ class ParticleSystem {
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let p of this.particles) {
-      ctx.save(); ctx.globalAlpha = p.opacity; ctx.fillStyle = this.config.color;
-      if (this.config.glow) { ctx.shadowColor = this.config.color; ctx.shadowBlur = 4; }
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      if (this.config.glow) {
+        ctx.shadowColor = this.config.color;
+        ctx.shadowBlur = p.size * 5;
+        // soft outer halo pass
+        ctx.globalAlpha = p.opacity * 0.35;
+        ctx.fillStyle = this.config.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 2.8, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = p.opacity;
+      }
+      ctx.fillStyle = this.config.color;
+      ctx.shadowBlur = this.config.glow ? p.size * 3 : 0;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
     }
   }
   start() {
@@ -2871,13 +2926,13 @@ class ParticleSystem {
 }
 
 const PARTICLE_CONFIGS = {
-  dashboard: { count: 35, color: 'rgba(251,191,36,0.55)', direction: 'up', speed: 0.5, size: 2.5, opacity: 0.6, glow: true },
-  mgmt: { count: 40, color: 'rgba(52,211,153,0.4)', direction: 'up', speed: 0.5, size: 1.8, opacity: 0.5, glow: true },
-  lde: { count: 50, color: 'rgba(253,230,138,0.45)', direction: 'right', speed: 0.8, size: 1.8, opacity: 0.5, gravity: true },
-  alde: { count: 45, color: 'rgba(224,242,254,0.5)', direction: 'drift', speed: 0.4, size: 1.5, opacity: 0.55 },
-  journal: { count: 30, color: 'rgba(251,146,60,0.65)', direction: 'up', speed: 0.7, size: 2, opacity: 0.65, glow: true },
-  resources: { count: 20, color: 'rgba(190,242,100,0.3)', direction: 'drift', speed: 0.25, size: 1.5, opacity: 0.35 },
-  settings: { count: 0, color: 'transparent', direction: 'up', speed: 0, size: 0, opacity: 0 }
+  dashboard: { count: 65, color: 'rgba(251,191,36,0.65)', direction: 'up', speed: 0.55, size: 2.8, opacity: 0.7, glow: true },
+  mgmt:      { count: 70, color: 'rgba(52,211,153,0.5)',  direction: 'up', speed: 0.55, size: 2.0, opacity: 0.6, glow: true },
+  lde:       { count: 85, color: 'rgba(253,230,138,0.55)', direction: 'right', speed: 0.85, size: 2.2, opacity: 0.6, gravity: true, glow: true },
+  alde:      { count: 75, color: 'rgba(224,242,254,0.6)', direction: 'drift', speed: 0.45, size: 1.8, opacity: 0.65, glow: true },
+  journal:   { count: 55, color: 'rgba(251,146,60,0.7)',  direction: 'up', speed: 0.75, size: 2.4, opacity: 0.72, glow: true },
+  resources: { count: 40, color: 'rgba(190,242,100,0.4)', direction: 'drift', speed: 0.3, size: 1.8, opacity: 0.45, glow: true },
+  settings:  { count: 0, color: 'transparent', direction: 'up', speed: 0, size: 0, opacity: 0 }
 };
 
 // =============================================
@@ -3033,9 +3088,9 @@ function refreshDashboard() {
   const chipPhases = document.getElementById('dash-chip-phases');
   const chipHours = document.getElementById('dash-chip-hours');
   const chipMilestones = document.getElementById('dash-chip-milestones');
-  if (chipPhases) { chipPhases.textContent = phases + ' Phases Done'; pulseChip(chipPhases); }
-  if (chipHours) { chipHours.textContent = hours + ' hrs invested'; pulseChip(chipHours); }
-  if (chipMilestones) { chipMilestones.textContent = lessons + ' milestones complete'; pulseChip(chipMilestones); }
+  if (chipPhases) { chipPhases.textContent = phases === 0 ? 'Begin your first phase' : phases + (phases === 1 ? ' Phase Complete' : ' Phases Complete'); pulseChip(chipPhases); }
+  if (chipHours) { chipHours.textContent = hours === 0 ? 'Your journey starts now' : hours + ' hrs invested'; pulseChip(chipHours); }
+  if (chipMilestones) { chipMilestones.textContent = lessons === 0 ? 'First milestone awaits' : lessons + (lessons === 1 ? ' milestone complete' : ' milestones complete'); pulseChip(chipMilestones); }
 
   animateCounter(document.getElementById('stat-phases'), phases);
   animateCounter(document.getElementById('stat-hours'), hours);
@@ -3282,9 +3337,9 @@ function refreshMGMT() {
   container.innerHTML = MGMT_PHASES.map(p => renderPhaseCard(p, 'mgmt')).join('');
   const mgmt = calcMGMTProgress();
   const chip = document.getElementById('mgmt-chip-progress');
-  if (chip) chip.textContent = mgmt.pct + '% Complete';
+  if (chip) chip.textContent = mgmt.pct === 0 ? 'Start Milestone 1' : mgmt.pct + '% Complete';
   const chipM = document.getElementById('mgmt-chip-milestones');
-  if (chipM) chipM.textContent = mgmt.done + ' milestones done';
+  if (chipM) chipM.textContent = mgmt.done === 0 ? 'First step awaits' : mgmt.done + (mgmt.done === 1 ? ' milestone done' : ' milestones done');
 }
 
 function refreshLDE() {
@@ -3293,9 +3348,9 @@ function refreshLDE() {
   container.innerHTML = LDE_PHASES.map(p => renderPhaseCard(p, 'lde')).join('');
   const lde = calcLDEProgress();
   const chip = document.getElementById('lde-chip-progress');
-  if (chip) chip.textContent = lde.pct + '% Complete';
+  if (chip) chip.textContent = lde.pct === 0 ? 'Enter the Desert' : lde.pct + '% Complete';
   const chipM = document.getElementById('lde-chip-milestones');
-  if (chipM) chipM.textContent = lde.done + ' milestones done';
+  if (chipM) chipM.textContent = lde.done === 0 ? 'Trail not yet blazed' : lde.done + (lde.done === 1 ? ' milestone done' : ' milestones done');
 }
 
 // =============================================
@@ -3311,14 +3366,14 @@ function refreshALDE() {
   const lockFill = document.getElementById('alde-page-lock-fill');
   if (lockFill) lockFill.style.width = lde.pct + '%';
   const lockLabel = document.getElementById('alde-page-lock-label');
-  if (lockLabel) lockLabel.textContent = 'LDE: ' + lde.pct + '% complete — need 80%';
+  if (lockLabel) lockLabel.textContent = 'Desert Crossing: ' + lde.pct + '% complete — need 80%';
   if (unlocked) {
     container.innerHTML = ALDE_STAGES.map(s => renderPhaseCard(s, 'alde')).join('');
     const alde = calcALDEProgress();
     const chip = document.getElementById('alde-chip-progress');
-    if (chip) chip.textContent = alde.pct + '% Complete';
+    if (chip) chip.textContent = alde.pct === 0 ? 'Begin the Ascent' : alde.pct + '% Complete';
     const chipM = document.getElementById('alde-chip-milestones');
-    if (chipM) chipM.textContent = alde.done + ' milestones done';
+    if (chipM) chipM.textContent = alde.done === 0 ? 'Summit not yet started' : alde.done + (alde.done === 1 ? ' milestone done' : ' milestones done');
   } else {
     container.innerHTML = '';
   }
@@ -3333,7 +3388,9 @@ function refreshJournal() { renderJournalList(); updateJournalChip(); updateJour
 
 function updateJournalChip() {
   const chip = document.getElementById('journal-chip-count');
-  if (chip) chip.textContent = state.journal.length + ' Entr' + (state.journal.length === 1 ? 'y' : 'ies');
+  if (!chip) return;
+  const n = state.journal.length;
+  chip.textContent = n === 0 ? 'Write your first entry' : n + (n === 1 ? ' Entry' : ' Entries');
 }
 
 function updateJournalBadge() {
