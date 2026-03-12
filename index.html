@@ -4254,11 +4254,11 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   }
 
   // Assessment block
-  const assessEl = document.getElementById('zone-assess');
+  const zoneAssessEl = document.getElementById('zone-assess');
   const assessBlock = document.getElementById('zone-assess-block');
-  if (milestone.assessment && milestone.assessment.length && assessEl && assessBlock) {
+  if (milestone.assessment && milestone.assessment.length && zoneAssessEl && assessBlock) {
     const savedAssess = (state[programKey].reflections || {})[milestoneId + '_assess'] || {};
-    assessEl.innerHTML = renderAssessment(milestone.assessment, savedAssess, milestoneId);
+    zoneAssessEl.innerHTML = renderAssessment(milestone.assessment, savedAssess, milestoneId);
     assessBlock.style.display = 'block';
   } else if (assessBlock) {
     assessBlock.style.display = 'none';
