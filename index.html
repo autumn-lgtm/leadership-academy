@@ -231,12 +231,24 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--accent-glow); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
 .step-text { font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; }
 .assessment-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; position: relative; overflow: hidden; transition: all var(--transition); }
-.assessment-card:hover { border-color: var(--accent-glow); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+.assessment-card:hover { border-color: rgba(52,211,153,0.3); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 .assessment-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); }
+.assessment-card.assess-done { border-color: rgba(52,211,153,0.35); }
+.assessment-card.assess-done::before { background: linear-gradient(90deg, #34D399, transparent); }
 .assessment-icon { font-size: 32px; margin-bottom: 14px; }
 .assessment-title { font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 6px; }
 .assessment-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
 .assessment-tag { display: inline-block; background: var(--accent-glow); border: 1px solid var(--accent-glow); color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+/* Leadership Profile Card */
+.lp-card { background: linear-gradient(135deg, rgba(251,191,36,0.06) 0%, rgba(167,139,250,0.06) 100%); border: 1px solid rgba(251,191,36,0.2); border-radius: 16px; padding: 32px; }
+.lp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.lp-slot { }
+.lp-slot-label { font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+.lp-slot-value { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.92); line-height: 1.5; }
+.lp-slot-empty { font-size: 13px; color: rgba(255,255,255,0.22); font-style: italic; }
+.lp-crystal { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+.lp-crystal-text { font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.75; white-space: pre-wrap; }
+@media (max-width: 640px) { .lp-grid { grid-template-columns: 1fr; } }
 
 /* ===== SETTINGS ===== */
 .settings-section { margin-bottom: 32px; }
@@ -910,8 +922,30 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
       <div class="three-col" id="frameworks-grid"></div>
     </div>
     <div class="tab-pane" id="tab-assessments">
-      <div class="section-header mb-4"><div class="section-label">Assessments</div><div class="section-title-text">Know Thyself First</div><div class="section-desc">Great leadership begins with self-awareness. These tools are your mirror.</div></div>
+      <div class="section-header mb-4"><div class="section-label">Assessments</div><div class="section-title-text">Know Thyself First</div><div class="section-desc">Great leadership begins with self-awareness. Complete each assessment, record your results, and watch your Leadership Profile build itself below.</div></div>
       <div class="two-col" id="assessments-grid"></div>
+      <!-- Crystal Knows -->
+      <div class="card mt-6" id="crystal-card" style="margin-top:32px">
+        <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:16px">
+          <div style="font-size:32px">🔮</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:15px;color:var(--text-primary);margin-bottom:4px">Crystal Knows Personality Profile</div>
+            <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px">Crystal analyzes communication style and working preferences. It gives you a plain-language profile of how you think, decide, and collaborate — and how others should work with you. Paste your full Crystal profile text below.</div>
+            <a href="https://www.crystalknows.com" target="_blank" rel="noopener" style="font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;letter-spacing:0.5px">Get Your Crystal Profile ↗</a>
+          </div>
+        </div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:8px">Paste Your Crystal Profile Here</div>
+        <textarea id="crystal-profile-input" placeholder="Paste your full Crystal Knows profile text here — personality type, communication tips, how to work with you, what drives you..." style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:rgba(255,255,255,0.9);font-family:Inter,sans-serif;font-size:13px;padding:14px 16px;resize:vertical;min-height:140px;outline:none;line-height:1.65;transition:border-color 0.2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'" oninput="saveCrystalProfile(this.value)"></textarea>
+      </div>
+      <!-- Leadership Profile -->
+      <div id="leadership-profile-block" style="margin-top:32px;display:none">
+        <div class="section-header mb-4" style="padding:0">
+          <div class="section-label">Your Identity</div>
+          <div class="section-title-text">Your Leadership Profile</div>
+          <div class="section-desc">Built from your assessments. This is your fingerprint as a leader — reference it throughout every milestone.</div>
+        </div>
+        <div id="leadership-profile-card"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1089,6 +1123,8 @@ const defaultState = {
   alde: { milestones: {}, reflections: {} },
   journal: [],
   booksRead: {},
+  assessmentResults: {},
+  crystalProfile: '',
   notifications: { weekly: true, journal: true, milestones: true },
   currentSection: 'dashboard'
 };
@@ -3173,10 +3209,12 @@ function renderTrailQuote() {
 }
 
 const ASSESSMENTS = [
-  { icon: '🧩', title: '16 Personalities (MBTI)', desc: 'Discover your personality type and how it shapes your leadership style. Reference this throughout your program — from your LDE presentation to your ALDE playbook. Self-awareness starts here.', tag: 'Self-Awareness · Foundation' },
-  { icon: '⭐', title: 'High5 Strengths Assessment', desc: 'Identify your top 5 natural strengths. At PM, we lead from strength. This assessment tells you where you shine — and gives you a framework for delegating what you don\'t.', tag: 'Strengths · LDE + ALDE' },
-  { icon: '🏛', title: 'Values Assessment', desc: 'What do you stand for? Your values are your leadership constitution. When decisions get hard, your values are your compass. Know them clearly before the pressure hits.', tag: 'Values · Core' },
-  { icon: '📊', title: 'Paylocity Development Analysis', desc: 'Your formal performance and development review through Paylocity. This connects your program progress to your actual role, manager feedback, and growth trajectory at Property Meld.', tag: 'Performance · Formal Review' }
+  { icon: '🧩', title: '16 Personalities (MBTI)', desc: 'Discover your personality type and how it shapes your leadership style — cognitive functions, decision-making patterns, stress behaviors. Reference this in your LDE presentation and your ALDE playbook. Self-awareness starts here.', tag: 'Self-Awareness · Foundation', url: 'https://www.16personalities.com/free-personality-test', time: '12 min', resultHint: 'e.g. INTJ, ENFP, ISTJ — paste your full type', resultLabel: 'Your Type' },
+  { icon: '⭐', title: 'High5 Strengths', desc: 'Identify your top 5 natural strengths. Property Meld leaders lead from strength — this tells you where you shine and gives you language for how you contribute, delegate, and build teams.', tag: 'Strengths · LDE + ALDE', url: 'https://high5test.com', time: '20 min', resultHint: 'e.g. Coach, Strategist, Deliverer, Empathizer...', resultLabel: 'Your Top 5' },
+  { icon: '🏛', title: 'Personal Values Assessment', desc: 'What do you stand for? Your values are your leadership constitution. When decisions get hard and the situation is ambiguous, your values are your compass. Know them before the pressure hits.', tag: 'Values · Core', url: 'https://www.valuescentre.com/tools-assessments/pva/', time: '10 min', resultHint: 'Your top 3–5 values...', resultLabel: 'Your Values' },
+  { icon: '🌟', title: 'VIA Character Strengths', desc: 'A research-backed inventory of your 24 character strengths ranked by how central they are to who you are. Your top strengths ("signature strengths") are where leadership feels most natural and energizing.', tag: 'Character · Foundation', url: 'https://www.viacharacter.org/survey/account/register', time: '15 min', resultHint: 'Your top 5 character strengths...', resultLabel: 'Your Signature Strengths' },
+  { icon: '🎯', title: 'CliftonStrengths (StrengthsFinder)', desc: 'Gallup\'s definitive strengths assessment — 34 themes ranked by natural talent. One of the most widely used in high-performance teams. If you\'ve already taken it, record your top 5 here. If not, ask your manager about access.', tag: 'Strengths · Advanced', url: 'https://www.gallup.com/cliftonstrengths/en/252137/home.aspx', time: '35 min', resultHint: 'e.g. Achiever, Learner, Relator, Ideation...', resultLabel: 'Your Top 5 Themes' },
+  { icon: '📊', title: 'Paylocity Development Analysis', desc: 'Your formal performance and development review through Paylocity. This connects your program progress to your actual role, manager feedback, and growth trajectory at Property Meld.', tag: 'Performance · Formal', url: 'https://www.paylocity.com', time: null, resultHint: null, resultLabel: null }
 ];
 
 // =============================================
@@ -3813,7 +3851,13 @@ document.getElementById('journal-body').addEventListener('input', function() {
 // =============================================
 // RESOURCES
 // =============================================
-function refreshResources() { renderBooks(); renderFrameworks(); renderAssessments(); updateBooksChip(); }
+function refreshResources() {
+  renderBooks(); renderFrameworks(); renderAssessments(); updateBooksChip();
+  // Restore Crystal profile input
+  const crystalInput = document.getElementById('crystal-profile-input');
+  if (crystalInput) crystalInput.value = state.crystalProfile || '';
+  renderLeadershipProfile();
+}
 
 function updateBooksChip() {
   const chip = document.getElementById('books-read-chip');
@@ -3881,14 +3925,83 @@ function renderFrameworks() {
 function renderAssessments() {
   const grid = document.getElementById('assessments-grid');
   if (!grid) return;
-  grid.innerHTML = ASSESSMENTS.map(a => `
-    <div class="assessment-card">
-      <div class="assessment-icon">${a.icon}</div>
+  const saved = state.assessmentResults || {};
+  grid.innerHTML = ASSESSMENTS.map((a, i) => {
+    const resultVal = escHtml(saved[i] || '');
+    const resultField = a.resultHint ? `
+      <div style="margin-top:14px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:7px">${escHtml(a.resultLabel || 'Your Result')}</div>
+        <input type="text" placeholder="${escHtml(a.resultHint)}" value="${resultVal}"
+          style="width:100%;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:rgba(255,255,255,0.9);font-family:Inter,sans-serif;font-size:13px;padding:9px 12px;outline:none;box-sizing:border-box;transition:border-color 0.2s"
+          onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.12)'"
+          oninput="saveAssessmentResult(${i},this.value)" />
+      </div>` : '';
+    const doneIndicator = saved[i] ? '<span style="font-size:11px;color:#34D399;font-weight:600">✓ Completed</span>' : '';
+    return `<div class="assessment-card${saved[i] ? ' assess-done' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div class="assessment-icon" style="margin-bottom:0;font-size:28px">${a.icon}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${a.time ? `<span style="font-size:11px;color:var(--text-muted);font-weight:500">~${escHtml(a.time)}</span>` : ''}
+          ${doneIndicator}
+        </div>
+      </div>
       <div class="assessment-title">${escHtml(a.title)}</div>
       <div class="assessment-desc">${escHtml(a.desc)}</div>
-      <span class="assessment-tag">${escHtml(a.tag)}</span>
-    </div>
-  `).join('');
+      ${resultField}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:8px">
+        <span class="assessment-tag">${escHtml(a.tag)}</span>
+        ${a.url ? `<a href="${escHtml(a.url)}" target="_blank" rel="noopener" style="font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;letter-spacing:0.5px;flex-shrink:0">Take Assessment \u2197</a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function saveAssessmentResult(idx, value) {
+  if (!state.assessmentResults) state.assessmentResults = {};
+  state.assessmentResults[idx] = value;
+  saveState();
+  renderLeadershipProfile();
+}
+
+function saveCrystalProfile(value) {
+  state.crystalProfile = value;
+  saveState();
+  renderLeadershipProfile();
+}
+
+function renderLeadershipProfile() {
+  const block = document.getElementById('leadership-profile-block');
+  const card = document.getElementById('leadership-profile-card');
+  if (!block || !card) return;
+  const results = state.assessmentResults || {};
+  const crystal = state.crystalProfile || '';
+  const filled = Object.values(results).filter(v => v && v.trim()).length;
+  if (filled === 0 && !crystal.trim()) { block.style.display = 'none'; return; }
+  block.style.display = 'block';
+  // Map assessment indices to profile slots
+  // 0=16P, 1=High5, 2=Values, 3=VIA, 4=Clifton, 5=Paylocity
+  const slots = [
+    { label: '16 Personalities Type', idx: 0, icon: '🧩' },
+    { label: 'High5 Top Strengths', idx: 1, icon: '⭐' },
+    { label: 'Core Values', idx: 2, icon: '🏛' },
+    { label: 'VIA Character Strengths', idx: 3, icon: '🌟' },
+    { label: 'CliftonStrengths', idx: 4, icon: '🎯' },
+  ];
+  const slotsHtml = slots.map(s => {
+    const val = results[s.idx];
+    return `<div class="lp-slot">
+      <div class="lp-slot-label">${s.icon} ${escHtml(s.label)}</div>
+      ${val ? `<div class="lp-slot-value">${escHtml(val)}</div>` : `<div class="lp-slot-empty">Not yet completed</div>`}
+    </div>`;
+  }).join('');
+  const crystalHtml = crystal.trim() ? `<div class="lp-crystal">
+    <div class="lp-slot-label" style="margin-bottom:12px">🔮 Crystal Knows Profile</div>
+    <div class="lp-crystal-text">${escHtml(crystal.trim())}</div>
+  </div>` : '';
+  card.innerHTML = `<div class="lp-card">
+    <div class="lp-grid">${slotsHtml}</div>
+    ${crystalHtml}
+  </div>`;
 }
 
 function switchTab(tabId, btn) {
