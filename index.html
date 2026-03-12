@@ -287,6 +287,20 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
 .zone-activities { display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; }
 .zone-activities li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text-primary); line-height: 1.5; }
 .zone-activities li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.zone-activity-link { color: var(--accent); text-decoration: none; font-weight: 500; }
+.zone-activity-link:hover { text-decoration: underline; }
+.zone-resources { display: flex; flex-direction: column; gap: 10px; }
+.zone-resource-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.07); text-decoration: none; color: var(--text-primary); transition: all 0.2s; }
+.zone-resource-item:hover { background: rgba(255,255,255,0.07); border-color: var(--accent); }
+.zone-resource-tier { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 12px; flex-shrink: 0; margin-top: 1px; }
+.tier-watch { background: rgba(59,130,246,0.2); color: #93c5fd; }
+.tier-read { background: rgba(139,92,246,0.2); color: #c4b5fd; }
+.tier-discuss { background: rgba(245,158,11,0.2); color: #fcd34d; }
+.tier-apply { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+.tier-practice { background: rgba(239,68,68,0.2); color: #fca5a5; }
+.zone-resource-body { display: flex; flex-direction: column; gap: 3px; }
+.zone-resource-label { font-size: 13px; font-weight: 600; line-height: 1.4; }
+.zone-resource-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 .zone-frameworks { display: flex; flex-direction: column; gap: 14px; }
 .zone-framework-item { display: flex; flex-direction: column; gap: 4px; }
 .zone-framework-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
@@ -761,6 +775,10 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
           <div class="zone-assessment-prompts" id="zone-assessment-prompts"></div>
         </div>
       </div>
+      <div class="zone-block" id="zone-resources-block" style="display:none">
+        <div class="zone-block-label">&#127775; Learning Pyramid Resources</div>
+        <div class="zone-resources" id="zone-resources"></div>
+      </div>
       <div class="zone-block">
         <div class="zone-block-label">&#128230; Your Deliverable</div>
         <div class="zone-deliverable" id="zone-deliverable"></div>
@@ -833,13 +851,20 @@ const LDE_PHASES = [
         geoZone: 'The Trailhead', geoScene: '🏜',
         duration: '2 hours',
         activities: [
-          'Watch the "Leadership vs. Management" keynote video (35 min)',
-          'Read pages 1–30 of Start with Why by Simon Sinek',
-          'Write a 1-page reflection: What does leadership mean to me today?',
-          'Share your reflection with your assigned mentor before your first meeting'
+          { text: 'Watch "Leadership vs. Management | 7 Differences"', url: 'https://www.youtube.com/results?search_query=Leadership+vs+Management+7+Difference+between+Leadership+and+Management' },
+          { text: 'Watch "Are you that Manager People Love to Hate?" — Shadé Zahrai', url: 'https://www.youtube.com/@shadezahrai/videos' },
+          { text: 'Read "From Purpose to Impact" — HBR, Craig & Snook', url: 'https://hbr.org/2014/05/from-purpose-to-impact' },
+          { text: 'Complete the 16 Personalities (MBTI) assessment', url: 'https://www.16personalities.com/free-personality-test' },
+          { text: 'Complete the Personal Values Assessment (Barrett Values Centre)', url: 'https://www.valuescentre.com/tools-assessments/pva/' },
+          { text: 'Write a 1-page reflection: What does leadership mean to me today?', url: null },
+          { text: 'Share your reflection with your assigned mentor before your first meeting', url: null }
         ],
         frameworks: [
           { name: "Simon Sinek's Golden Circle", how: "Start by articulating your WHY — your purpose and belief — before your HOW or WHAT. Ask: why do I want to lead?" }
+        ],
+        resources: [
+          { tier: 'apply', label: 'Find Your Why — Simon Sinek Workbook', url: 'https://simonsinek.com/find-your-why/', desc: 'Move from passive reflection to active purpose-drafting. Work through the exercises before your first mentor meeting.' },
+          { tier: 'discuss', label: 'Slack Discussion Prompt: Purpose Statement', url: 'https://meld-leadershipdevelopment.slack.com', desc: 'Post your purpose statement to the Meld_leadershipdevelopment channel and respond to two others.' }
         ],
         reflections: [
           'What is the real difference between how I manage tasks and how I lead people?',
@@ -855,14 +880,18 @@ const LDE_PHASES = [
         geoZone: 'The Mirror Rock', geoScene: '🪨',
         duration: '3 hours',
         activities: [
-          'Complete the 16 Personalities (MBTI) assessment at 16personalities.com (20 min)',
-          'Complete the High5 Strengths assessment (25 min)',
-          'Complete the Values Assessment (20 min)',
-          'Write a 1-page synthesis: how do your personality type, strengths, and values align — or conflict?',
-          'Bring all three results to your mentor meeting'
+          { text: 'Complete the 16 Personalities (MBTI) assessment', url: 'https://www.16personalities.com/free-personality-test' },
+          { text: 'Complete the High5 Strengths assessment', url: 'https://high5test.com' },
+          { text: 'Complete the Personal Values Assessment', url: 'https://www.valuescentre.com/tools-assessments/pva/' },
+          { text: 'Write a 1-page synthesis connecting personality, strengths, and values', url: null },
+          { text: 'Bring all three results to your mentor meeting', url: null }
         ],
         frameworks: [
           { name: 'Johari Window', how: 'Use your assessment results to map your "open self" — what you and others know. Commit to shrinking your blind spot by sharing results and asking for honest feedback.' }
+        ],
+        resources: [
+          { tier: 'apply', label: "What's Your Leadership Style? — MindTools Quiz", url: 'https://www.mindtools.com/azr30oh/whats-your-leadership-style/', desc: 'Self-assessment that moves from reading about styles to evaluating yourself. Debrief with your mentor.' },
+          { tier: 'discuss', label: 'Johari Window Interactive Template — Miro', url: 'https://miro.com/templates/johari-window/', desc: 'Map your open, blind, hidden, and unknown quadrants using your assessment results. Share with your mentor.' }
         ],
         reflections: [
           'Were any of your assessment results surprising? What did you not want to see — and why?',
@@ -878,13 +907,18 @@ const LDE_PHASES = [
         geoZone: 'The First Dune', geoScene: '🏔',
         duration: '2 hours',
         activities: [
-          'Review your assessment results and identify 1–2 leadership competencies to develop',
-          'Read Brené Brown\'s framing on vulnerability (resource provided)',
-          'Complete the "Gap Identifier" worksheet: where are you now vs. where you want to be?',
-          'Discuss your growth opportunities with your mentor and get their honest input'
+          { text: 'Watch "Six Leadership Styles" — Goleman (LeadershipAhoy)', url: 'https://www.leadershipahoy.com/the-six-leadership-styles-by-daniel-goleman/' },
+          { text: 'Watch "Leadership Styles: Which Type of Leader Are You?"', url: 'https://www.youtube.com/results?search_query=Leadership+Styles+Which+Type+of+Leader+Are+You' },
+          { text: 'Read "Leadership Styles" — MindTools', url: 'https://www.mindtools.com/a7m23wp/leadership-styles' },
+          { text: 'Complete the Development Analysis through Paylocity (self-rating on competencies)', url: null },
+          { text: 'Discuss your growth opportunities with your mentor and get their honest input', url: null }
         ],
         frameworks: [
           { name: 'Competency Gap Analysis', how: 'For each competency: rate yourself 1–5, ask a trusted colleague to rate you, compare. The gap between self-perception and reality is your growth frontier.' }
+        ],
+        resources: [
+          { tier: 'read', label: '6 Common Leadership Styles — HBR 2024', url: 'https://hbr.org/2024/04/6-common-leadership-styles-and-how-to-decide-which-to-use-when', desc: 'Practical guide to choosing which style to deploy in different situations.' },
+          { tier: 'apply', label: 'Competency Gap Analysis — Free Template', url: 'https://www.mindtools.com/axupoij/golemans-six-leadership-styles-video/', desc: 'Rate yourself on each of Goleman\'s six styles. Share scores with your mentor before your next sync.' }
         ],
         reflections: [
           'What leadership behavior have I avoided because it makes me uncomfortable — and what would change if I embraced it?',
@@ -907,6 +941,10 @@ const LDE_PHASES = [
         ],
         frameworks: [
           { name: 'Growth Zone Model', how: 'Understand the three zones: comfort (no growth), learning (growth with stretch), panic (shutdown). Your job: stay in the learning zone deliberately.' }
+        ],
+        resources: [
+          { tier: 'discuss', label: 'Growth Zone Model — Explained', url: 'https://www.mindtools.com/a7m23wp/leadership-styles', desc: 'Review the three zones with your mentor and identify where you currently sit for each of your development goals.' },
+          { tier: 'apply', label: '70-20-10 Learning Plan Template', url: 'https://www.mindtools.com/abyj5fi/forming-storming-norming-and-performing/', desc: 'Structure your 6-month mentor plan: 70% experience, 20% mentoring, 10% formal learning.' }
         ],
         reflections: [
           'What does committing to 2 hours per week of intentional growth actually ask of me — and what am I willing to sacrifice?',
@@ -973,13 +1011,18 @@ const LDE_PHASES = [
         geoZone: 'The Crossroads Oasis', geoScene: '🌴',
         duration: '2 hours',
         activities: [
-          'Study Kellerman\'s five follower types: Isolates, Bystanders, Participants, Activists, Diehards',
-          'Map your current team or colleagues to these types — honestly',
-          'Identify what each type needs from a leader to become more engaged',
-          'Discuss your mapping with your mentor: are your observations accurate?'
+          { text: 'Watch "Kellerman Follower Typology" lecture', url: 'https://www.youtube.com/results?search_query=Barbara+Kellerman+follower+typology' },
+          { text: 'Read "Kellerman\'s Follower Typology" — ChangingMinds', url: 'http://www.changingminds.org/disciplines/leadership/followership/kellerman_follower.htm' },
+          { text: 'Map your current team or colleagues to Kellerman\'s five types — honestly', url: null },
+          { text: 'Identify what each type needs from a leader to become more engaged', url: null },
+          { text: 'Discuss your mapping with your mentor: are your observations accurate?', url: null }
         ],
         frameworks: [
           { name: "Kellerman's Follower Typology", how: "Don't manage followers as a monolith. Isolates need visibility and inclusion. Bystanders need permission and safety. Activists need a cause. Diehards need to be channeled. Know your team — meet them where they are." }
+        ],
+        resources: [
+          { tier: 'discuss', label: 'Followership Peer Discussion Guide — Slack', url: 'https://meld-leadershipdevelopment.slack.com', desc: 'Post your Follower Map to the channel (anonymized). Discuss: what does your distribution tell you about your leadership environment?' },
+          { tier: 'read', label: 'Follower Types — Northouse Textbook Preview (Sage)', url: 'https://us.sagepub.com/sites/default/files/northouse_ch_12_sneak_preview.pdf', desc: 'Chapter 12 on Followership — academic depth behind Kellerman\'s five types.' }
         ],
         reflections: [
           'Which follower type am I most effective with — and which do I struggle to reach?',
@@ -995,13 +1038,19 @@ const LDE_PHASES = [
         geoZone: 'The River Crossing', geoScene: '🌊',
         duration: '2 hours',
         activities: [
-          'Study Tuckman\'s five stages of team development (Forming, Storming, Norming, Performing, Adjourning)',
-          'Identify which stage your current team is in — and the evidence for your assessment',
-          'Read Amy Edmondson\'s framing on psychological safety (excerpt provided)',
-          'Conduct a brief "psychological safety pulse check" with your team — anonymously if needed'
+          { text: 'Watch "Tuckman\'s Team Building Model | How to build a Team?"', url: 'https://www.youtube.com/results?search_query=Tuckman+Team+Building+Model+How+to+build+a+Team' },
+          { text: 'Watch "10 Ways to deal with office drama and politics"', url: 'https://www.youtube.com/results?search_query=10+ways+to+deal+with+office+drama+and+politics' },
+          { text: 'Read "The 5 Stages of Tuckman\'s Team Development Model" — Emma-Louise', url: 'https://www.thecoachingtoolscompany.com/get-your-team-performing-beautifully-with-this-powerful-group-development-model/' },
+          { text: 'Read "Team Building and Leadership: Why Team Leaders Need This Essential Skill"', url: 'https://www.strayboots.com/blog/team-building-is-essential-for-leadership/' },
+          { text: 'Identify which stage your current team is in and what evidence supports your assessment', url: null },
+          { text: 'Conduct a brief psychological safety pulse check with your team', url: null }
         ],
         frameworks: [
           { name: "Tuckman's Team Stages", how: "Each stage has a leadership imperative: Forming = provide clarity and direction. Storming = hold the container for conflict. Norming = reinforce cohesion. Performing = get out of the way. Know your stage, adjust your approach." }
+        ],
+        resources: [
+          { tier: 'apply', label: 'Forming, Storming, Norming, Performing — MindTools', url: 'https://www.mindtools.com/abyj5fi/forming-storming-norming-and-performing/', desc: 'Application exercise: assess your team\'s current stage, then build a specific plan to move to the next one.' },
+          { tier: 'practice', label: 'Psychological Safety Team Survey — Google re:Work', url: 'https://rework.withgoogle.com/guides/understanding-team-effectiveness/steps/foster-psychological-safety/', desc: 'Run a real psychological safety check on your team. Google\'s validated survey framework from Project Aristotle.' }
         ],
         reflections: [
           'Does my team feel safe enough to disagree with me openly? How do I know — really?',
@@ -1017,13 +1066,18 @@ const LDE_PHASES = [
         geoZone: 'The Horizon Line', geoScene: '🌅',
         duration: '2 hours',
         activities: [
-          'Read two articles on AI and the future of leadership (curated list provided)',
-          'Explore what "Next Gen Leadership" means in your specific industry context',
-          'Write a 1-page personal manifesto: what kind of leader do you want to be in 2030?',
-          'Discuss with your mentor: what skills do you need to develop to lead effectively in the future?'
+          { text: 'Watch "The Future of Leadership" — Eve Simon (TEDx, ~15 min)', url: 'https://www.youtube.com/watch?v=40KGjjrvQ-Q' },
+          { text: 'Watch "Leaders of Tomorrow" — Imran Savas (TED)', url: 'https://www.ted.com/talks/imran_savas_leaders_of_tomorrow' },
+          { text: 'Watch "Low on Leaders: Developing the Leaders of Tomorrow Today" — Vaney Hariri (TEDx)', url: 'https://www.ted.com/talks/vaney_hariri_low_on_leaders_developing_the_leaders_of_tomorrow_today' },
+          { text: 'Read "6 Trends Impacting the Future of Leadership" — Poppulo', url: 'https://www.poppulo.com/blog/6-trends-impacting-the-future-of-leadership' },
+          { text: 'Write a 1-page personal manifesto: what kind of leader do you want to be in 2030?', url: null }
         ],
         frameworks: [
           { name: 'Adaptive Leadership Framework (Heifetz)', how: 'Distinguish technical problems (solvable with known methods) from adaptive challenges (require shifts in values, beliefs, behavior). Future leaders must thrive in adaptive territory. Ask: is this problem technical or adaptive?' }
+        ],
+        resources: [
+          { tier: 'apply', label: '5 Recommendations Reshaping Leadership Development — BigThink', url: 'https://bigthink.com/plus/five-recommendations-that-will-reshape-leadership-development-in-2026/', desc: 'Choose one trend from Vaney Hariri\'s talk and create a 90-day personal action plan to adapt your leadership practice to it.' },
+          { tier: 'discuss', label: 'Next Gen Leadership Discussion — Slack', url: 'https://meld-leadershipdevelopment.slack.com', desc: 'Reflect on where Property Meld is hitting (and missing) the Next Gen Leadership qualities Hariri outlines. Post 2–3 specific examples.' }
         ],
         reflections: [
           'How is the nature of leadership changing — and what does that ask of me personally?',
@@ -1046,13 +1100,18 @@ const LDE_PHASES = [
         geoZone: 'The Oasis of Honest Reckoning', geoScene: '🌿',
         duration: '2 hours',
         activities: [
-          'Study the distinction between positional power (role authority) and personal power (earned influence)',
-          'Map your own power sources: where do people follow you because of the title vs. because of you?',
-          'Identify one leader you know whose personal power exceeds their positional authority — study them',
-          'Complete a written exercise: if your title disappeared tomorrow, who would still follow you and why?'
+          { text: 'Watch "Most Leaders Don\'t Even Know the Game They\'re In" — Simon Sinek (35 min)', url: 'https://www.youtube.com/watch?v=RyTQ5-SQYTo' },
+          { text: 'Watch "Positional vs Personal Power | The Worst Leadership Advice"', url: 'https://www.youtube.com/results?search_query=Leaders+Never+Say+Please+Thank+You+Positional+Personal+Power' },
+          { text: 'Read "What Is Personal Power? How to Develop It" — MasterClass', url: 'https://www.masterclass.com/articles/personal-power' },
+          { text: 'Read "Positional Power vs. Personal Power" — BetterUp', url: 'https://www.betterup.com/blog/positional-power' },
+          { text: 'Complete a written exercise: if your title disappeared tomorrow, who would still follow you and why?', url: null }
         ],
         frameworks: [
           { name: 'French & Raven Power Bases', how: 'Legitimate, Reward, Coercive (positional). Expert, Referent (personal). The most durable influence comes from referent power — who you are, not what you control. Deliberately build your referent power base.' }
+        ],
+        resources: [
+          { tier: 'apply', label: 'Personal Power Self-Audit Worksheet', url: 'https://www.betterup.com/blog/positional-power', desc: 'List 5 examples of times you used positional vs. personal power in the past month. Evaluate outcomes. Share with mentor.' },
+          { tier: 'discuss', label: 'Slack Discussion: Your Personal Power Sources', url: 'https://meld-leadershipdevelopment.slack.com', desc: 'Post to the channel: your top 2 personal power sources and the one you want to develop. Give feedback to two others.' }
         ],
         reflections: [
           'Am I leading through authority or through influence? How do I actually know?',
@@ -1068,13 +1127,19 @@ const LDE_PHASES = [
         geoZone: 'The Storyteller\'s Stone', geoScene: '📖',
         duration: '2 hours',
         activities: [
-          'Study the "data wrapped in story" model of leadership communication',
-          'Watch one TED Talk focused specifically on storytelling in leadership (list provided)',
-          'Write a 2-minute leadership story about a challenge you faced and what you learned',
-          'Deliver your 2-minute story to your mentor and ask for specific feedback'
+          { text: 'Watch "How Leaders Tell Stories" — Majeed Mogharreban (TEDxSunValley, ~11 min)', url: 'https://www.ted.com/talks/majeed_mogharreban_how_leaders_tell_stories' },
+          { text: 'Watch "The Importance of Stories" — Simon Sinek', url: 'https://www.youtube.com/results?search_query=The+Importance+of+Stories+Simon+Sinek' },
+          { text: 'Read "Storytelling for Leaders: What Makes a Great Story?" — VirtualSpeech', url: 'https://virtualspeech.com/blog/storytelling-for-leaders' },
+          { text: 'Read "Storytelling Can Make or Break Your Leadership" — HBR', url: 'https://hbr.org/2020/10/storytelling-can-make-or-break-your-leadership' },
+          { text: 'Write a 2-minute leadership story about a challenge you faced and what you learned', url: null },
+          { text: 'Deliver your 2-minute story to your mentor and ask for specific feedback', url: null }
         ],
         frameworks: [
           { name: "Nancy Duarte's Presentation Structure", how: "Great leadership communication follows: What Is → What Could Be → What Is → What Could Be → New Bliss. Create tension between the current reality and your vision. People follow leaders who make the destination feel real." }
+        ],
+        resources: [
+          { tier: 'practice', label: 'Harvard Business Publishing — Storytelling Discussion Guide (PDF)', url: 'https://www.harvardbusiness.org/wp-content/uploads/2018/11/20681_CL_Storytelling_Brief_Nov2018.pdf', desc: 'Structured discussion guide with reflection questions and facilitation prompts. Use with your mentor.' },
+          { tier: 'apply', label: 'First Round Review — Good Leaders are Great Storytellers', url: 'https://review.firstround.com/good-leaders-are-great-storytellers-our-6-tips-for-telling-stories-that-resonate/', desc: '6 specific tips for crafting stories that resonate. Apply to your 2-minute story exercise.' }
         ],
         reflections: [
           'What story am I telling my team — and is it the story that will take us where we need to go?',
@@ -1454,13 +1519,18 @@ const ALDE_STAGES = [
         geoZone: 'Base Camp Alpha', geoScene: '⛺',
         duration: '3 hours',
         activities: [
-          'Study the research on high-performing culture components (Jim Collins, Patrick Lencioni synthesis)',
-          'Conduct a culture audit of your current team/organization against 10 high-performance indicators',
-          'Interview two senior leaders at Property Meld on what they believe makes this culture unique',
-          'Write a 2-page analysis: where does our culture excel and where does it have gaps?'
+          { text: 'Watch "3 Ways to Create a Work Culture That Brings Out the Best in Employees" — Chris White (TEDxAtlanta, ~14 min)', url: 'https://www.youtube.com/watch?v=2y8SA6cLUys' },
+          { text: 'Read "3 Ways to Create Work Culture" — TED Ideas', url: 'https://ideas.ted.com/3-ways-to-create-work-company-culture-brings-out-best-in-people/' },
+          { text: 'Reflect on the definition of high performance and document the behaviors that support it', url: null },
+          { text: 'Share examples of these behaviors in action within your team or other organizations', url: null },
+          { text: 'Brainstorm your collective vision and purpose as a leader', url: null }
         ],
         frameworks: [
           { name: "Collins' Level 5 Leadership + Culture", how: "High-performing cultures have leaders with fierce professional will combined with personal humility. They recruit for character first, skills second. They confront brutal facts while maintaining unwavering belief in success. Assess your organization against these criteria." }
+        ],
+        resources: [
+          { tier: 'apply', label: 'High-Performance Culture Team Audit', url: 'https://ideas.ted.com/3-ways-to-create-work-company-culture-brings-out-best-in-people/', desc: 'Score your team on Chris White\'s 3 strategies (1–5 each): Unblock communication, Be responsive, Aim higher. Share scores in group discussion.' },
+          { tier: 'discuss', label: 'Slack Discussion: Defining High Performance', url: 'https://meld-leadershipdevelopment.slack.com', desc: 'Post: how will you know when your team has achieved a high-performance culture? Name 3 specific, observable behaviors.' }
         ],
         reflections: [
           'What does "high performance" actually mean at Property Meld — and does everyone share that definition?',
@@ -3043,7 +3113,12 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   document.getElementById('zone-chips').innerHTML = (milestone.tags || []).map(t => '<span class="zone-chip">' + escHtml(t) + '</span>').join('');
 
   const actEl = document.getElementById('zone-activities');
-  actEl.innerHTML = (milestone.activities || []).map(a => '<li>' + escHtml(a) + '</li>').join('');
+  actEl.innerHTML = (milestone.activities || []).map(a => {
+    if (typeof a === 'object' && a.url) {
+      return '<li><a href="' + escHtml(a.url) + '" target="_blank" rel="noopener" class="zone-activity-link">' + escHtml(a.text) + ' ↗</a></li>';
+    }
+    return '<li>' + escHtml(typeof a === 'object' ? a.text : a) + '</li>';
+  }).join('');
 
   const fwEl = document.getElementById('zone-frameworks');
   const fwBlock = document.getElementById('zone-frameworks-block');
@@ -3057,6 +3132,23 @@ function openZoneModal(milestoneId, programKey, phaseId) {
     fwBlock.style.display = 'block';
   } else {
     fwBlock.style.display = 'none';
+  }
+
+  const resEl = document.getElementById('zone-resources');
+  const resBlock = document.getElementById('zone-resources-block');
+  if (milestone.resources && milestone.resources.length) {
+    resEl.innerHTML = milestone.resources.map(r => `
+      <a class="zone-resource-item" href="${escHtml(r.url)}" target="_blank" rel="noopener">
+        <span class="zone-resource-tier tier-${escHtml(r.tier || 'read')}">${escHtml(r.tier || 'read')}</span>
+        <div class="zone-resource-body">
+          <div class="zone-resource-label">${escHtml(r.label)}</div>
+          ${r.desc ? '<div class="zone-resource-desc">' + escHtml(r.desc) + '</div>' : ''}
+        </div>
+      </a>
+    `).join('');
+    resBlock.style.display = 'block';
+  } else {
+    resBlock.style.display = 'none';
   }
 
   const refEl = document.getElementById('zone-reflections');
