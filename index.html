@@ -420,6 +420,85 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .zone-act-row.act-done .zone-act-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.25); }
 .zone-act-link { color: var(--accent); text-decoration: none; font-weight: 500; }
 .zone-act-link:hover { text-decoration: underline; }
+/* ===== INTERACTIVE EXERCISES ===== */
+.zone-exercise { border-radius: 14px; padding: 22px 24px; margin: 6px 0; position: relative; overflow: hidden; }
+.zone-exercise-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.zone-exercise-prompt { font-size: 14.5px; font-weight: 600; color: rgba(255,255,255,0.94); line-height: 1.6; margin-bottom: 16px; }
+.zone-exercise-saved { font-size: 11px; opacity: 0; margin-top: 8px; display: inline-block; transition: opacity 0.4s; font-weight: 600; letter-spacing: 0.5px; }
+.zone-exercise-saved.show { opacity: 1; }
+/* Reflect */
+.zone-exercise.ex-reflect { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.22); }
+.zone-exercise.ex-reflect .zone-exercise-eyebrow { color: var(--accent); }
+.zone-exercise.ex-reflect .zone-exercise-saved { color: var(--accent); }
+.ex-textarea { width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.13); border-radius: 10px; color: rgba(255,255,255,0.9); font-family: "Inter", sans-serif; font-size: 13.5px; line-height: 1.65; padding: 14px 16px; resize: vertical; min-height: 100px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.ex-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(217,119,6,0.15); }
+.ex-textarea::placeholder { color: rgba(255,255,255,0.28); }
+/* Rate */
+.zone-exercise.ex-rate { background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.2); }
+.zone-exercise.ex-rate .zone-exercise-eyebrow { color: #34D399; }
+.zone-exercise.ex-rate .zone-exercise-saved { color: #34D399; }
+.ex-rate-scale { display: flex; gap: 10px; margin: 4px 0 8px; }
+.ex-rate-btn { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.55); font-size: 15px; font-weight: 700; cursor: pointer; font-family: "Inter", sans-serif; transition: all 0.2s; flex-shrink: 0; }
+.ex-rate-btn:hover { border-color: rgba(52,211,153,0.6); color: #34D399; transform: scale(1.08); }
+.ex-rate-btn.selected { background: rgba(52,211,153,0.18); border-color: #34D399; color: #34D399; box-shadow: 0 0 18px rgba(52,211,153,0.25); transform: scale(1.12); }
+.ex-rate-anchors { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.ex-rate-anchor { font-size: 11px; color: rgba(255,255,255,0.35); max-width: 140px; line-height: 1.3; }
+.ex-rate-anchor:last-child { text-align: right; }
+.ex-rate-feedback { margin-top: 12px; padding: 12px 16px; background: rgba(0,0,0,0.3); border-radius: 10px; font-size: 13px; color: rgba(255,255,255,0.78); line-height: 1.6; display: none; border-left: 3px solid #34D399; }
+.ex-rate-feedback.show { display: block; animation: fadeSlideUp 0.3s ease; }
+/* Scenario */
+.zone-exercise.ex-scenario { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.22); }
+.zone-exercise.ex-scenario .zone-exercise-eyebrow { color: rgba(96,165,250,0.95); }
+.ex-scenario-text { font-size: 14px; color: rgba(255,255,255,0.82); line-height: 1.7; background: rgba(0,0,0,0.35); border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; border-left: 3px solid rgba(96,165,250,0.45); font-style: italic; }
+.ex-scenario-options { display: flex; flex-direction: column; gap: 8px; }
+.ex-scenario-opt { padding: 13px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.78); font-size: 13.5px; font-family: "Inter", sans-serif; cursor: pointer; text-align: left; line-height: 1.5; transition: all 0.18s; width: 100%; }
+.ex-scenario-opt:hover:not([disabled]) { border-color: rgba(96,165,250,0.55); background: rgba(96,165,250,0.09); color: rgba(255,255,255,0.95); transform: translateX(3px); }
+.ex-scenario-opt.opt-best { border-color: rgba(52,211,153,0.8); background: rgba(52,211,153,0.1); color: rgba(255,255,255,0.95); }
+.ex-scenario-opt.opt-ok { border-color: rgba(251,191,36,0.7); background: rgba(251,191,36,0.08); color: rgba(255,255,255,0.88); }
+.ex-scenario-opt.opt-miss { border-color: rgba(251,113,133,0.6); background: rgba(251,113,133,0.07); color: rgba(255,255,255,0.7); }
+.ex-scenario-fb { margin-top: 14px; padding: 14px 18px; border-radius: 10px; font-size: 13.5px; line-height: 1.65; display: none; }
+.ex-scenario-fb.show { display: block; animation: fadeSlideUp 0.35s ease; }
+.ex-scenario-fb.fb-best { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: rgba(255,255,255,0.92); }
+.ex-scenario-fb.fb-ok { background: rgba(251,191,36,0.09); border: 1px solid rgba(251,191,36,0.25); color: rgba(255,255,255,0.88); }
+.ex-scenario-fb.fb-miss { background: rgba(251,113,133,0.09); border: 1px solid rgba(251,113,133,0.25); color: rgba(255,255,255,0.82); }
+/* Build */
+.zone-exercise.ex-build { background: rgba(167,139,250,0.06); border: 1px solid rgba(167,139,250,0.22); }
+.zone-exercise.ex-build .zone-exercise-eyebrow { color: rgba(167,139,250,0.95); }
+.zone-exercise.ex-build .zone-exercise-saved { color: rgba(167,139,250,0.9); }
+.ex-build-desc { font-size: 13px; color: rgba(255,255,255,0.58); margin-bottom: 18px; line-height: 1.55; }
+.ex-build-fields { display: flex; flex-direction: column; gap: 14px; }
+.ex-build-field { display: flex; flex-direction: column; gap: 6px; }
+.ex-build-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(167,139,250,0.8); }
+.ex-build-input { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.9); font-family: "Inter", sans-serif; font-size: 13.5px; padding: 11px 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; box-sizing: border-box; }
+.ex-build-input:focus { border-color: rgba(167,139,250,0.7); box-shadow: 0 0 0 3px rgba(167,139,250,0.12); }
+.ex-build-input::placeholder { color: rgba(255,255,255,0.24); }
+/* Divider between tasks and exercises */
+.zone-act-section-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); padding: 18px 0 8px; border-top: 1px solid rgba(255,255,255,0.07); margin-top: 10px; }
+@keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* Video Embed */
+.zone-exercise.ex-video { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); padding: 16px 18px; }
+.zone-exercise.ex-video .zone-exercise-eyebrow { color: rgba(255,255,255,0.45); }
+.ex-video-thumb { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; background: #000; margin-bottom: 12px; }
+.ex-video-thumb.r169 { aspect-ratio: 16/9; }
+.ex-video-thumb.r916 { aspect-ratio: 9/16; max-width: 260px; }
+.ex-video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.25s, transform 0.35s; }
+.ex-video-thumb:hover img { opacity: 0.65; transform: scale(1.03); }
+.ex-video-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 100%); pointer-events: none; }
+.ex-video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.ex-video-play-btn { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.93); display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 28px rgba(0,0,0,0.55); }
+.ex-video-thumb:hover .ex-video-play-btn { transform: scale(1.12); box-shadow: 0 8px 36px rgba(0,0,0,0.65); }
+.ex-video-play-icon { width: 0; height: 0; border-top: 11px solid transparent; border-bottom: 11px solid transparent; border-left: 20px solid #111; margin-left: 5px; }
+.ex-video-title-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 16px; }
+.ex-video-title-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.97); line-height: 1.4; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+.ex-video-meta { display: flex; gap: 8px; align-items: center; }
+.ex-video-badge { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 5px; }
+.ex-video-badge.yt { background: rgba(255,50,50,0.14); color: #ff7070; border: 1px solid rgba(255,50,50,0.22); }
+.ex-video-badge.tt { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.1); }
+.ex-video-duration { font-size: 11px; color: rgba(255,255,255,0.35); }
+.ex-video-iframe-wrap { border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+.ex-video-iframe-wrap.r169 { aspect-ratio: 16/9; }
+.ex-video-iframe-wrap.r916 { aspect-ratio: 9/16; max-width: 260px; }
+.ex-video-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -1000,11 +1079,27 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Watch: "How to Start a New Manager Role" — Michael Watkins on The First 90 Days', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc' },
-          { text: 'Read the Property Meld 90-Day Cognitive Onboarding Map — understand the 4-phase framework your reports navigate', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260' },
-          { text: 'Read the Hello Meld Week 1 Welcome Guide — internalize what new Melders need from their manager on Day 1', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
-          'Schedule a 30-minute "get to know you" 1:1 with every direct report in your first week',
-          'Map your team: names, roles, tenure, what they\'re working on, and one thing each person is proud of'
+          { type: 'video', platform: 'youtube', videoId: 'PpqmxzUWrPc', label: 'Watch This First', title: 'The First 90 Days — Michael Watkins', duration: '18 min' },
+          { text: 'Read the Property Meld 90-Day Cognitive Onboarding Map — the 4-phase framework your reports navigate', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260' },
+          { text: 'Read the Hello Meld Week 1 Welcome Guide — what new Melders need from their manager on Day 1', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'scenario', label: 'Situation Lab', prompt: 'What do you do?', scenario: 'It\'s Day 3. A direct report pulls you aside after a team meeting and says: "I want you to know I applied for your role. I\'m fine — I just wanted you to hear it from me directly." How do you respond?',
+            options: [
+              { text: 'Thank them briefly and move on — you don\'t want to make it awkward.', quality: 'miss', feedback: 'Moving on too quickly misses a moment of trust. They took a risk telling you directly. Glossing over it signals you don\'t know how to handle uncomfortable truth. That registers.' },
+              { text: 'Ask them to tell you more — what made them want the role? What are they hoping to grow into?', quality: 'best', feedback: 'This is exactly right. They extended trust first. You honor that by meeting it with curiosity. This conversation becomes the foundation of your strongest working relationship if you handle it well.' },
+              { text: 'Reassure them you\'re not threatened and that you value their experience.', quality: 'ok', feedback: 'Well-intentioned, but centering your own feelings misses the point. They weren\'t asking for your reassurance — they were opening a door. Walk through it with questions, not comfort.' },
+              { text: 'Make a note and mention it to HR to document it.', quality: 'miss', feedback: 'This would destroy the trust they just extended. They came to you directly as a show of good faith. Escalating turns a courageous act into a liability for them. Never do this.' }
+            ]
+          },
+          { type: 'build', label: 'Build Your Listening Plan', prompt: 'Design your 30-Day Listening Plan', description: 'For your most important first conversation with each direct report. Focus on understanding, not proving yourself.',
+            fields: [
+              { key: 'q1', label: 'Opening Question (about them, not work)', placeholder: 'e.g. "What\'s the best thing about working on this team right now?"' },
+              { key: 'q2', label: 'Question About Their Work', placeholder: 'e.g. "What\'s the most important thing I should know about what you\'re working on?"' },
+              { key: 'q3', label: 'Question About What They Need', placeholder: 'e.g. "What does a great manager do for you that a mediocre one doesn\'t?"' },
+              { key: 'q4', label: 'Your Closing Commitment', placeholder: 'e.g. "Here\'s what I commit to you in our first 30 days together..."' }
+            ]
+          },
+          { type: 'reflect', label: 'Honest Audit', prompt: 'What assumptions are you already making about this team? Write them down — who you think is the strongest, who you think is struggling, what you think needs to change. Be honest. These are the lenses that will distort what you see until you name them.', placeholder: 'My current assumptions about this team:\n\n1.\n2.\n3.\n\nWhich of these might be wrong?', rows: 7 }
         ],
         frameworks: [
           'The 4-Phase Cognitive Onboarding Model (Understand System → Understand Customer → Understand Levers → Drive Outcomes)',
@@ -1033,12 +1128,20 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Watch: Brené Brown — "The Anatomy of Trust" (BRAVING inventory, SuperSoul Sessions)', url: 'https://brenebrown.com/videos/anatomy-trust-video/' },
-          { text: 'Watch: Simon Sinek — "Why Leaders Eat Last" (Circle of Safety)', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y' },
-          'Complete the Trust Equation self-assessment: rate yourself on Credibility, Reliability, Intimacy, and Self-Orientation for each direct report',
-          'Map your current trust level with each team member (1-10) and identify the primary driver for each score',
-          'Review the Property Meld values (Humility, Loyalty, Integrity, Agility) — identify which one you personally need to develop most as a leader',
-          '🧊 Team Workshop — The Snowball Exercise: Each person writes one fear or challenge they carry as a leader on a piece of paper. Crumple it. On 3, everyone throws their snowball to the center. Pick one up (not your own) and read it silently. Optional: share a few aloud anonymously. The point: you are not alone in this.'
+          { type: 'video', platform: 'youtube', videoId: 'ReRcHdeUG9Y', label: 'Watch This First', title: 'Why Leaders Eat Last — Simon Sinek', duration: '45 min' },
+          { text: 'Watch: Bren\u00e9 Brown \u2014 "The Anatomy of Trust" (BRAVING inventory)', url: 'https://brenebrown.com/videos/anatomy-trust-video/' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'rate', label: 'Self-Assessment', prompt: 'Rate your current self-orientation score. The Trust Equation divides credibility + reliability + intimacy by self-orientation. High self-focus tanks trust even when you\'re competent. How much is your leadership currently about you vs them?',
+            anchors: ['Mostly about me — my performance, my reputation', 'Mostly about them — their growth, their success'],
+            feedbacks: [
+              'High self-orientation is the silent trust killer. Your team senses when everything is filtered through "how does this make me look?" Start with one question per day: "What does this person need from me right now?"',
+              'Self-focus is natural, especially when you\'re new. The antidote is curiosity — genuine interest in each person\'s reality, not performative check-ins.',
+              'You\'re in the middle — aware of the tension. Name it to yourself before each conversation: "This meeting is about them."',
+              'Strong orientation toward others builds the intimacy component of trust fast. Keep going — and make sure it shows up in the hard conversations too.',
+              'Genuinely other-focused leadership is rare and magnetic. Channel it into your most difficult relationships where it\'s hardest to sustain.'
+            ]
+          },
+          { type: 'reflect', label: 'Trust Audit', prompt: 'Pick one person on your team where trust feels unsteady — either you don\'t fully trust them, or you sense they don\'t fully trust you. Write what you actually know about why that gap exists, and one specific behavior you\'ve displayed that may have contributed to it.', placeholder: 'The person: \n\nWhat I observe about the trust gap:\n\nOne behavior of mine that may have contributed:\n\nOne thing I will do differently:', rows: 7 }
         ],
         frameworks: [
           'The Trust Equation (Maister): (Credibility + Reliability + Intimacy) / Self-Orientation',
@@ -1067,11 +1170,18 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Watch: Daniel Pink on motivation — Autonomy, Mastery, Purpose (TED Talk)', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y' },
-          'Review the Meld People Leader and IC Growth Path with your manager or People Ops — understand where each of your reports sits on the track',
-          'Run a "What Motivates You?" conversation with each direct report — ask: what energizes you at work? what drains you? where do you want to be in 2 years?',
-          'Start an Individual Development Plan (IDP) template for each direct report — at minimum 2 growth areas per person',
-          'Map each team member on the IC Growth Path levels (1-6) based on what you observe, not just their title'
+          { type: 'video', platform: 'youtube', videoId: 'rrkrvAUbU9Y', label: 'Watch This First', title: 'The Puzzle of Motivation — Daniel Pink', duration: '18 min' },
+          { text: 'Review the Meld People Leader and IC Growth Path with your manager or People Ops', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/299731533' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'scenario', label: 'Situation Lab', prompt: 'What do you do?', scenario: 'Your top performer tells you in a 1:1: "I love the work, but I\'ve been doing this role for 2 years and I feel like I\'m not growing anymore. I\'m starting to get calls from other companies." They\'re not threatening to leave — they\'re being honest with you.',
+            options: [
+              { text: 'Reassure them they\'re valued and bring it up in the next performance review.', quality: 'miss', feedback: 'Deferring to a future review is the most common — and most costly — management mistake. They just told you they\'re actively considering leaving. The next action needs to happen this week, not in Q4.' },
+              { text: 'Ask them what growth would actually look like for them — and co-design a plan in the next 2 weeks.', quality: 'best', feedback: 'This is the move. They told you what they need. The right response is to take it seriously, move fast, and co-create — not just listen and nod. "What would growth look like?" is one of the most important questions you can ask a high performer.' },
+              { text: 'Advocate to your manager for a promotion or title change for them.', quality: 'ok', feedback: 'Advocating upward is the right instinct, but you\'re jumping to a solution before you understand what they actually want. Growth isn\'t always promotion. Have the deeper conversation first.' },
+              { text: 'Offer them a new project to keep them engaged.', quality: 'ok', feedback: 'Projects can work, but only if they map to what the person actually wants to develop. Without understanding their specific growth goals, this is a band-aid, not a plan.' }
+            ]
+          },
+          { type: 'reflect', label: 'Development Audit', prompt: 'Pick your most important direct report. Write what you actually know about what they care about in their career right now — not what\'s in their job description, but what they want to build, where they want to go, and what\'s getting in the way. Be honest about the gaps in your knowledge.', placeholder: 'What I know about what [name] wants:\n\nWhat I don\'t actually know yet:\n\nHow I found out (or: I assumed it because...):\n\nWhat I will ask them this week:', rows: 7 }
         ],
         frameworks: [
           'Self-Determination Theory (Deci & Ryan): Autonomy, Mastery, Purpose as the core human motivators',
@@ -1100,11 +1210,27 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1515942400420-2b98fed1f515?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Read the Meld Guide to 1:1s — the full Meld template, Lattice setup steps, and note-taking practices', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s' },
-          'Set up recurring 1:1s in Lattice for every direct report — apply the Meld 1:1 Template (Iteration → Outcomes → Coaching → Growth → Commitments)',
-          'Schedule weekly 1:1s for new team members, biweekly for established ones — consistency builds the relationship',
-          'In your next 1:1, ask: "What\'s feeling heavy or misaligned right now?" — then listen for 5 full minutes before responding',
-          'After each 1:1, use Granola to auto-capture AI meeting notes — then surface the key coaching themes and log them to Lattice to track patterns over time'
+          { type: 'video', platform: 'youtube', videoId: 'iCvmsMzlF7o', label: 'Watch Before Your Next 1:1', title: 'The Power of Vulnerability — Bren\u00e9 Brown (TED)', duration: '20 min' },
+          { text: 'Read the Meld Guide to 1:1s — the full template, Lattice setup, and note-taking practices', url: 'https://propertymeld.atlassian.net/wiki/spaces/PEOP/pages/2802843658/Guide+to+1+1+s' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'build', label: 'Design Your 1:1 Structure', prompt: 'Build your first 1:1 agenda', description: 'The best 1:1s create psychological safety before diving into work. Each section has a purpose — don\'t skip them.',
+            fields: [
+              { key: 'opener', label: 'Opening Check-In (builds safety)', placeholder: 'e.g. "What\'s one thing that\'s energizing you this week, and one thing that\'s draining you?"' },
+              { key: 'work', label: 'Work Update Prompt (their words, not yours)', placeholder: 'e.g. "What\'s the most important thing I should know about what you\'re working on?"' },
+              { key: 'blocker', label: 'Blockers / Support Needed', placeholder: 'e.g. "Where are you stuck? What do you need from me that you haven\'t asked for?"' },
+              { key: 'growth', label: 'Development Moment (one per 1:1)', placeholder: 'e.g. "What\'s a decision you\'re sitting on right now that we could think through together?"' },
+              { key: 'close', label: 'Committed Action (theirs, not yours)', placeholder: 'e.g. "What\'s one thing you\'re committing to before our next 1:1?"' }
+            ]
+          },
+          { type: 'scenario', label: 'Situation Lab', prompt: 'What do you do?', scenario: 'You\'ve been running 1:1s with a strong performer for 6 weeks. They show up, give updates, answer your questions, and leave. It feels transactional. They seem fine — but not engaged. What\'s your move?',
+            options: [
+              { text: 'Keep running the same 1:1 — if they seem fine, don\'t fix what isn\'t broken.', quality: 'miss', feedback: '"Seems fine" is not the same as thriving. Transactional 1:1s signal to strong performers that their development isn\'t your priority. The best ones start quietly looking elsewhere long before they say anything.' },
+              { text: 'Ask them directly: "I want to make our 1:1s more valuable for you. What would that look like?"', quality: 'best', feedback: 'This is exactly right. You\'re putting the agenda in their hands — which is where it belongs. The 1:1 is their meeting. Naming the gap openly shows self-awareness and invites the real relationship to begin.' },
+              { text: 'Add a personal check-in question at the start to warm things up.', quality: 'ok', feedback: 'A small step in the right direction, but tweaking format doesn\'t fix the root issue: they don\'t feel like the 1:1 is theirs. Format changes without a direct conversation just mask the real dynamic.' },
+              { text: 'Start pushing on their career development — ask where they want to be in 3 years.', quality: 'ok', feedback: 'Development conversations are valuable, but jumping to career goals before understanding why the 1:1 feels flat can feel formulaic. Start by naming what you\'re observing and asking for their honest read.' }
+            ]
+          },
+          { type: 'reflect', label: 'The Questions You Avoid', prompt: 'Write 3 questions you\'ve never asked a direct report but probably should. Not status questions. Questions that would actually change how you manage them — about what they need from you, what they\'re afraid to say, or what\'s getting in their way.', placeholder: 'Question 1: (and why I haven\'t asked it)\n\nQuestion 2:\n\nQuestion 3:', rows: 6 }
         ],
         frameworks: [
           'The Meld 1:1 Structure: Start with Iteration (5 min) → Focus on Outcomes (10-15 min) → Coaching & Support (10-15 min) → Growth & Development (5-10 min) → Commitments & Takeaways (2-5 min)',
@@ -1252,11 +1378,26 @@ const MGMT_PHASES = [
         photoUrl: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1920&q=90&auto=format&fit=crop',
         duration: '2 hours',
         activities: [
-          { text: 'Review the Meld 1Q26 Growth Execution OKRs — understand the company-level objectives and how your team\'s work connects to them', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution' },
-          'For each of your team\'s current metrics, classify each one: Is it a leading indicator (predicts the future) or a lagging indicator (confirms the past)?',
-          'Write one OKR for your team in proper format: 1 Objective (qualitative, inspiring direction) + 2–3 Key Results (specific, measurable, time-bound outcomes)',
-          'Map the Cobra Effect risk for your leading indicators — what perverse behavior could emerge if someone optimized purely for the number you\'re tracking?',
-          { text: 'Understand Meld\'s OKR pace system: <90% = Red · 90–99% = Yellow · 100–110% = Green · >110% = Blue. Discuss: what does each color signal — and what does your team do differently in each state?', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution' }
+          { type: 'video', platform: 'youtube', videoId: 'L4N1q4RNi9I', label: 'Watch This First', title: 'Why the Secret to Success is Setting the Right Goals — John Doerr', duration: '11 min' },
+          { text: 'Review the Meld 1Q26 Growth Execution OKRs — understand company-level objectives and how your team\'s work connects', url: 'https://propertymeld.atlassian.net/wiki/spaces/KB/pages/3401220111/1Q26+-+Growth+Execution' },
+          { type: 'divider', label: 'Apply What You\'re Learning' },
+          { type: 'build', label: 'Write Your Team\'s OKR', prompt: 'Draft your team\'s OKR for this quarter', description: 'The Objective is qualitative and inspiring — "where are we going?" Key Results are specific, measurable, time-bound outcomes — "how will we know we arrived?"',
+            fields: [
+              { key: 'obj', label: 'Objective (inspiring direction — no numbers)', placeholder: 'e.g. "Become the team that owns the customer activation experience end-to-end"' },
+              { key: 'kr1', label: 'Key Result 1 (measurable outcome)', placeholder: 'e.g. "Reduce time-to-first-value from 14 days to 7 days by March 31"' },
+              { key: 'kr2', label: 'Key Result 2', placeholder: 'e.g. "Achieve 85%+ activation rate for new customers in the onboarding cohort"' },
+              { key: 'kr3', label: 'Key Result 3 (stretch goal)', placeholder: 'e.g. "Ship 3 customer-reported friction removals validated by NPS lift"' }
+            ]
+          },
+          { type: 'scenario', label: 'OKR Grade Lab', prompt: 'How do you call it?', scenario: 'End of quarter. Your team hit 82% of a Key Result — "Reduce customer time-to-first-value from 14 days to 7 days." You got to 9.7 days. Meld\'s pace system calls this Red (<90%). Your team worked hard. How do you communicate this?',
+            options: [
+              { text: 'Reframe it as a near-miss success: "We made incredible progress and got to 9.7 days — we basically hit it."', quality: 'miss', feedback: 'Reframing a Red as a success trains your team to round up on everything. OKRs only work if the grades mean something. 82% is meaningful progress AND a learning opportunity — honor both without softening the grade.' },
+              { text: 'Call it Red, own the grade, and run a quick retro: what did we learn, what do we adjust for next quarter?', quality: 'best', feedback: 'This is exactly right. Name the number honestly, honor the effort specifically, and turn the gap into a question: "What did we learn that makes our next KR more accurate?" Psychological safety is built when grading is consistent and non-punitive, not when it\'s generous.' },
+              { text: 'Don\'t mention the grade — focus on the positive work the team did.', quality: 'miss', feedback: 'Avoiding the grade teaches your team not to trust the system. They already know where they landed. Silence signals you either don\'t care or can\'t have the honest conversation.' },
+              { text: 'Acknowledge the Red grade but explain that external factors made it harder than expected.', quality: 'ok', feedback: 'Context matters, but leading with external factors before internal learning is a subtle blame shift. Lead with what you\'d do differently, then offer context. Otherwise it reads as excuse-making.' }
+            ]
+          },
+          { type: 'reflect', label: 'Leading vs. Lagging Audit', prompt: 'List the top 3 numbers you look at most on your team. For each one: Is it a leading indicator (predicts what will happen) or lagging (confirms what already happened)? If it\'s lagging, what leading indicator would actually help you act earlier?', placeholder: 'Metric 1: ___\nLeading or lagging? Why:\nThe leading indicator I\'m missing:\n\nMetric 2: ___\nLeading or lagging? Why:\nThe leading indicator I\'m missing:\n\nMetric 3:', rows: 9 }
         ],
         frameworks: [
           'OKR Structure: Objectives are qualitative and inspiring — they answer "where are we going?" Key Results are specific, measurable outcomes — they answer "how will we know we arrived?"',
@@ -3792,18 +3933,8 @@ function openZoneModal(milestoneId, programKey, phaseId) {
 
   const actEl = document.getElementById('zone-activities');
   const savedActs = (state[programKey].reflections || {})[milestoneId + '_acts'] || [];
-  actEl.innerHTML = (milestone.activities || []).map((a, i) => {
-    const done = !!savedActs[i];
-    const text = typeof a === 'object' ? a.text : a;
-    const url = typeof a === 'object' ? a.url : null;
-    const inner = url
-      ? '<a href="' + escHtml(url) + '" target="_blank" rel="noopener" class="zone-act-link" onclick="event.stopPropagation()">' + escHtml(text) + ' ↗</a>'
-      : escHtml(text);
-    return '<div class="zone-act-row' + (done ? ' act-done' : '') + '" data-act-idx="' + i + '" onclick="toggleActivityDone(this,' + i + ')">' +
-      '<div class="zone-act-cb">' + (done ? '✓' : '') + '</div>' +
-      '<div class="zone-act-body"><div class="zone-act-text">' + inner + '</div></div>' +
-      '</div>';
-  }).join('');
+  const savedExData = (state[programKey].reflections || {})[milestoneId + '_exdata'] || {};
+  actEl.innerHTML = (milestone.activities || []).map((a, i) => renderActivityItem(a, i, savedActs, savedExData)).join('');
 
   const fwEl = document.getElementById('zone-frameworks');
   const fwBlock = document.getElementById('zone-frameworks-block');
@@ -3985,6 +4116,161 @@ function toggleActivityDone(row, idx) {
   row.classList.toggle('act-done', !!arr[idx]);
   const cb = row.querySelector('.zone-act-cb');
   if (cb) cb.textContent = arr[idx] ? '✓' : '';
+}
+
+// =============================================
+// INTERACTIVE EXERCISES
+// =============================================
+function getExData() {
+  if (!zoneModalProgram || !zoneModalMilestoneId) return {};
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  const key = zoneModalMilestoneId + '_exdata';
+  if (!state[zoneModalProgram].reflections[key]) state[zoneModalProgram].reflections[key] = {};
+  return state[zoneModalProgram].reflections[key];
+}
+function setExData(idx, value) {
+  const data = getExData();
+  data[idx] = value;
+  saveState();
+}
+function autoSaveReflect(idx, el) {
+  setExData(idx, el.value);
+  const note = document.getElementById('ex-saved-' + idx);
+  if (note) { note.classList.add('show'); clearTimeout(note._t); note._t = setTimeout(() => note.classList.remove('show'), 2000); }
+}
+function saveBuildField(idx, fieldKey, value) {
+  const data = getExData();
+  if (!data[idx] || typeof data[idx] !== 'object') data[idx] = {};
+  data[idx][fieldKey] = value;
+  saveState();
+  const note = document.getElementById('ex-saved-' + idx);
+  if (note) { note.classList.add('show'); clearTimeout(note._t); note._t = setTimeout(() => note.classList.remove('show'), 2000); }
+}
+function rateActivity(idx, val, feedbacks) {
+  setExData(idx, val);
+  const wrap = document.querySelector('[data-ex-idx="' + idx + '"]');
+  if (!wrap) return;
+  wrap.querySelectorAll('.ex-rate-btn').forEach(b => b.classList.toggle('selected', +b.dataset.val === val));
+  const fb = wrap.querySelector('.ex-rate-feedback');
+  if (fb) { const text = feedbacks && feedbacks[val - 1] ? feedbacks[val - 1] : ''; fb.textContent = text; fb.classList.toggle('show', !!text); }
+}
+function answerScenario(idx, optIdx, quality, feedback) {
+  setExData(idx, { selected: optIdx, quality });
+  const wrap = document.querySelector('[data-ex-idx="' + idx + '"]');
+  if (!wrap) return;
+  wrap.querySelectorAll('.ex-scenario-opt').forEach((b, j) => {
+    b.disabled = true;
+    if (j === optIdx) b.classList.add('opt-' + quality);
+  });
+  const fb = wrap.querySelector('.ex-scenario-fb');
+  if (fb) { fb.textContent = feedback; fb.className = 'ex-scenario-fb show fb-' + quality; }
+}
+function renderActivityItem(a, i, savedActs, savedExData) {
+  if (typeof a === 'string' || !a.type || a.type === 'checkbox') {
+    const done = !!savedActs[i];
+    const text = typeof a === 'object' ? (a.text || '') : a;
+    const url = typeof a === 'object' ? a.url : null;
+    const inner = url
+      ? '<a href="' + escHtml(url) + '" target="_blank" rel="noopener" class="zone-act-link" onclick="event.stopPropagation()">' + escHtml(text) + ' \u2197</a>'
+      : escHtml(text);
+    return '<div class="zone-act-row' + (done ? ' act-done' : '') + '" data-act-idx="' + i + '" onclick="toggleActivityDone(this,' + i + ')">' +
+      '<div class="zone-act-cb">' + (done ? '\u2713' : '') + '</div>' +
+      '<div class="zone-act-body"><div class="zone-act-text">' + inner + '</div></div></div>';
+  }
+  const sv = savedExData ? (savedExData[i] !== undefined ? savedExData[i] : null) : null;
+  if (a.type === 'divider') return '<div class="zone-act-section-label">' + escHtml(a.label || 'Apply What You\'re Learning') + '</div>';
+  if (a.type === 'reflect') {
+    const label = escHtml(a.label || 'Reflection Exercise');
+    const val = escHtml(sv || '');
+    return `<div class="zone-exercise ex-reflect" data-ex-idx="${i}">
+      <div class="zone-exercise-eyebrow">\u270D ${label}</div>
+      <div class="zone-exercise-prompt">${escHtml(a.prompt)}</div>
+      <textarea class="ex-textarea" rows="${a.rows||4}" placeholder="${escHtml(a.placeholder||'Write your response here...')}" oninput="autoSaveReflect(${i},this)">${val}</textarea>
+      <span class="zone-exercise-saved" id="ex-saved-${i}">\u2713 Saved</span>
+    </div>`;
+  }
+  if (a.type === 'rate') {
+    const btns = [1,2,3,4,5].map(n => `<button class="ex-rate-btn${sv===n?' selected':''}" data-val="${n}" onclick="rateActivity(${i},${n},${JSON.stringify(a.feedbacks||[])})">${n}</button>`).join('');
+    const an = a.anchors || [];
+    const fbText = sv && a.feedbacks && a.feedbacks[sv-1] ? escHtml(a.feedbacks[sv-1]) : '';
+    return `<div class="zone-exercise ex-rate" data-ex-idx="${i}">
+      <div class="zone-exercise-eyebrow">\uD83D\uDCCA ${escHtml(a.label||'Self-Assessment')}</div>
+      <div class="zone-exercise-prompt">${escHtml(a.prompt)}</div>
+      <div class="ex-rate-scale">${btns}</div>
+      ${an.length?`<div class="ex-rate-anchors"><span class="ex-rate-anchor">${escHtml(an[0])}</span><span class="ex-rate-anchor">${escHtml(an[an.length-1])}</span></div>`:''}
+      <div class="ex-rate-feedback${fbText?' show':''}">${fbText}</div>
+    </div>`;
+  }
+  if (a.type === 'scenario') {
+    const answered = sv && sv.selected !== undefined;
+    const opts = (a.options||[]).map((opt,j) => {
+      let cls = 'ex-scenario-opt';
+      if (answered && j === sv.selected) cls += ' opt-' + sv.quality;
+      const safeFb = (opt.feedback||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<button class="${cls}"${answered?' disabled':''} onclick="answerScenario(${i},${j},'${opt.quality||'ok'}','${safeFb}')">${escHtml(opt.text)}</button>`;
+    }).join('');
+    let fbHtml = '';
+    if (answered) { const sel = a.options[sv.selected]; fbHtml = `<div class="ex-scenario-fb show fb-${sv.quality}">${escHtml(sel.feedback||'')}</div>`; }
+    return `<div class="zone-exercise ex-scenario" data-ex-idx="${i}">
+      <div class="zone-exercise-eyebrow">\uD83C\uDFAF ${escHtml(a.label||'Situation Lab')}</div>
+      <div class="zone-exercise-prompt">${escHtml(a.prompt||'How would you handle this?')}</div>
+      <div class="ex-scenario-text">${escHtml(a.scenario)}</div>
+      <div class="ex-scenario-options">${opts}</div>
+      ${fbHtml}
+    </div>`;
+  }
+  if (a.type === 'build') {
+    const saved = (sv && typeof sv === 'object') ? sv : {};
+    const fields = (a.fields||[]).map(f => `<div class="ex-build-field">
+      <label class="ex-build-label">${escHtml(f.label)}</label>
+      <input class="ex-build-input" placeholder="${escHtml(f.placeholder||'')}" value="${escHtml(saved[f.key]||'')}" oninput="saveBuildField(${i},'${f.key}',this.value)" />
+    </div>`).join('');
+    return `<div class="zone-exercise ex-build" data-ex-idx="${i}">
+      <div class="zone-exercise-eyebrow">\uD83D\uDD28 ${escHtml(a.label||'Build It')}</div>
+      <div class="zone-exercise-prompt">${escHtml(a.prompt||'')}</div>
+      ${a.description?`<div class="ex-build-desc">${escHtml(a.description)}</div>`:''}
+      <div class="ex-build-fields">${fields}</div>
+      <span class="zone-exercise-saved" id="ex-saved-${i}">\u2713 Saved</span>
+    </div>`;
+  }
+  if (a.type === 'video') {
+    const isTT = a.platform === 'tiktok';
+    const ratio = isTT ? 'r916' : 'r169';
+    const badgeCls = isTT ? 'tt' : 'yt';
+    const badgeLabel = isTT ? 'TikTok' : 'YouTube';
+    const thumbUrl = !isTT ? `https://img.youtube.com/vi/${a.videoId}/maxresdefault.jpg` : '';
+    const embedUrl = isTT
+      ? `https://www.tiktok.com/embed/v2/${a.videoId}`
+      : `https://www.youtube.com/embed/${a.videoId}?autoplay=1&rel=0`;
+    const safeEmbed = escHtml(embedUrl);
+    return `<div class="zone-exercise ex-video">
+      <div class="zone-exercise-eyebrow">\u25B6 ${escHtml(a.label||'Watch')}</div>
+      <div class="ex-video-thumb ${ratio}" id="vthumb-${i}" onclick="loadVideoEmbed(${i},'${safeEmbed}','${ratio}')">
+        ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy" />` : '<div style="width:100%;height:100%;background:#0a0a0a"></div>'}
+        <div class="ex-video-overlay"></div>
+        <div class="ex-video-play"><div class="ex-video-play-btn"><div class="ex-video-play-icon"></div></div></div>
+        ${a.title ? `<div class="ex-video-title-overlay"><div class="ex-video-title-text">${escHtml(a.title)}</div></div>` : ''}
+      </div>
+      <div class="ex-video-meta">
+        <span class="ex-video-badge ${badgeCls}">${badgeLabel}</span>
+        ${a.duration ? `<span class="ex-video-duration">${escHtml(a.duration)}</span>` : ''}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+function loadVideoEmbed(idx, url, ratio) {
+  const thumb = document.getElementById('vthumb-' + idx);
+  if (!thumb) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'ex-video-iframe-wrap ' + (ratio || 'r169');
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
+  iframe.allowFullscreen = true;
+  wrap.appendChild(iframe);
+  thumb.replaceWith(wrap);
 }
 
 function setValueStar(key, n) {
