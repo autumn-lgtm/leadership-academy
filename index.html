@@ -4498,17 +4498,21 @@ function renderActivityItem(a, i, savedActs, savedExData) {
       const thumbUrl = videoId ? 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg' : '';
       const cleanTitle = text.replace(/^Watch[:\s"]+/, '').replace(/"\s*$/, '').replace(/\s*—.*$/, '').trim();
       const thumbInner = thumbUrl
-        ? '<img src="' + thumbUrl + '" alt="" loading="lazy" />'
+        ? '<img src="' + thumbUrl + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=this.src.replace(\'maxresdefault\',\'hqdefault\')" />'
         : '<div style="width:100%;height:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box"><span style="color:rgba(255,255,255,0.35);font-size:13px;font-weight:600;text-align:center;line-height:1.5">' + escHtml(text.replace(/^Watch[:\s"]+/, '')) + '</span></div>';
+      const embedUrl = videoId ? 'https://www.youtube.com/embed/' + videoId + '?autoplay=1' : url;
+      const clickHandler = videoId
+        ? 'loadVideoEmbed(\'act-' + i + '\', \'' + embedUrl + '\', \'r169\')'
+        : 'window.open(\'' + escHtml(url) + '\',\'_blank\')';
       return '<div class="zone-exercise ex-video">' +
         '<div class="zone-exercise-eyebrow">\u25B6 Watch</div>' +
-        '<div class="ex-video-thumb r169" onclick="window.open(\'' + escHtml(url) + '\',\'_blank\')" style="cursor:pointer">' +
+        '<div id="vthumb-act-' + i + '" class="ex-video-thumb r169" onclick="' + clickHandler + '" style="cursor:pointer">' +
         thumbInner +
         '<div class="ex-video-overlay"></div>' +
         '<div class="ex-video-play"><div class="ex-video-play-btn"><div class="ex-video-play-icon"></div></div></div>' +
         (cleanTitle ? '<div class="ex-video-title-overlay"><div class="ex-video-title-text">' + escHtml(text.replace(/^Watch[:\s"]+/, '')) + '</div></div>' : '') +
         '</div>' +
-        '<div class="ex-video-meta"><span class="ex-video-badge yt">YouTube</span><span class="ex-video-duration" style="margin-left:auto;opacity:0.4;font-size:11px">Opens YouTube \u2197</span></div>' +
+        '<div class="ex-video-meta"><span class="ex-video-badge yt">YouTube</span></div>' +
         '</div>';
     }
     const done = !!savedActs[i];
@@ -4619,10 +4623,14 @@ function renderActivityItem(a, i, savedActs, savedExData) {
     const badgeLabel = isTT ? 'TikTok' : 'YouTube';
     const thumbUrl = !isTT ? `https://img.youtube.com/vi/${a.videoId}/maxresdefault.jpg` : '';
     const watchUrl = isTT ? `https://www.tiktok.com/video/${a.videoId}` : `https://www.youtube.com/watch?v=${a.videoId}`;
+    const embedUrl = !isTT ? `https://www.youtube.com/embed/${a.videoId}?autoplay=1` : watchUrl;
+    const clickHandler = !isTT
+      ? `loadVideoEmbed('vid-${i}', '${embedUrl}', '${ratio}')`
+      : `window.open('${escHtml(watchUrl)}','_blank')`;
     return `<div class="zone-exercise ex-video">
       <div class="zone-exercise-eyebrow">\u25B6 ${escHtml(a.label||'Watch')}</div>
-      <div class="ex-video-thumb ${ratio}" onclick="window.open('${escHtml(watchUrl)}','_blank')" style="cursor:pointer">
-        ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy" />` : '<div style="width:100%;height:100%;background:#0a0a0a"></div>'}
+      <div id="vthumb-vid-${i}" class="ex-video-thumb ${ratio}" onclick="${clickHandler}" style="cursor:pointer">
+        ${thumbUrl ? `<img src="${thumbUrl}" alt="" loading="lazy" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />` : '<div style="width:100%;height:100%;background:#0a0a0a"></div>'}
         <div class="ex-video-overlay"></div>
         <div class="ex-video-play"><div class="ex-video-play-btn"><div class="ex-video-play-icon"></div></div></div>
         ${a.title ? `<div class="ex-video-title-overlay"><div class="ex-video-title-text">${escHtml(a.title)}</div></div>` : ''}
@@ -4630,7 +4638,6 @@ function renderActivityItem(a, i, savedActs, savedExData) {
       <div class="ex-video-meta">
         <span class="ex-video-badge ${badgeCls}">${badgeLabel}</span>
         ${a.duration ? `<span class="ex-video-duration">${escHtml(a.duration)}</span>` : ''}
-        <span class="ex-video-duration" style="margin-left:auto;opacity:0.45;font-size:11px">Opens YouTube \u2197</span>
       </div>
     </div>`;
   }
