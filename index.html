@@ -4649,9 +4649,8 @@ function answerAssess(milestoneId, qi, oi, correct, feedback) {
 }
 
 function findMilestone(programKey, milestoneId) {
-  const prog = getProgramData(programKey);
-  if (!prog) return null;
-  for (const phase of prog.phases || []) {
+  const phases = programKey === 'mgmt' ? MGMT_PHASES : programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
+  for (const phase of phases || []) {
     for (const m of phase.milestones || []) {
       if (m.id === milestoneId) return m;
     }
