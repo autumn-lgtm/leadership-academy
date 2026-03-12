@@ -26,6 +26,7 @@ body { font-family: "Inter", sans-serif; background: #0D0906; color: #E5D9C8; mi
 body[data-section="dashboard"] { --accent: #D97706; --accent-glow: rgba(217,119,6,0.35); --hero-bg-start: #0D0906; --hero-bg-end: #2A1A08; --hero-accent: #F59E0B; --hero-text: #FDE68A; --sidebar-bg: #080705; }
 body[data-section="lde"] { --accent: #D97706; --accent-glow: rgba(217,119,6,0.3); --hero-bg-start: #1C0A00; --hero-bg-end: #3D1C00; --hero-accent: #F59E0B; --hero-text: #FDE68A; --sidebar-bg: #0F0500; }
 body[data-section="alde"] { --accent: #60A5FA; --accent-glow: rgba(96,165,250,0.3); --hero-bg-start: #060B18; --hero-bg-end: #0F2240; --hero-accent: #60A5FA; --hero-text: #E0F2FE; --sidebar-bg: #040810; }
+body[data-section="mgmt"] { --accent: #34D399; --accent-glow: rgba(52,211,153,0.3); --hero-bg-start: #031A10; --hero-bg-end: #062E1C; --hero-accent: #34D399; --hero-text: #A7F3D0; --sidebar-bg: #020E09; }
 body[data-section="journal"] { --accent: #B45309; --accent-glow: rgba(180,83,9,0.35); --hero-bg-start: #130800; --hero-bg-end: #2D1000; --hero-accent: #F97316; --hero-text: #FCA5A5; --sidebar-bg: #0A0400; }
 body[data-section="resources"] { --accent: #4D7C0F; --accent-glow: rgba(77,124,15,0.35); --hero-bg-start: #0D1A0E; --hero-bg-end: #152B16; --hero-accent: #84CC16; --hero-text: #BEF264; --sidebar-bg: #080E08; }
 body[data-section="settings"] { --accent: #60A5FA; --accent-glow: rgba(96,165,250,0.3); --hero-bg-start: #0F172A; --hero-bg-end: #1E293B; --hero-accent: #60A5FA; --hero-text: #E0F2FE; --sidebar-bg: #0A1020; }
@@ -98,6 +99,7 @@ body[data-section="settings"] { --accent: #60A5FA; --accent-glow: rgba(96,165,25
 .phase-card.complete { border-color: rgba(217,119,6,0.4); }
 .phase-card.complete::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(217,119,6,0.08), transparent); animation: shimmer 3s ease-in-out infinite; pointer-events: none; }
 body[data-section="alde"] .phase-card.complete::after { background: linear-gradient(90deg, transparent, rgba(96,165,250,0.08), transparent); }
+body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradient(90deg, transparent, rgba(52,211,153,0.08), transparent); }
 @keyframes shimmer { 0% { transform: translateX(-100%); } 50% { transform: translateX(100%); } 100% { transform: translateX(100%); } }
 .phase-header { padding: 20px 24px; display: flex; align-items: center; gap: 16px; cursor: pointer; user-select: none; }
 .phase-header:hover { background: rgba(255,255,255,0.03); }
@@ -393,6 +395,7 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
   <nav class="sidebar-nav">
     <div class="nav-section-label">Navigation</div>
     <div class="nav-item active" data-nav="dashboard"><span class="nav-icon">&#9978;</span><span>Base Camp</span></div>
+    <div class="nav-item" data-nav="mgmt"><span class="nav-icon">&#127807;</span><span>MGMT 101</span></div>
     <div class="nav-item" data-nav="lde"><span class="nav-icon">&#127964;</span><span>LDE Program</span></div>
     <div class="nav-item" data-nav="alde"><span class="nav-icon">&#127956;</span><span>ALDE Program</span></div>
     <div class="divider" style="margin:10px 0"></div>
@@ -451,6 +454,22 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
       <div class="stat-card"><div class="stat-icon">&#128221;</div><div class="stat-value" id="stat-entries">0</div><div class="stat-label">Journal Entries</div></div>
     </div>
     <div class="prog-cards-grid">
+      <div class="progress-path-card" id="dash-mgmt-card" style="border-color:rgba(52,211,153,0.2)">
+        <div class="prog-header">
+          <div><div class="prog-title">&#127807; The Trailhead &mdash; MGMT 101</div><div class="prog-subtitle">New Leader Foundations &middot; 7 milestones</div></div>
+          <div class="prog-pct-big" id="dash-mgmt-pct" style="color:#34D399">0%</div>
+        </div>
+        <div class="trail-container">
+          <svg class="trail-svg" viewBox="0 0 500 60" preserveAspectRatio="none">
+            <path class="trail-path-bg" d="M 20,45 C 80,45 120,35 180,30 C 240,25 280,35 340,25 C 380,18 420,18 480,18"/>
+            <path class="trail-path-fill" id="mgmt-trail-fill" d="M 20,45 C 80,45 120,35 180,30 C 240,25 280,35 340,25 C 380,18 420,18 480,18" stroke="#34D399" stroke-dasharray="600" stroke-dashoffset="600"/>
+            <circle id="mgmt-trail-dot" cx="20" cy="45" r="6" fill="var(--hero-bg-start,#031A10)" stroke="#34D399" stroke-width="2.5"/>
+            <text x="20" y="58" fill="rgba(255,255,255,0.3)" font-size="8" font-family="Inter">Start</text>
+            <text x="455" y="14" fill="rgba(255,255,255,0.3)" font-size="8" font-family="Inter">Ready</text>
+          </svg>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px" id="dash-mgmt-phases"></div>
+      </div>
       <div class="progress-path-card" id="dash-lde-card">
         <div class="prog-header">
           <div><div class="prog-title">&#127964; Desert Crossing &mdash; LDE</div><div class="prog-subtitle">Leadership Development Experience &middot; 26 milestones</div></div>
@@ -500,6 +519,34 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
     <div id="milestones-list"></div>
   </div>
 </section>
+<!-- ===================== MGMT 101 SECTION ===================== -->
+<section class="section" id="section-mgmt">
+  <div class="section-hero">
+    <canvas id="canvas-mgmt"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">New Leader Foundations &middot; Property Meld</div>
+      <h1 class="hero-title">THE TRAILHEAD</h1>
+      <p class="hero-subtitle">MGMT 101 &middot; Before the Desert Crossing &middot; 7 Milestones</p>
+      <p class="hero-quote">&ldquo;Every trail starts somewhere. This is where leaders learn to show up — before they lead anyone anywhere.&rdquo;</p>
+      <div class="hero-chips">
+        <span class="hero-chip accent" id="mgmt-chip-progress">0% Complete</span>
+        <span class="hero-chip">1 Module</span>
+        <span class="hero-chip">7 Milestones</span>
+        <span class="hero-chip" id="mgmt-chip-milestones">0 milestones done</span>
+      </div>
+    </div>
+  </div>
+  <div class="section-content">
+    <div class="section-header">
+      <div class="section-label">MGMT 101</div>
+      <div class="section-title-text">New Leader Foundations</div>
+      <div class="section-desc">Before the desert crossing, there&apos;s the trailhead. This is where you learn the fundamentals — how to start a working relationship, build trust, run a real 1:1, handle performance, and manage time off without losing culture. Ground-level. Essential. Yours.</div>
+    </div>
+    <div id="mgmt-phases-container"></div>
+  </div>
+</section>
+
 <!-- ===================== LDE SECTION ===================== -->
 <section class="section" id="section-lde">
   <div class="section-hero">
@@ -678,7 +725,7 @@ body[data-section="alde"] .phase-card.complete::after { background: linear-gradi
           <div class="settings-field"><label class="settings-label">Your Name</label><input type="text" class="settings-input" id="settings-name" placeholder="Enter your name..." /></div>
           <div class="settings-field"><label class="settings-label">Program Start Date</label><input type="date" class="settings-input" id="settings-start-date" /></div>
           <div class="settings-field"><label class="settings-label">Role / Cohort</label><input type="text" class="settings-input" id="settings-role" placeholder="e.g., Product Manager &middot; Cohort 3" /></div>
-          <div class="settings-field"><label class="settings-label">Current Program</label><select class="settings-input" id="settings-program"><option value="lde">LDE &mdash; Leadership Development Experience</option><option value="alde">ALDE &mdash; Advanced Leadership Development</option></select></div>
+          <div class="settings-field"><label class="settings-label">Current Program</label><select class="settings-input" id="settings-program"><option value="mgmt">MGMT 101 &mdash; New Leader Foundations</option><option value="lde">LDE &mdash; Leadership Development Experience</option><option value="alde">ALDE &mdash; Advanced Leadership Development</option></select></div>
           <button class="btn btn-primary mt-4" onclick="saveSettings()">Save Profile</button>
         </div>
         <div class="settings-section">
@@ -803,6 +850,7 @@ const defaultState = {
   startDate: new Date().toISOString().split('T')[0],
   role: '',
   program: 'lde',
+  mgmt: { milestones: {}, reflections: {} },
   lde: { milestones: {}, reflections: {} },
   alde: { milestones: {}, reflections: {} },
   journal: [],
@@ -820,6 +868,9 @@ function loadState() {
       const parsed = JSON.parse(saved);
       state = Object.assign({}, defaultState, parsed);
       // backward compat: support old "weeks" key
+      state.mgmt = Object.assign({ milestones: {}, reflections: {} }, parsed.mgmt || {});
+      state.mgmt.milestones = parsed.mgmt?.milestones || {};
+      state.mgmt.reflections = parsed.mgmt?.reflections || {};
       state.lde = Object.assign({ milestones: {}, reflections: {} }, parsed.lde || {});
       state.lde.milestones = parsed.lde?.milestones || parsed.lde?.weeks || {};
       state.lde.reflections = parsed.lde?.reflections || {};
@@ -834,6 +885,245 @@ function loadState() {
 function saveState() {
   try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {}
 }
+
+// =============================================
+// CURRICULUM DATA — MGMT 101
+// =============================================
+const MGMT_PHASES = [
+  {
+    id: 1, name: 'New Leader Foundations', subtitle: 'Milestones 1-7',
+    tagline: '"Every trail starts somewhere. This is yours."',
+    desc: 'The fundamentals of leading people — before the desert crossing begins.',
+    milestones: [
+      {
+        id: 'mgmt-1', num: 'Milestone 1', title: 'Your First 30 Days — Starting a Working Relationship',
+        desc: 'You have a team. Now what? The first 30 days aren\'t about proving yourself — they\'re about listening, mapping, and earning the right to lead.',
+        tags: ['orientation', 'trust', 'new leader', '2hr'],
+        geoZone: 'The Trailhead', geoScene: 'A forest clearing at dawn — fresh trail markers, dew on the leaves, everything ahead of you.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Watch: "How to Start a New Manager Role" — Michael Watkins on The First 90 Days', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc' },
+          { text: 'Read the Property Meld 90-Day Cognitive Onboarding Map — understand the 4-phase framework your reports navigate', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260' },
+          { text: 'Read the Hello Meld Week 1 Welcome Guide — internalize what new Melders need from their manager on Day 1', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
+          'Schedule a 30-minute "get to know you" 1:1 with every direct report in your first week',
+          'Map your team: names, roles, tenure, what they\'re working on, and one thing each person is proud of'
+        ],
+        frameworks: [
+          'The 4-Phase Cognitive Onboarding Model (Understand System → Understand Customer → Understand Levers → Drive Outcomes)',
+          'New Leader Assimilation (Watkins): Secure early wins without breaking what\'s working',
+          'The 5 Conversations: Purpose, Priorities, People, Process, Presence'
+        ],
+        reflections: [
+          'What assumptions are you walking in with about this team? Which ones might be wrong?',
+          'What do you want your team to know about how you lead — and how will you show it, not just say it?',
+          'What does "starting a working relationship" mean to you vs what it might mean to your reports?'
+        ],
+        deliverable: 'A 30/60/90-day listening plan — with the 5 questions you will ask every team member in your first 1:1, and what you are listening for.',
+        resources: [
+          { tier: 'watch', label: 'The First 90 Days — Michael Watkins', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc', desc: 'The definitive framework for transitioning into a new leadership role.' },
+          { tier: 'read', label: 'Property Meld 90-Day Cognitive Onboarding Map', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260', desc: 'The 4-phase cognitive model Meld uses for new joiners.' },
+          { tier: 'read', label: 'Hello Meld — Week 1 Welcome Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'What new Melders need from their manager in Week 1.' },
+          { tier: 'apply', label: 'HBR: What New Leaders Need to Do First', url: 'https://hbr.org/2017/10/what-new-leaders-need-to-do-first', desc: 'Practical advice on making a strong start without overreaching.' }
+        ]
+      },
+      {
+        id: 'mgmt-2', num: 'Milestone 2', title: 'Building Trust & Respect as a Foundation',
+        desc: 'Authority isn\'t trust. The title gets you in the room. Trust is what gets people to follow you when things get hard.',
+        tags: ['trust', 'culture', 'foundation', '2hr'],
+        geoZone: 'The Root System', geoScene: 'Ancient trees whose roots interlock underground — strength built invisibly over time.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Watch: Brené Brown on "The Anatomy of Trust" (BRAVING inventory)', url: 'https://www.youtube.com/watch?v=CFMDD6WMcKY' },
+          { text: 'Watch: Simon Sinek — "Why Leaders Eat Last" (Circle of Safety)', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y' },
+          'Complete the Trust Equation self-assessment: rate yourself on Credibility, Reliability, Intimacy, and Self-Orientation for each direct report',
+          'Map your current trust level with each team member (1-10) and identify the primary driver for each score',
+          'Review the Property Meld values (Humility, Loyalty, Integrity, Agility) — identify which one you personally need to develop most as a leader'
+        ],
+        frameworks: [
+          'The Trust Equation (Maister): (Credibility + Reliability + Intimacy) / Self-Orientation',
+          'BRAVING Inventory (Brown): Boundaries, Reliability, Accountability, Vault, Integrity, Non-judgment, Generosity',
+          'Circle of Safety (Sinek): Leaders set the conditions — people decide whether to follow'
+        ],
+        reflections: [
+          'Where do you currently have high trust with your team? What specific behaviors built it?',
+          'Where might your behavior be unintentionally eroding trust — even with good intentions?',
+          'What does "earned authority" mean to you, and how long do you think it takes to earn it?'
+        ],
+        deliverable: 'A trust-building commitment document for your first 90 days — three specific behaviors you will practice consistently, and how you will know they\'re working.',
+        resources: [
+          { tier: 'watch', label: 'Brené Brown: The Anatomy of Trust', url: 'https://www.youtube.com/watch?v=CFMDD6WMcKY', desc: 'The BRAVING inventory — what trust actually requires.' },
+          { tier: 'watch', label: 'Simon Sinek: Why Leaders Eat Last', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y', desc: 'The Circle of Safety and what makes people feel safe enough to follow.' },
+          { tier: 'read', label: 'The Trusted Advisor — Maister, Green, Galford', url: 'https://hbr.org/2009/10/becoming-a-trusted-leader', desc: 'The Trust Equation framework applied to leadership.' },
+          { tier: 'apply', label: 'Trust Assessment: Rate Yourself', url: 'https://trustedadvisor.com/why-trust-matters/understanding-trust/understanding-the-trust-equation', desc: 'Interactive trust equation self-scoring tool.' }
+        ]
+      },
+      {
+        id: 'mgmt-3', num: 'Milestone 3', title: 'Understanding What Your Team Members Value',
+        desc: 'One-size-fits-all development doesn\'t fit anyone. The leaders who retain and grow talent are the ones who actually know what their people care about.',
+        tags: ['idp', 'development', 'motivation', '2hr'],
+        geoZone: 'The Listening Post', geoScene: 'A high ridge where wind carries voices from the valley — the place leaders go to understand before they act.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Watch: Daniel Pink on motivation — Autonomy, Mastery, Purpose (TED Talk)', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y' },
+          { text: 'Review the Property Meld People Leader Growth Path and IC Growth Path — understand where each of your reports sits on the track', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374' },
+          'Run a "What Motivates You?" conversation with each direct report — ask: what energizes you at work? what drains you? where do you want to be in 2 years?',
+          'Start an Individual Development Plan (IDP) template for each direct report — at minimum 2 growth areas per person',
+          'Map each team member on the IC Growth Path levels (1-6) based on what you observe, not just their title'
+        ],
+        frameworks: [
+          'Self-Determination Theory (Deci & Ryan): Autonomy, Mastery, Purpose as the core human motivators',
+          'Individual Development Plan (IDP): Current role strengths + development gaps + growth goals + resources + timeline',
+          '9-Box Performance/Potential Grid: Where is each person now, and where are they going?'
+        ],
+        reflections: [
+          'What do you know about each team member\'s career goals? What surprised you from the conversations?',
+          'How well does your current team structure actually match what each person wants to be doing?',
+          'What development investment have you made in your team in the past 30 days — be specific.'
+        ],
+        deliverable: 'A starter IDP template for each direct report — with 2+ growth goals, identified strengths, and one resource or opportunity mapped to each goal.',
+        resources: [
+          { tier: 'watch', label: 'Daniel Pink: The Puzzle of Motivation', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y', desc: 'Autonomy, mastery, purpose. The research on what actually drives people.' },
+          { tier: 'read', label: 'Property Meld People Leader Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374', desc: 'Level-by-level competency expectations for leaders at Meld.' },
+          { tier: 'read', label: 'Property Meld IC Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1769308189', desc: 'The individual contributor track — from Level 1 to Principal.' },
+          { tier: 'apply', label: 'HBR: The Performance Management Revolution', url: 'https://hbr.org/2016/10/the-performance-management-revolution', desc: 'Why development-first management outperforms evaluation-first.' },
+          { tier: 'practice', label: 'Develop IDPs for Team Members', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/299731533', desc: 'Meld\'s internal IDP framework with example areas for improvement.' }
+        ]
+      },
+      {
+        id: 'mgmt-4', num: 'Milestone 4', title: 'The Art of the 1:1 — Structure, Cadence & The Right Questions',
+        desc: 'The 1:1 is the most powerful tool a manager has. Most managers run it wrong — they make it a status update. It\'s not. It\'s a coaching conversation.',
+        tags: ['1:1', 'connection', 'communication', '2hr'],
+        geoZone: 'The Crossroads Fire', geoScene: 'A campfire at a trail junction — where two paths meet, where real conversations happen.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Watch: "Manager Tools — The One-on-One" (the definitive 1:1 methodology)', url: 'https://www.youtube.com/watch?v=Ia4tSgKFxTE' },
+          { text: 'Review the Property Meld 1:1 question bank from the Autumn One-on-One playbook', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/358089836' },
+          'Design your personal 1:1 template — include: Top 3 check-in, highlight/lowlight, obstacle question, feedback invitation, and development check-in',
+          'Schedule recurring 1:1s with all direct reports this week — weekly for new team members, biweekly for established ones',
+          'Run at least one structured 1:1 using your new template and write down what you learned that you didn\'t know before'
+        ],
+        frameworks: [
+          'The Top 3 Format: What are your top priorities this week / how did last week\'s go?',
+          'Highlight / Lowlight: Surface what\'s energizing and what\'s draining — fast and direct',
+          'The Obstacle Question: "What if anything feels harder than it should be in your day-to-day work?" — this is gold',
+          'The Feedback Invitation: "If there was one thing I could do differently to help you more, what would it be?"'
+        ],
+        reflections: [
+          'What does your current 1:1 approach look like — be honest. Is it a status meeting or a development conversation?',
+          'What questions do you avoid asking your team members, and why?',
+          'What would your reports say they get from your 1:1s right now — and what would they wish they got?'
+        ],
+        deliverable: 'Your personalized 1:1 template + a standing meeting schedule for every direct report for the next quarter.',
+        resources: [
+          { tier: 'watch', label: 'Manager Tools: The One-on-One', url: 'https://www.youtube.com/watch?v=Ia4tSgKFxTE', desc: 'The gold standard 1:1 framework — 30 minutes, employee first, recurring.' },
+          { tier: 'read', label: 'Meld 1:1 Playbook — Question Bank', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/358089836', desc: 'Property Meld\'s internal 1:1 questions, refined over time.' },
+          { tier: 'read', label: 'HBR: How to Have More Useful One-on-Ones', url: 'https://hbr.org/2022/11/how-to-have-more-effective-one-on-ones', desc: 'Research-backed structure for high-quality 1:1 conversations.' },
+          { tier: 'apply', label: 'The SBI Feedback Model', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'Situation-Behavior-Impact — the cleanest feedback delivery model.' },
+          { tier: 'practice', label: 'Radical Candor — Kim Scott (Core Framework)', url: 'https://www.radicalcandor.com/our-approach/', desc: 'Care personally + challenge directly. The 2x2 that changes how you give feedback.' }
+        ]
+      },
+      {
+        id: 'mgmt-5', num: 'Milestone 5', title: 'Performance Reviews That Actually Mean Something',
+        desc: 'Most performance reviews are a waste of time because they\'re built backward. Great reviews don\'t surprise anyone — because great managers have been having the conversation all along.',
+        tags: ['performance', 'review', 'accountability', '2hr'],
+        geoZone: 'Summit Calibration Point', geoScene: 'A survey marker high on a ridge — the place you stop to confirm you\'re on the right trail.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Read: "Reinventing Performance Management" — HBR (Deloitte\'s research on what actually works)', url: 'https://hbr.org/2015/04/reinventing-performance-management' },
+          { text: 'Review the Property Meld People Leader Growth Path and IC Growth Path — these are your calibration anchors', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374' },
+          'Map each of your direct reports to a level on the IC or People Leader Growth Path — document your evidence for each placement',
+          'Practice writing one full performance review for a hypothetical team member — use the SBI model for specific examples',
+          'Identify the "surprise risk" on your team — which team member might be confused about how their performance is perceived?'
+        ],
+        frameworks: [
+          'The 9-Box Grid: Performance (x-axis) × Potential (y-axis) — where is each person, and what does that imply for how you develop them?',
+          'Calibration Sessions: How do peers rate similar performance? Are your standards aligned with org expectations?',
+          'Continuous Feedback Loop: Review should be a summary, not a surprise — if someone is shocked, the system failed',
+          'The SBI Evidence Standard: Every rating needs a specific Situation, Behavior, and documented Impact'
+        ],
+        reflections: [
+          'What does "meeting expectations" actually mean on your team — can you describe it concretely?',
+          'How do you communicate performance expectations before the review, not just during it?',
+          'Think of the last review you gave or received that felt most accurate. What made it land well?'
+        ],
+        deliverable: 'A calibrated performance standards document for your team — what "exceeds," "meets," and "developing" looks like for each person\'s role, tied to the Meld Growth Path levels.',
+        resources: [
+          { tier: 'read', label: 'HBR: Reinventing Performance Management', url: 'https://hbr.org/2015/04/reinventing-performance-management', desc: 'Deloitte\'s research on what makes performance review systems actually work.' },
+          { tier: 'read', label: 'Property Meld People Leader Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374', desc: 'The calibration anchor for evaluating leader performance at Meld.' },
+          { tier: 'watch', label: 'Laszlo Bock: ReWork — Performance at Google', url: 'https://www.youtube.com/watch?v=2M3hR0Zt9gQ', desc: 'How Google redesigned performance reviews to focus on growth.' },
+          { tier: 'apply', label: '9-Box Grid: A Manager\'s Guide', url: 'https://www.shrm.org/resourcesandtools/hr-topics/talent-acquisition/pages/9-box-grid-talent-management.aspx', desc: 'How to use the performance/potential matrix in real calibration sessions.' },
+          { tier: 'practice', label: 'Meld Performance Management — Test Group Framework', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/530055419', desc: 'The internal Meld framework for 9-Box, IDP, 1:1s, and 360 peer reviews.' }
+        ]
+      },
+      {
+        id: 'mgmt-6', num: 'Milestone 6', title: 'The Honest Conversation — Managing Underperformance',
+        desc: 'The most human thing a manager can do for an underperforming team member is have the honest conversation early. Avoidance isn\'t kindness — it\'s a slow disservice to everyone.',
+        tags: ['underperformance', 'accountability', 'coaching', '2hr'],
+        geoZone: 'The Hard Pass', geoScene: 'A narrow mountain pass in low cloud — requires full attention, there\'s no easy route around it.',
+        duration: '2 hours',
+        activities: [
+          { text: 'Watch: "Crucial Conversations" overview — the core model for high-stakes dialogue', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY' },
+          { text: 'Read: "The Feedback Fallacy" — HBR (what actually helps vs what we think helps)', url: 'https://hbr.org/2019/03/the-feedback-fallacy' },
+          'Practice the SBI model on a recent performance situation — write out the full Situation, Behavior, and Impact without generalizing',
+          'Map the "Coaching vs Managing vs Disciplining" distinction — write one example of each from your current team context',
+          'Draft a progressive feedback framework for your team: informal conversation → documented concern → formal PIP → separation decision'
+        ],
+        frameworks: [
+          'SBI Model (Situation-Behavior-Impact): The cleanest way to deliver performance feedback — no labels, no generalizations, just evidence',
+          'The Coaching vs Managing Distinction: Coaching is for skill gaps. Managing is for will gaps. The intervention differs.',
+          'Progressive Discipline Framework: Informal → Formal Feedback → Written Warning → PIP → Separation — each step requires documentation',
+          'The Ownership Conversation: "Here\'s what I\'ve observed. Here\'s the impact. What do you think is getting in the way?"'
+        ],
+        reflections: [
+          'Have you ever avoided a hard performance conversation? What did it cost — the person, the team, and you?',
+          'What is the difference between managing someone\'s performance and caring about them as a person? Are those in conflict?',
+          'What would a direct report need to hear from you to feel both challenged and supported at the same time?'
+        ],
+        deliverable: 'A documented underperformance conversation framework — the questions you\'ll ask, the timeline you\'ll use, the criteria for when you escalate, and the standard for documenting the conversation.',
+        resources: [
+          { tier: 'watch', label: 'Crucial Conversations: The Core Model', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY', desc: 'A framework for high-stakes dialogue when the stakes are highest.' },
+          { tier: 'read', label: 'HBR: The Feedback Fallacy', url: 'https://hbr.org/2019/03/the-feedback-fallacy', desc: 'What research says about what actually helps performance — vs what managers think.' },
+          { tier: 'read', label: 'HBR: Delivering Effective Performance Feedback', url: 'https://hbr.org/2011/08/the-fundamentals-of-performance', desc: 'The mechanics of performance conversations that lead to change.' },
+          { tier: 'apply', label: 'The SBI Feedback Tool (CCL)', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'The Center for Creative Leadership\'s SBI framework with practice examples.' },
+          { tier: 'practice', label: 'Writing a Performance Improvement Plan', url: 'https://www.shrm.org/resourcesandtools/tools-and-samples/how-to-guides/pages/performanceimprovementplan.aspx', desc: 'The SHRM guide to building a PIP that is specific, measurable, and fair.' }
+        ]
+      },
+      {
+        id: 'mgmt-7', num: 'Milestone 7', title: 'Managing PTO & Protecting the Culture of Rest',
+        desc: 'How you handle time off is a direct signal of whether you trust your team. And your team is watching whether you actually take it yourself.',
+        tags: ['pto', 'policy', 'culture', '1hr'],
+        geoZone: 'Base Camp Rest', geoScene: 'A well-maintained camp at the end of a long day\'s hike — fire lit, gear stowed, the next trail can wait.',
+        duration: '1 hour',
+        activities: [
+          { text: 'Read the Property Meld Hello Meld PTO policy — understand the collab hours rule, the 2-hour threshold, and Paylocity', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982' },
+          'Review how PTO requests are currently flowing on your team — are people using it? Are some never taking it? What does the pattern tell you?',
+          'Create a team coverage plan template — how will work be covered when someone is out, and who is responsible for handoffs?',
+          'Have an open conversation with your team about PTO norms — not the policy, the culture: what does "actually disconnecting" look like here?',
+          'Audit your own PTO and out-of-office habits in the last 90 days — what message does your behavior send?'
+        ],
+        frameworks: [
+          'Results-Orientation (not hours): PTO management should be outcome-focused — the question isn\'t "are you here?" it\'s "is the work covered?"',
+          'Coverage Planning: For every person, there should be a plan for who handles what when they\'re out — proactive, not reactive',
+          'The Permission Signal: Your behavior gives permission for theirs. If you never disconnect, your team won\'t either.',
+          'Property Meld PTO Rule: Missing 2+ hours of collab time (11am–3pm MT) in a day = a PTO day. Requests go through Paylocity.'
+        ],
+        reflections: [
+          'How do you actually feel when a team member requests PTO — be honest with yourself? Does your response give them full permission to take it?',
+          'What signals does your own behavior send about rest, recovery, and time off — intended or not?',
+          'What would a healthy PTO culture look like on your team, and what\'s the gap between that and where you are now?'
+        ],
+        deliverable: 'A team PTO coverage template — who handles what when each person is out, plus a written "PTO culture statement" you\'ve discussed with your team.',
+        resources: [
+          { tier: 'read', label: 'Hello Meld — PTO Policy & Paylocity Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'Meld\'s official PTO structure — collab hours rule, Paylocity setup, what counts as a day.' },
+          { tier: 'read', label: 'HBR: The Research Is Clear — Long Hours Backfire', url: 'https://hbr.org/2015/08/the-research-is-clear-long-hours-backfire-for-people-and-for-companies', desc: 'Why overwork hurts productivity and what managers can do about it.' },
+          { tier: 'watch', label: 'Why We All Need to Practice Emotional First Aid — Guy Winch', url: 'https://www.youtube.com/watch?v=F2hc2FLOdhI', desc: 'The importance of recovery and what happens to teams that don\'t prioritize it.' },
+          { tier: 'apply', label: 'Building a Team Coverage Plan', url: 'https://hbr.org/2021/07/how-to-actually-use-your-vacation-time', desc: 'Practical guide to creating team coverage systems that enable real rest.' },
+          { tier: 'discuss', label: 'Discuss: What does "fully disconnecting" mean on our team?', url: '#', desc: 'Bring this question to your next team meeting. The conversation itself is the deliverable.' }
+        ]
+      }
+    ]
+  }
+];
 
 // =============================================
 // CURRICULUM DATA — LDE
@@ -2493,6 +2783,7 @@ class ParticleSystem {
 
 const PARTICLE_CONFIGS = {
   dashboard: { count: 35, color: 'rgba(251,191,36,0.55)', direction: 'up', speed: 0.5, size: 2.5, opacity: 0.6, glow: true },
+  mgmt: { count: 40, color: 'rgba(52,211,153,0.4)', direction: 'up', speed: 0.5, size: 1.8, opacity: 0.5, glow: true },
   lde: { count: 50, color: 'rgba(253,230,138,0.45)', direction: 'right', speed: 0.8, size: 1.8, opacity: 0.5, gravity: true },
   alde: { count: 45, color: 'rgba(224,242,254,0.5)', direction: 'drift', speed: 0.4, size: 1.5, opacity: 0.55 },
   journal: { count: 30, color: 'rgba(251,146,60,0.65)', direction: 'up', speed: 0.7, size: 2, opacity: 0.65, glow: true },
@@ -2507,7 +2798,7 @@ let currentSection = 'dashboard';
 const particleSystems = {};
 
 function initParticleSystems() {
-  ['dashboard', 'lde', 'alde', 'journal', 'resources', 'settings'].forEach(s => {
+  ['dashboard', 'mgmt', 'lde', 'alde', 'journal', 'resources', 'settings'].forEach(s => {
     const canvas = document.getElementById('canvas-' + s);
     if (canvas) { const ps = new ParticleSystem(canvas); ps.configure(PARTICLE_CONFIGS[s]); particleSystems[s] = ps; }
   });
@@ -2533,6 +2824,7 @@ function navigateTo(sectionId) {
   state.currentSection = sectionId;
   if (particleSystems[sectionId]) particleSystems[sectionId].start();
   if (sectionId === 'dashboard') refreshDashboard();
+  if (sectionId === 'mgmt') refreshMGMT();
   if (sectionId === 'lde') refreshLDE();
   if (sectionId === 'alde') refreshALDE();
   if (sectionId === 'journal') refreshJournal();
@@ -2578,8 +2870,16 @@ function calcPhaseProgress(phase, programKey) {
   return { done, total: phase.milestones.length, pct: Math.round((done / phase.milestones.length) * 100) };
 }
 
+function calcMGMTProgress() {
+  const total = MGMT_PHASES.reduce((s, p) => s + p.milestones.length, 0);
+  let done = 0;
+  MGMT_PHASES.forEach(phase => phase.milestones.forEach(m => { if (state.mgmt.milestones[m.id]) done++; }));
+  return { pct: total ? Math.round((done / total) * 100) : 0, done, total };
+}
+
 function countCompletedPhases() {
   let count = 0;
+  MGMT_PHASES.forEach(p => { const pr = calcPhaseProgress(p, 'mgmt'); if (pr.pct === 100) count++; });
   LDE_PHASES.forEach(p => { const pr = calcPhaseProgress(p, 'lde'); if (pr.pct === 100) count++; });
   ALDE_STAGES.forEach(p => { const pr = calcPhaseProgress(p, 'alde'); if (pr.pct === 100) count++; });
   return count;
@@ -2587,6 +2887,7 @@ function countCompletedPhases() {
 
 function estimateHours() {
   let h = 0;
+  MGMT_PHASES.forEach(p => p.milestones.forEach(m => { if (state.mgmt.milestones[m.id]) { const t = m.tags.find(t => t.includes('hr')); h += t ? parseInt(t) : 2; } }));
   LDE_PHASES.forEach(p => p.milestones.forEach(m => { if (state.lde.milestones[m.id]) { const t = m.tags.find(t => t.includes('hr')); h += t ? parseInt(t) : 2; } }));
   ALDE_STAGES.forEach(p => p.milestones.forEach(m => { if (state.alde.milestones[m.id]) { const t = m.tags.find(t => t.includes('hr')); h += t ? parseInt(t) : 3; } }));
   return h;
@@ -2632,11 +2933,12 @@ function updateTrail(fillId, dotId, pct) {
 // DASHBOARD
 // =============================================
 function refreshDashboard() {
+  const mgmt = calcMGMTProgress();
   const lde = calcLDEProgress();
   const alde = calcALDEProgress();
   const phases = countCompletedPhases();
   const hours = estimateHours();
-  const lessons = lde.done + alde.done;
+  const lessons = mgmt.done + lde.done + alde.done;
   const entries = state.journal.length;
 
   const chipPhases = document.getElementById('dash-chip-phases');
@@ -2650,6 +2952,18 @@ function refreshDashboard() {
   animateCounter(document.getElementById('stat-hours'), hours);
   animateCounter(document.getElementById('stat-lessons'), lessons);
   animateCounter(document.getElementById('stat-entries'), entries);
+
+  const mgmtPct = document.getElementById('dash-mgmt-pct');
+  if (mgmtPct) mgmtPct.textContent = mgmt.pct + '%';
+  setTimeout(() => updateTrail('mgmt-trail-fill', 'mgmt-trail-dot', mgmt.pct), 50);
+  const mgmtPhDots = document.getElementById('dash-mgmt-phases');
+  if (mgmtPhDots) {
+    mgmtPhDots.innerHTML = MGMT_PHASES.map(p => {
+      const pr = calcPhaseProgress(p, 'mgmt');
+      const col = pr.pct === 100 ? '#34D399' : pr.pct > 0 ? 'rgba(52,211,153,0.5)' : 'rgba(255,255,255,0.15)';
+      return '<span title="' + p.name + ' (' + pr.pct + '%)" style="display:inline-block;width:32px;height:5px;border-radius:3px;background:' + col + ';transition:background 0.3s"></span>';
+    }).join('');
+  }
 
   const ldePct = document.getElementById('dash-lde-pct');
   if (ldePct) ldePct.textContent = lde.pct + '%';
@@ -2684,6 +2998,16 @@ function refreshUpcomingMilestones() {
   const list = document.getElementById('milestones-list');
   if (!list) return;
   const items = [];
+
+  for (const phase of MGMT_PHASES) {
+    for (const m of phase.milestones) {
+      if (!state.mgmt.milestones[m.id]) {
+        items.push({ icon: '🌱', text: m.title, sub: 'MGMT 101 · ' + phase.name + ' · ' + m.num, tag: 'Start Here', color: '#34D399' });
+        break;
+      }
+    }
+    if (items.length >= 1) break;
+  }
 
   for (const phase of LDE_PHASES) {
     for (const m of phase.milestones) {
@@ -2769,8 +3093,8 @@ function renderPhaseCard(phase, programKey) {
   const pr = calcPhaseProgress(phase, programKey);
   const isComplete = pr.pct === 100;
   const data = state[programKey].milestones;
-  const backLabel = programKey === 'lde' ? '← Back to Desert' : '← Back to Summit Trail';
-  const phaseIcon = programKey === 'lde' ? '🏜' : '🏔';
+  const backLabel = programKey === 'mgmt' ? '← Back to Trailhead' : programKey === 'lde' ? '← Back to Desert' : '← Back to Summit Trail';
+  const phaseIcon = programKey === 'mgmt' ? '🌱' : programKey === 'lde' ? '🏜' : '🏔';
 
   return `
     <div class="phase-card ${isComplete ? 'complete' : ''}" id="phase-card-${programKey}-${phase.id}">
@@ -2819,7 +3143,7 @@ function toggleMilestone(milestoneId, programKey, phaseId) {
   const check = document.getElementById('milestone-check-' + milestoneId);
   if (check) { check.classList.toggle('checked', !current); check.textContent = !current ? '✓' : ''; }
 
-  const phases = programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
+  const phases = programKey === 'mgmt' ? MGMT_PHASES : programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
   const phase = phases.find(p => p.id === phaseId);
   if (phase) {
     const pr = calcPhaseProgress(phase, programKey);
@@ -2837,7 +3161,13 @@ function toggleMilestone(milestoneId, programKey, phaseId) {
     }
   }
 
-  if (programKey === 'lde') {
+  if (programKey === 'mgmt') {
+    const mgmt = calcMGMTProgress();
+    const chip = document.getElementById('mgmt-chip-progress');
+    if (chip) { chip.textContent = mgmt.pct + '% Complete'; pulseChip(chip); }
+    const chipM = document.getElementById('mgmt-chip-milestones');
+    if (chipM) { chipM.textContent = mgmt.done + ' milestones done'; pulseChip(chipM); }
+  } else if (programKey === 'lde') {
     const lde = calcLDEProgress();
     const chip = document.getElementById('lde-chip-progress');
     if (chip) { chip.textContent = lde.pct + '% Complete'; pulseChip(chip); }
@@ -2852,6 +3182,20 @@ function toggleMilestone(milestoneId, programKey, phaseId) {
   }
 
   showToast('Progress updated.', '✅');
+}
+
+// =============================================
+// MGMT 101 PROGRAM
+// =============================================
+function refreshMGMT() {
+  const container = document.getElementById('mgmt-phases-container');
+  if (!container) return;
+  container.innerHTML = MGMT_PHASES.map(p => renderPhaseCard(p, 'mgmt')).join('');
+  const mgmt = calcMGMTProgress();
+  const chip = document.getElementById('mgmt-chip-progress');
+  if (chip) chip.textContent = mgmt.pct + '% Complete';
+  const chipM = document.getElementById('mgmt-chip-milestones');
+  if (chipM) chipM.textContent = mgmt.done + ' milestones done';
 }
 
 function refreshLDE() {
@@ -3183,7 +3527,7 @@ let zoneModalMilestoneId = null;
 let zonePSystem = null;
 
 function openZoneModal(milestoneId, programKey, phaseId) {
-  const phases = programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
+  const phases = programKey === 'mgmt' ? MGMT_PHASES : programKey === 'lde' ? LDE_PHASES : ALDE_STAGES;
   const phase = phases.find(p => p.id === phaseId);
   if (!phase) return;
   const milestone = phase.milestones.find(m => m.id === milestoneId);
@@ -3304,6 +3648,7 @@ function closeZoneModal() {
   modal.classList.remove('open');
   document.body.style.overflow = '';
   if (zonePSystem) { zonePSystem.stop(); zonePSystem = null; }
+  if (zoneModalProgram === 'mgmt') refreshMGMT();
   if (zoneModalProgram === 'lde') refreshLDE();
   if (zoneModalProgram === 'alde') refreshALDE();
 }
@@ -3459,7 +3804,7 @@ function toggleMilestoneFromModal() {
 
   // Update phase progress bar
   if (zoneModalPhaseId) {
-    const phases = zoneModalProgram === 'lde' ? LDE_PHASES : ALDE_STAGES;
+    const phases = zoneModalProgram === 'mgmt' ? MGMT_PHASES : zoneModalProgram === 'lde' ? LDE_PHASES : ALDE_STAGES;
     const phase = phases.find(p => p.id === zoneModalPhaseId);
     if (phase) {
       const pr = calcPhaseProgress(phase, zoneModalProgram);
