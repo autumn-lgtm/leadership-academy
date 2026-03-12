@@ -3564,12 +3564,15 @@ function openZoneModal(milestoneId, programKey, phaseId) {
   const fwEl = document.getElementById('zone-frameworks');
   const fwBlock = document.getElementById('zone-frameworks-block');
   if (milestone.frameworks && milestone.frameworks.length) {
-    fwEl.innerHTML = milestone.frameworks.map(f => `
-      <div class="zone-framework-item">
-        <div class="zone-framework-name">${escHtml(f.name)}</div>
-        <div class="zone-framework-how">${escHtml(f.how)}</div>
-      </div>
-    `).join('');
+    fwEl.innerHTML = milestone.frameworks.map(f => {
+      if (typeof f === 'string') {
+        const colonIdx = f.indexOf(':');
+        const name = colonIdx > -1 ? f.slice(0, colonIdx).trim() : f;
+        const how = colonIdx > -1 ? f.slice(colonIdx + 1).trim() : '';
+        return `<div class="zone-framework-item"><div class="zone-framework-name">${escHtml(name)}</div>${how ? '<div class="zone-framework-how">' + escHtml(how) + '</div>' : ''}</div>`;
+      }
+      return `<div class="zone-framework-item"><div class="zone-framework-name">${escHtml(f.name)}</div><div class="zone-framework-how">${escHtml(f.how)}</div></div>`;
+    }).join('');
     fwBlock.style.display = 'block';
   } else {
     fwBlock.style.display = 'none';
