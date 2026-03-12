@@ -322,6 +322,16 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
 .zone-reflect-assess-btn:hover { background: var(--accent); color: #000; }
 .zone-reflect-saved-note { font-size: 11px; color: var(--accent); opacity: 0; transition: opacity 0.4s; }
 .zone-reflect-saved-note.show { opacity: 1; }
+.zone-values-intro { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+.zone-values-grid { display: flex; flex-direction: column; gap: 10px; }
+.zone-value-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.07); }
+.zone-value-label { flex: 1; }
+.zone-value-name { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.zone-value-desc { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+.zone-value-stars { display: flex; gap: 4px; }
+.zone-value-star { font-size: 18px; cursor: pointer; color: rgba(255,255,255,0.2); transition: color 0.15s; line-height: 1; }
+.zone-value-star.lit { color: #FBBF24; }
+.zone-value-star:hover { color: #FBBF24; }
 /* Assessment panel */
 .zone-assessment { margin-top: 8px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 20px; display: none; flex-direction: column; gap: 16px; }
 .zone-assessment.visible { display: flex; }
@@ -822,6 +832,15 @@ body[data-section="mgmt"] .phase-card.complete::after { background: linear-gradi
           <div class="zone-assessment-prompts" id="zone-assessment-prompts"></div>
         </div>
       </div>
+      <div class="zone-block" id="zone-values-block" style="display:none">
+        <div class="zone-block-label">&#128142; Team Values Assessment</div>
+        <div class="zone-values-intro">Use this in your 1:1s. Ask each team member to rate how important each value is to them right now (1 star = not a priority, 5 stars = core to what I need). Their answers shape how you develop, recognize, and support them.</div>
+        <div class="zone-values-grid" id="zone-values-grid"></div>
+        <div class="zone-reflect-actions" style="margin-top:12px">
+          <button class="zone-reflect-save-btn" onclick="saveValuesAssessment()">&#128190; Save Assessment</button>
+          <span class="zone-reflect-saved-note" id="zone-values-saved-note">Saved.</span>
+        </div>
+      </div>
       <div class="zone-block" id="zone-resources-block" style="display:none">
         <div class="zone-block-label">&#127775; Learning Pyramid Resources</div>
         <div class="zone-resources" id="zone-resources"></div>
@@ -923,7 +942,7 @@ const MGMT_PHASES = [
           { tier: 'watch', label: 'The First 90 Days — Michael Watkins', url: 'https://www.youtube.com/watch?v=PpqmxzUWrPc', desc: 'The definitive framework for transitioning into a new leadership role.' },
           { tier: 'read', label: 'Property Meld 90-Day Cognitive Onboarding Map', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3587637260', desc: 'The 4-phase cognitive model Meld uses for new joiners.' },
           { tier: 'read', label: 'Hello Meld — Week 1 Welcome Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'What new Melders need from their manager in Week 1.' },
-          { tier: 'apply', label: 'HBR: What New Leaders Need to Do First', url: 'https://hbr.org/2017/10/what-new-leaders-need-to-do-first', desc: 'Practical advice on making a strong start without overreaching.' }
+          { tier: 'apply', label: 'BetterUp: New Manager Tips for Your First 90 Days', url: 'https://www.betterup.com/blog/new-manager-tips', desc: 'Practical advice on making a strong start without overreaching.' }
         ]
       },
       {
@@ -933,11 +952,12 @@ const MGMT_PHASES = [
         geoZone: 'The Root System', geoScene: 'Ancient trees whose roots interlock underground — strength built invisibly over time.',
         duration: '2 hours',
         activities: [
-          { text: 'Watch: Brené Brown on "The Anatomy of Trust" (BRAVING inventory)', url: 'https://www.youtube.com/watch?v=CFMDD6WMcKY' },
+          { text: 'Watch: Brené Brown — "The Anatomy of Trust" (BRAVING inventory, SuperSoul Sessions)', url: 'https://brenebrown.com/videos/anatomy-trust-video/' },
           { text: 'Watch: Simon Sinek — "Why Leaders Eat Last" (Circle of Safety)', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y' },
           'Complete the Trust Equation self-assessment: rate yourself on Credibility, Reliability, Intimacy, and Self-Orientation for each direct report',
           'Map your current trust level with each team member (1-10) and identify the primary driver for each score',
-          'Review the Property Meld values (Humility, Loyalty, Integrity, Agility) — identify which one you personally need to develop most as a leader'
+          'Review the Property Meld values (Humility, Loyalty, Integrity, Agility) — identify which one you personally need to develop most as a leader',
+          '🧊 Team Workshop — The Snowball Exercise: Each person writes one fear or challenge they carry as a leader on a piece of paper. Crumple it. On 3, everyone throws their snowball to the center. Pick one up (not your own) and read it silently. Optional: share a few aloud anonymously. The point: you are not alone in this.'
         ],
         frameworks: [
           'The Trust Equation (Maister): (Credibility + Reliability + Intimacy) / Self-Orientation',
@@ -951,21 +971,21 @@ const MGMT_PHASES = [
         ],
         deliverable: 'A trust-building commitment document for your first 90 days — three specific behaviors you will practice consistently, and how you will know they\'re working.',
         resources: [
-          { tier: 'watch', label: 'Brené Brown: The Anatomy of Trust', url: 'https://www.youtube.com/watch?v=CFMDD6WMcKY', desc: 'The BRAVING inventory — what trust actually requires.' },
+          { tier: 'watch', label: 'Brené Brown: The Anatomy of Trust (BRAVING)', url: 'https://brenebrown.com/videos/anatomy-trust-video/', desc: 'The BRAVING inventory — what trust actually requires.' },
           { tier: 'watch', label: 'Simon Sinek: Why Leaders Eat Last', url: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y', desc: 'The Circle of Safety and what makes people feel safe enough to follow.' },
           { tier: 'read', label: 'The Trusted Advisor — Maister, Green, Galford', url: 'https://hbr.org/2009/10/becoming-a-trusted-leader', desc: 'The Trust Equation framework applied to leadership.' },
           { tier: 'apply', label: 'Trust Assessment: Rate Yourself', url: 'https://trustedadvisor.com/why-trust-matters/understanding-trust/understanding-the-trust-equation', desc: 'Interactive trust equation self-scoring tool.' }
         ]
       },
       {
-        id: 'mgmt-3', num: 'Milestone 3', title: 'Understanding What Your Team Members Value',
+        id: 'mgmt-3', num: 'Milestone 3', title: 'Understanding What Your Team Members Value', valuesAssessment: true,
         desc: 'One-size-fits-all development doesn\'t fit anyone. The leaders who retain and grow talent are the ones who actually know what their people care about.',
         tags: ['idp', 'development', 'motivation', '2hr'],
         geoZone: 'The Listening Post', geoScene: 'A high ridge where wind carries voices from the valley — the place leaders go to understand before they act.',
         duration: '2 hours',
         activities: [
           { text: 'Watch: Daniel Pink on motivation — Autonomy, Mastery, Purpose (TED Talk)', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y' },
-          { text: 'Review the Property Meld People Leader Growth Path and IC Growth Path — understand where each of your reports sits on the track', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374' },
+          'Review the Meld People Leader and IC Growth Path with your manager or People Ops — understand where each of your reports sits on the track',
           'Run a "What Motivates You?" conversation with each direct report — ask: what energizes you at work? what drains you? where do you want to be in 2 years?',
           'Start an Individual Development Plan (IDP) template for each direct report — at minimum 2 growth areas per person',
           'Map each team member on the IC Growth Path levels (1-6) based on what you observe, not just their title'
@@ -983,10 +1003,9 @@ const MGMT_PHASES = [
         deliverable: 'A starter IDP template for each direct report — with 2+ growth goals, identified strengths, and one resource or opportunity mapped to each goal.',
         resources: [
           { tier: 'watch', label: 'Daniel Pink: The Puzzle of Motivation', url: 'https://www.youtube.com/watch?v=rrkrvAUbU9Y', desc: 'Autonomy, mastery, purpose. The research on what actually drives people.' },
-          { tier: 'read', label: 'Property Meld People Leader Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374', desc: 'Level-by-level competency expectations for leaders at Meld.' },
-          { tier: 'read', label: 'Property Meld IC Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1769308189', desc: 'The individual contributor track — from Level 1 to Principal.' },
-          { tier: 'apply', label: 'HBR: The Performance Management Revolution', url: 'https://hbr.org/2016/10/the-performance-management-revolution', desc: 'Why development-first management outperforms evaluation-first.' },
-          { tier: 'practice', label: 'Develop IDPs for Team Members', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/299731533', desc: 'Meld\'s internal IDP framework with example areas for improvement.' }
+          { tier: 'read', label: 'Gallup: What Great Managers Do Differently', url: 'https://www.gallup.com/workplace/272681/manager-cause-employee-performance.aspx', desc: 'The research on what separates managers who develop people from those who don\'t.' },
+          { tier: 'apply', label: 'BetterUp: How to Write an Effective IDP', url: 'https://www.betterup.com/blog/individual-development-plan', desc: 'Why development-first management outperforms evaluation-first — with a practical IDP template.' },
+          { tier: 'practice', label: 'Develop IDPs for Team Members (Meld Internal)', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/299731533', desc: 'Meld\'s internal IDP framework with example areas for improvement.' }
         ]
       },
       {
@@ -996,8 +1015,8 @@ const MGMT_PHASES = [
         geoZone: 'The Crossroads Fire', geoScene: 'A campfire at a trail junction — where two paths meet, where real conversations happen.',
         duration: '2 hours',
         activities: [
-          { text: 'Watch: "Manager Tools — The One-on-One" (the definitive 1:1 methodology)', url: 'https://www.youtube.com/watch?v=Ia4tSgKFxTE' },
-          { text: 'Review the Property Meld 1:1 question bank from the Autumn One-on-One playbook', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/358089836' },
+          { text: 'Read: Manager Tools — "The One-on-One" (the definitive free 1:1 methodology)', url: 'https://www.manager-tools.com/manager-tools-basics' },
+          'Review the 1:1 question bank below — design questions that surface what\'s energizing, what\'s hard, what\'s blocking, and what\'s next for each person',
           'Design your personal 1:1 template — include: Top 3 check-in, highlight/lowlight, obstacle question, feedback invitation, and development check-in',
           'Schedule recurring 1:1s with all direct reports this week — weekly for new team members, biweekly for established ones',
           'Run at least one structured 1:1 using your new template and write down what you learned that you didn\'t know before'
@@ -1015,9 +1034,9 @@ const MGMT_PHASES = [
         ],
         deliverable: 'Your personalized 1:1 template + a standing meeting schedule for every direct report for the next quarter.',
         resources: [
-          { tier: 'watch', label: 'Manager Tools: The One-on-One', url: 'https://www.youtube.com/watch?v=Ia4tSgKFxTE', desc: 'The gold standard 1:1 framework — 30 minutes, employee first, recurring.' },
-          { tier: 'read', label: 'Meld 1:1 Playbook — Question Bank', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/358089836', desc: 'Property Meld\'s internal 1:1 questions, refined over time.' },
-          { tier: 'read', label: 'HBR: How to Have More Useful One-on-Ones', url: 'https://hbr.org/2022/11/how-to-have-more-effective-one-on-ones', desc: 'Research-backed structure for high-quality 1:1 conversations.' },
+          { tier: 'read', label: 'Manager Tools: The One-on-One Basics', url: 'https://www.manager-tools.com/manager-tools-basics', desc: 'The gold standard 1:1 framework — 30 minutes, employee first, recurring.' },
+          { tier: 'read', label: 'Radical Candor: 1:1 Question Bank', url: 'https://www.radicalcandor.com/blog/1-on-1-meeting-questions/', desc: 'Questions that surface what matters — for the person, not the project.' },
+          { tier: 'read', label: 'Radical Candor: How to Have Effective 1:1s', url: 'https://www.radicalcandor.com/blog/effective-one-on-ones/', desc: 'Research-backed structure for high-quality 1:1 conversations from Kim Scott\'s framework.' },
           { tier: 'apply', label: 'The SBI Feedback Model', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'Situation-Behavior-Impact — the cleanest feedback delivery model.' },
           { tier: 'practice', label: 'Radical Candor — Kim Scott (Core Framework)', url: 'https://www.radicalcandor.com/our-approach/', desc: 'Care personally + challenge directly. The 2x2 that changes how you give feedback.' }
         ]
@@ -1029,8 +1048,8 @@ const MGMT_PHASES = [
         geoZone: 'Summit Calibration Point', geoScene: 'A survey marker high on a ridge — the place you stop to confirm you\'re on the right trail.',
         duration: '2 hours',
         activities: [
-          { text: 'Read: "Reinventing Performance Management" — HBR (Deloitte\'s research on what actually works)', url: 'https://hbr.org/2015/04/reinventing-performance-management' },
-          { text: 'Review the Property Meld People Leader Growth Path and IC Growth Path — these are your calibration anchors', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374' },
+          { text: 'Read: McKinsey — "Reimagining Performance Management" (what replaces annual reviews)', url: 'https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/reimagining-performance-management' },
+          'Review the Meld People Leader and IC Growth Path with your manager — use them as your calibration anchors for each direct report',
           'Map each of your direct reports to a level on the IC or People Leader Growth Path — document your evidence for each placement',
           'Practice writing one full performance review for a hypothetical team member — use the SBI model for specific examples',
           'Identify the "surprise risk" on your team — which team member might be confused about how their performance is perceived?'
@@ -1048,8 +1067,7 @@ const MGMT_PHASES = [
         ],
         deliverable: 'A calibrated performance standards document for your team — what "exceeds," "meets," and "developing" looks like for each person\'s role, tied to the Meld Growth Path levels.',
         resources: [
-          { tier: 'read', label: 'HBR: Reinventing Performance Management', url: 'https://hbr.org/2015/04/reinventing-performance-management', desc: 'Deloitte\'s research on what makes performance review systems actually work.' },
-          { tier: 'read', label: 'Property Meld People Leader Growth Path', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/1770553374', desc: 'The calibration anchor for evaluating leader performance at Meld.' },
+          { tier: 'read', label: 'McKinsey: Reimagining Performance Management', url: 'https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/reimagining-performance-management', desc: 'What replaces annual reviews — continuous feedback loops and calibration.' },
           { tier: 'watch', label: 'Laszlo Bock: ReWork — Performance at Google', url: 'https://www.youtube.com/watch?v=2M3hR0Zt9gQ', desc: 'How Google redesigned performance reviews to focus on growth.' },
           { tier: 'apply', label: '9-Box Grid: A Manager\'s Guide', url: 'https://www.shrm.org/resourcesandtools/hr-topics/talent-acquisition/pages/9-box-grid-talent-management.aspx', desc: 'How to use the performance/potential matrix in real calibration sessions.' },
           { tier: 'practice', label: 'Meld Performance Management — Test Group Framework', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/530055419', desc: 'The internal Meld framework for 9-Box, IDP, 1:1s, and 360 peer reviews.' }
@@ -1063,7 +1081,7 @@ const MGMT_PHASES = [
         duration: '2 hours',
         activities: [
           { text: 'Watch: "Crucial Conversations" overview — the core model for high-stakes dialogue', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY' },
-          { text: 'Read: "The Feedback Fallacy" — HBR (what actually helps vs what we think helps)', url: 'https://hbr.org/2019/03/the-feedback-fallacy' },
+          { text: 'Read: NeuroLeadership Institute — "The Science of Feedback" (what actually helps vs what we think helps)', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/' },
           'Practice the SBI model on a recent performance situation — write out the full Situation, Behavior, and Impact without generalizing',
           'Map the "Coaching vs Managing vs Disciplining" distinction — write one example of each from your current team context',
           'Draft a progressive feedback framework for your team: informal conversation → documented concern → formal PIP → separation decision'
@@ -1082,8 +1100,8 @@ const MGMT_PHASES = [
         deliverable: 'A documented underperformance conversation framework — the questions you\'ll ask, the timeline you\'ll use, the criteria for when you escalate, and the standard for documenting the conversation.',
         resources: [
           { tier: 'watch', label: 'Crucial Conversations: The Core Model', url: 'https://www.youtube.com/watch?v=svOaQh0aaMY', desc: 'A framework for high-stakes dialogue when the stakes are highest.' },
-          { tier: 'read', label: 'HBR: The Feedback Fallacy', url: 'https://hbr.org/2019/03/the-feedback-fallacy', desc: 'What research says about what actually helps performance — vs what managers think.' },
-          { tier: 'read', label: 'HBR: Delivering Effective Performance Feedback', url: 'https://hbr.org/2011/08/the-fundamentals-of-performance', desc: 'The mechanics of performance conversations that lead to change.' },
+          { tier: 'read', label: 'NeuroLeadership: The Science of Feedback', url: 'https://neuroleadership.com/your-brain-at-work/the-science-of-feedback/', desc: 'What research says about what actually helps performance — vs what managers think.' },
+          { tier: 'read', label: 'SHRM: Delivering Effective Performance Feedback', url: 'https://www.shrm.org/topics-tools/topics/performance-management', desc: 'The mechanics of performance conversations that lead to real change.' },
           { tier: 'apply', label: 'The SBI Feedback Tool (CCL)', url: 'https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/', desc: 'The Center for Creative Leadership\'s SBI framework with practice examples.' },
           { tier: 'practice', label: 'Writing a Performance Improvement Plan', url: 'https://www.shrm.org/resourcesandtools/tools-and-samples/how-to-guides/pages/performanceimprovementplan.aspx', desc: 'The SHRM guide to building a PIP that is specific, measurable, and fair.' }
         ]
@@ -1115,9 +1133,9 @@ const MGMT_PHASES = [
         deliverable: 'A team PTO coverage template — who handles what when each person is out, plus a written "PTO culture statement" you\'ve discussed with your team.',
         resources: [
           { tier: 'read', label: 'Hello Meld — PTO Policy & Paylocity Guide', url: 'https://propertymeld.atlassian.net/wiki/spaces/HR/pages/3586686982', desc: 'Meld\'s official PTO structure — collab hours rule, Paylocity setup, what counts as a day.' },
-          { tier: 'read', label: 'HBR: The Research Is Clear — Long Hours Backfire', url: 'https://hbr.org/2015/08/the-research-is-clear-long-hours-backfire-for-people-and-for-companies', desc: 'Why overwork hurts productivity and what managers can do about it.' },
+          { tier: 'read', label: 'BBC Worklife: Why You Should Work Less Than You Think', url: 'https://www.bbc.com/worklife/article/20200817-why-you-should-work-less-than-youre-working-now', desc: 'Why overwork hurts productivity — the Stanford and OECD research summarized.' },
           { tier: 'watch', label: 'Why We All Need to Practice Emotional First Aid — Guy Winch', url: 'https://www.youtube.com/watch?v=F2hc2FLOdhI', desc: 'The importance of recovery and what happens to teams that don\'t prioritize it.' },
-          { tier: 'apply', label: 'Building a Team Coverage Plan', url: 'https://hbr.org/2021/07/how-to-actually-use-your-vacation-time', desc: 'Practical guide to creating team coverage systems that enable real rest.' },
+          { tier: 'apply', label: 'BetterUp: How to Actually Take a Real Vacation', url: 'https://www.betterup.com/blog/how-to-take-a-real-vacation', desc: 'Practical guide to creating team coverage systems that enable real rest.' },
           { tier: 'discuss', label: 'Discuss: What does "fully disconnecting" mean on our team?', url: '#', desc: 'Bring this question to your next team meeting. The conversation itself is the deliverable.' }
         ]
       }
@@ -3578,6 +3596,33 @@ function openZoneModal(milestoneId, programKey, phaseId) {
     fwBlock.style.display = 'none';
   }
 
+  // Values assessment block
+  const valBlock = document.getElementById('zone-values-block');
+  const valGrid = document.getElementById('zone-values-grid');
+  if (milestone.valuesAssessment && valBlock && valGrid) {
+    const VALUES = [
+      { key: 'impact', name: 'Impact & Purpose', desc: 'Making a meaningful difference — work that matters beyond the metrics' },
+      { key: 'compensation', name: 'Compensation & Financial Security', desc: 'Fair pay, growth in earnings, and financial stability' },
+      { key: 'career', name: 'Career Advancement', desc: 'Moving up, expanding scope, or stepping into new roles' },
+      { key: 'learning', name: 'Learning & Skill Growth', desc: 'Becoming more capable — new challenges, new knowledge' },
+      { key: 'worklife', name: 'Work-Life Blend', desc: 'Flexibility, sustainable pace, and room for life outside work' },
+      { key: 'autonomy', name: 'Autonomy & Ownership', desc: 'Freedom to own my work and make real decisions' },
+      { key: 'recognition', name: 'Recognition & Being Seen', desc: 'Feeling appreciated and acknowledged for contributions' },
+      { key: 'belonging', name: 'Team & Belonging', desc: 'Strong relationships, psychological safety, genuine connection' },
+      { key: 'stability', name: 'Stability & Security', desc: 'Predictability, clear expectations, low existential risk' },
+      { key: 'innovation', name: 'Innovation & Challenge', desc: 'Working on hard, new, novel problems at the edge of the possible' }
+    ];
+    const saved = ((state[programKey].reflections || {})[milestoneId + '_values']) || {};
+    valGrid.innerHTML = VALUES.map(v => {
+      const rating = saved[v.key] || 0;
+      const stars = [1,2,3,4,5].map(n => `<span class="zone-value-star${n <= rating ? ' lit' : ''}" data-val="${v.key}" data-n="${n}" onclick="setValueStar('${v.key}',${n})">★</span>`).join('');
+      return `<div class="zone-value-row"><div class="zone-value-label"><div class="zone-value-name">${v.name}</div><div class="zone-value-desc">${v.desc}</div></div><div class="zone-value-stars">${stars}</div></div>`;
+    }).join('');
+    valBlock.style.display = 'block';
+  } else if (valBlock) {
+    valBlock.style.display = 'none';
+  }
+
   const resEl = document.getElementById('zone-resources');
   const resBlock = document.getElementById('zone-resources-block');
   if (milestone.resources && milestone.resources.length) {
@@ -3631,7 +3676,9 @@ function openZoneModal(milestoneId, programKey, phaseId) {
     canvas.height = window.innerHeight;
     if (zonePSystem) zonePSystem.stop();
     zonePSystem = new ParticleSystem(canvas);
-    const cfg = programKey === 'lde'
+    const cfg = programKey === 'mgmt'
+      ? { count: 40, color: 'rgba(52,211,153,0.35)', direction: 'up', speed: 0.5, size: 1.6, opacity: 0.45, glow: true }
+      : programKey === 'lde'
       ? { count: 60, color: 'rgba(253,230,138,0.35)', direction: 'right', speed: 0.7, size: 1.8, opacity: 0.45, gravity: true }
       : { count: 50, color: 'rgba(224,242,254,0.45)', direction: 'drift', speed: 0.35, size: 1.5, opacity: 0.5 };
     zonePSystem.configure(cfg);
@@ -3654,6 +3701,24 @@ function closeZoneModal() {
   if (zoneModalProgram === 'mgmt') refreshMGMT();
   if (zoneModalProgram === 'lde') refreshLDE();
   if (zoneModalProgram === 'alde') refreshALDE();
+}
+
+function setValueStar(key, n) {
+  if (!zoneModalProgram || !zoneModalMilestoneId) return;
+  const valKey = zoneModalMilestoneId + '_values';
+  if (!state[zoneModalProgram].reflections) state[zoneModalProgram].reflections = {};
+  if (!state[zoneModalProgram].reflections[valKey]) state[zoneModalProgram].reflections[valKey] = {};
+  state[zoneModalProgram].reflections[valKey][key] = n;
+  // Update star display
+  document.querySelectorAll('.zone-value-star[data-val="' + key + '"]').forEach(el => {
+    el.classList.toggle('lit', parseInt(el.dataset.n) <= n);
+  });
+}
+
+function saveValuesAssessment() {
+  saveState();
+  const note = document.getElementById('zone-values-saved-note');
+  if (note) { note.classList.add('show'); setTimeout(() => note.classList.remove('show'), 2000); }
 }
 
 function updateReflectionWordCount(ta) {
