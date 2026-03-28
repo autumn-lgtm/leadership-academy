@@ -5,6 +5,11 @@
  */
 
 import { SLIDER_ITEMS, GAP_PROMPT } from '../utils/sliderTransforms.js';
+import { SECTION_C } from './sectionC.js';
+import { SECTION_D } from './sectionD.js';
+import { SECTION_E } from './sectionE.js';
+import { EQ_ITEMS } from './eqItems.js';
+import { WORD_BANKS } from './wordBanks.js';
 
 // ── Assessment modes ─────────────────────────────────────────────────────
 export const MODES = {
@@ -121,15 +126,15 @@ export const SECTION_A = [
   },
 ];
 
-// ── Placeholder exports for sections B-F (next pushes) ──────────────────
+// ── Re-export all sections for unified access ─────────────────────────
 export const SECTION_B = SLIDER_ITEMS;
 export const SECTION_B_GAP = GAP_PROMPT;
 export { SLIDER_ITEMS, GAP_PROMPT };
-export const SECTION_C = [];  // forced choice — next push
-export const SECTION_D = [];  // pressure — next push
-export const SECTION_E = [];  // trust — next push
-export const EQ_ITEMS = [];   // EQ — next push
-export const WORD_BANKS = []; // word banks — next push
+export { SECTION_C } from './sectionC.js';
+export { SECTION_D } from './sectionD.js';
+export { SECTION_E } from './sectionE.js';
+export { EQ_ITEMS } from './eqItems.js';
+export { WORD_BANKS } from './wordBanks.js';
 
 // ── Master question list ─────────────────────────────────────────────────
 export function getAllQuestions(mode = 'long') {
