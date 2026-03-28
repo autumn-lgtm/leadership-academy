@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import BrainOrbit from '../components/BrainOrbit'
 
 const features = [
   {
     title: 'Leadership Assessment',
-    desc: 'Discover your leadership style through scenarios, signal mapping, and attribute profiling across 4 axes.',
+    desc: 'Discover your leadership style through scenarios, signal mapping, and attribute profiling across 4 neural axes.',
     color: '#00C8FF',
     link: '/assessment',
     cta: 'Take Assessment',
+    icon: '01',
   },
   {
     title: 'Profile Lab',
@@ -15,168 +17,326 @@ const features = [
     color: '#B88AFF',
     link: '/profile',
     cta: 'View Profile',
+    icon: '02',
   },
   {
     title: 'Communication Simulator',
-    desc: 'Decode others\' styles, map your signals, and translate messages across all four leadership styles.',
+    desc: 'Decode others\' styles, map your signals, and translate messages across all four leadership styles with AI.',
     color: '#00E896',
     link: '/simulator',
     cta: 'Open Simulator',
+    icon: '03',
   },
 ]
 
-const axes = [
-  { label: 'WHO', desc: 'People & Relationships', color: '#B88AFF' },
-  { label: 'WHY', desc: 'Purpose & Vision', color: '#00C8FF' },
-  { label: 'WHAT', desc: 'Systems & Structure', color: '#00E896' },
-  { label: 'HOW', desc: 'Speed & Execution', color: '#FFB340' },
+const styles = [
+  { name: 'Diplomatic', sub: 'The Bridge-Builder', color: '#B88AFF', axes: 'WHO + WHY', desc: 'Leads with empathy, shared values, and coalition-building' },
+  { name: 'Strategic', sub: 'The Visionary', color: '#00C8FF', axes: 'WHY + WHAT', desc: 'Leads with vision, frameworks, and systems thinking' },
+  { name: 'Tactical', sub: 'The Operator', color: '#FFB340', axes: 'WHO + HOW', desc: 'Leads with speed, directness, and measurable results' },
+  { name: 'Logistical', sub: 'The Architect', color: '#00E896', axes: 'WHAT + HOW', desc: 'Leads with process, structure, and reliable execution' },
 ]
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-bg-primary">
-      {/* Hero */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-cyan/5 via-transparent to-transparent" />
-        <div className="max-w-4xl mx-auto px-6 pt-20 pb-16 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan to-purple flex items-center justify-center">
-                <span className="text-white font-display font-bold text-2xl">N</span>
-              </div>
+    <div className="min-h-screen bg-bg-primary overflow-hidden">
+      {/* Nav */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
+        <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+              <span className="text-white font-display font-bold text-sm">N</span>
             </div>
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-text-primary mb-4 tracking-tight">
-              Neuro<span className="text-cyan">Leader</span>
+            <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+            <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
+            <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
+            <Link
+              to="/assessment"
+              className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero — Giant typography + orbital brain */}
+      <section className="relative min-h-screen flex items-center justify-center pt-20">
+        {/* Background radial glow */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-cyan/8 via-purple/4 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-gradient-radial from-purple/6 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-gradient-radial from-coral/5 to-transparent rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Left — text */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-8"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+              <span className="text-xs text-text-muted font-medium tracking-wide">Neuroscience-informed leadership</span>
+            </motion.div>
+
+            <h1 className="font-display text-[clamp(3rem,7vw,5.5rem)] font-extrabold leading-[0.95] tracking-tight mb-6">
+              <span className="text-white">Map your</span>
+              <br />
+              <span className="bg-gradient-to-r from-coral via-amber via-green via-cyan to-purple bg-clip-text text-transparent">
+                leadership
+              </span>
+              <br />
+              <span className="text-white">brain.</span>
             </h1>
-            <p className="text-lg text-text-muted max-w-2xl mx-auto mb-2">
-              Neuroscience-informed leadership development
-            </p>
-            <p className="text-sm text-text-muted/60 max-w-xl mx-auto mb-10">
-              Map your leadership style across four neural axes. Understand how you lead,
-              how others lead, and how to bridge the gap.
+
+            <p className="text-lg text-text-muted max-w-md mb-10 leading-relaxed">
+              Discover how you lead across four neural axes.
+              Understand your style. Decode others. Bridge the gap.
             </p>
 
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center gap-4">
               <Link
                 to="/assessment"
-                className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan to-purple text-white font-semibold shadow-[0_0_30px_rgba(0,200,255,0.3)] hover:shadow-[0_0_40px_rgba(0,200,255,0.5)] transition-all"
+                className="group px-8 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all flex items-center gap-3"
               >
                 Start Assessment
+                <span className="text-lg transition-transform group-hover:translate-x-1">→</span>
               </Link>
               <Link
                 to="/profile"
-                className="px-8 py-3.5 rounded-xl border border-white/10 text-text-primary hover:bg-white/5 transition-all"
+                className="px-8 py-4 rounded-2xl border border-white/10 text-white font-semibold text-base hover:bg-white/5 transition-all"
               >
                 View Profile
               </Link>
             </div>
           </motion.div>
-        </div>
-      </div>
 
-      {/* 4 Axes */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
+          {/* Right — orbital brain */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center justify-center relative"
+          >
+            <BrainOrbit size={480} />
+            {/* Floating axis labels around brain */}
+            {[
+              { label: 'WHO', sub: 'People', x: '-10%', y: '30%', color: '#B88AFF' },
+              { label: 'WHY', sub: 'Purpose', x: '40%', y: '-5%', color: '#00C8FF' },
+              { label: 'WHAT', sub: 'Systems', x: '85%', y: '30%', color: '#00E896' },
+              { label: 'HOW', sub: 'Execution', x: '40%', y: '90%', color: '#FFB340' },
+            ].map((a, i) => (
+              <motion.div
+                key={a.label}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 + i * 0.15 }}
+                className="absolute text-center"
+                style={{ left: a.x, top: a.y }}
+              >
+                <div className="font-display text-xs font-bold tracking-[3px]" style={{ color: a.color }}>{a.label}</div>
+                <div className="text-[10px] text-text-muted">{a.sub}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
-          <h2 className="text-center font-display text-sm font-bold text-text-muted uppercase tracking-[4px] mb-8">
-            Four Neural Axes
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {axes.map((axis, i) => (
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-5 h-8 rounded-full border border-white/20 flex items-start justify-center pt-1.5"
+          >
+            <div className="w-1 h-1.5 rounded-full bg-white/40" />
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* Four Axes — horizontal scroll-like strip */}
+      <section className="py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/50 to-transparent" />
+        <div className="max-w-6xl mx-auto px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="text-center mb-16">
+              <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">The Four Neural Axes</h2>
+              <p className="font-display text-4xl md:text-5xl font-bold text-white">
+                How your brain <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">leads</span>
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: 'WHO', desc: 'People & Relationships', long: 'Empathy, trust, team dynamics, interpersonal connection', color: '#B88AFF', icon: '◐' },
+                { label: 'WHY', desc: 'Purpose & Vision', long: 'Meaning, strategy, long-term thinking, values alignment', color: '#00C8FF', icon: '◎' },
+                { label: 'WHAT', desc: 'Systems & Structure', long: 'Process, organization, architecture, reliable execution', color: '#00E896', icon: '◈' },
+                { label: 'HOW', desc: 'Speed & Execution', long: 'Action, results, decisiveness, real-time adaptation', color: '#FFB340', icon: '◆' },
+              ].map((axis, i) => (
+                <motion.div
+                  key={axis.label}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="group relative bg-bg-surface/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 hover:border-white/10 transition-all duration-500 hover:-translate-y-1"
+                  style={{ '--glow': axis.color }}
+                >
+                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ boxShadow: `inset 0 0 40px ${axis.color}08, 0 0 30px ${axis.color}06` }} />
+                  <div className="relative">
+                    <div className="text-2xl mb-3 opacity-40">{axis.icon}</div>
+                    <div className="font-display text-3xl font-extrabold mb-1 tracking-tight" style={{ color: axis.color }}>{axis.label}</div>
+                    <div className="text-sm font-semibold text-white mb-2">{axis.desc}</div>
+                    <div className="text-xs text-text-muted leading-relaxed">{axis.long}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features — editorial stacked layout */}
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">The Platform</h2>
+            <p className="font-display text-4xl md:text-5xl font-bold text-white">
+              Three tools. <span className="bg-gradient-to-r from-amber to-coral bg-clip-text text-transparent">One system.</span>
+            </p>
+          </motion.div>
+
+          <div className="space-y-4">
+            {features.map((f, i) => (
               <motion.div
-                key={axis.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
-                className="bg-bg-surface border border-white/8 rounded-xl p-5 text-center"
+                key={f.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
               >
-                <div className="font-display text-2xl font-bold mb-1" style={{ color: axis.color }}>
-                  {axis.label}
-                </div>
-                <div className="text-xs text-text-muted">{axis.desc}</div>
+                <Link
+                  to={f.link}
+                  className="group flex flex-col md:flex-row items-start md:items-center gap-6 bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-8 hover:border-white/10 transition-all duration-500 hover:bg-bg-surface"
+                >
+                  <div className="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center font-display text-2xl font-extrabold"
+                    style={{ background: `${f.color}10`, color: f.color }}>
+                    {f.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display text-xl font-bold text-white mb-1 group-hover:text-white transition-colors">
+                      {f.title}
+                    </h3>
+                    <p className="text-sm text-text-muted leading-relaxed">{f.desc}</p>
+                  </div>
+                  <div className="shrink-0 text-sm font-semibold transition-all group-hover:translate-x-1" style={{ color: f.color }}>
+                    {f.cta} →
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </section>
 
-      {/* Features */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 + i * 0.1 }}
-            >
-              <Link
-                to={f.link}
-                className="block bg-bg-surface border border-white/8 rounded-xl p-6 hover:border-white/15 transition-all group h-full"
+      {/* Four Styles — 2x2 grid */}
+      <section className="py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/30 to-transparent" />
+        <div className="max-w-6xl mx-auto px-8 relative">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">Leadership Styles</h2>
+            <p className="font-display text-4xl md:text-5xl font-bold text-white">
+              Which one are <span className="bg-gradient-to-r from-green to-cyan bg-clip-text text-transparent">you?</span>
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {styles.map((s, i) => (
+              <motion.div
+                key={s.name}
+                initial={{ opacity: 0, scale: 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="group bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-8 hover:border-white/10 transition-all duration-500"
               >
-                <div className="w-10 h-10 rounded-lg mb-4 flex items-center justify-center" style={{ background: `${f.color}15` }}>
-                  <div className="w-3 h-3 rounded-full" style={{ background: f.color }} />
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div className="font-display text-2xl font-extrabold mb-0.5" style={{ color: s.color }}>{s.name}</div>
+                    <div className="text-sm text-text-muted">{s.sub}</div>
+                  </div>
+                  <div className="text-xs px-3 py-1 rounded-full font-semibold"
+                    style={{ background: `${s.color}12`, color: s.color }}>
+                    {s.axes}
+                  </div>
                 </div>
-                <h3 className="font-display text-lg font-bold text-text-primary mb-2 group-hover:text-cyan transition-colors">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-text-muted leading-relaxed mb-4">{f.desc}</p>
-                <span className="text-xs font-semibold" style={{ color: f.color }}>
-                  {f.cta} →
-                </span>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+                <p className="text-sm text-text-muted leading-relaxed">{s.desc}</p>
+                <div className="mt-4 w-full h-px" style={{ background: `linear-gradient(to right, ${s.color}30, transparent)` }} />
+              </motion.div>
+            ))}
+          </div>
 
-      {/* Four Styles Grid */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <h2 className="text-center font-display text-sm font-bold text-text-muted uppercase tracking-[4px] mb-8">
-          Four Leadership Styles
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {[
-            { name: 'Diplomatic', sub: 'The Bridge-Builder', color: '#B88AFF', axes: 'WHO + WHY' },
-            { name: 'Strategic', sub: 'The Visionary', color: '#00C8FF', axes: 'WHY + WHAT' },
-            { name: 'Tactical', sub: 'The Operator', color: '#FFB340', axes: 'WHO + HOW' },
-            { name: 'Logistical', sub: 'The Architect', color: '#00E896', axes: 'WHAT + HOW' },
-          ].map((s, i) => (
-            <motion.div
-              key={s.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 + i * 0.1 }}
-              className="bg-bg-surface border border-white/8 rounded-xl p-6 text-center"
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link
+              to="/assessment"
+              className="group inline-flex items-center gap-3 px-10 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all"
             >
-              <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.name}</div>
-              <div className="text-sm text-text-muted mb-2">{s.sub}</div>
-              <div className="text-xs px-3 py-1 rounded-full inline-block" style={{ background: `${s.color}15`, color: s.color }}>
-                {s.axes}
-              </div>
-            </motion.div>
-          ))}
+              Discover your style
+              <span className="text-lg transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <footer className="max-w-4xl mx-auto px-6 py-8 border-t border-white/5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-cyan to-purple flex items-center justify-center">
+      <footer className="border-t border-white/[0.04] py-12">
+        <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
               <span className="text-white font-display font-bold text-xs">N</span>
             </div>
-            <span className="text-sm font-display font-semibold text-text-muted">NeuroLeader</span>
+            <span className="font-display font-bold text-text-muted">NeuroLeader</span>
           </div>
-          <p className="text-xs text-text-muted">Neuroscience-informed leadership development</p>
+          <div className="flex items-center gap-8">
+            <Link to="/assessment" className="text-xs text-text-muted hover:text-white transition-colors">Assessment</Link>
+            <Link to="/profile" className="text-xs text-text-muted hover:text-white transition-colors">Profile</Link>
+            <Link to="/simulator" className="text-xs text-text-muted hover:text-white transition-colors">Simulator</Link>
+          </div>
+          <p className="text-xs text-text-muted/50">Neuroscience-informed leadership development</p>
         </div>
       </footer>
     </div>
