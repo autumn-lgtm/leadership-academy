@@ -10,7 +10,7 @@ const GROWTH_MODULES = [
   { phase: 'Foundation', title: 'New Leader Foundations', desc: 'Trust, motivation, 1:1s, delegation — the trailhead of leadership.', milestones: 7, program: 'MGMT 101', color: '#00E896' },
   { phase: 'Core', title: 'Leadership Development Experience', desc: 'Strategy, culture, coaching, conflict — the desert crossing.', milestones: 49, program: 'LDE', color: '#FFB340' },
   { phase: 'Advanced', title: 'Advanced Leadership Development', desc: 'Org design, executive presence, board dynamics — the ascent.', milestones: 40, program: 'ALDE', color: '#00C8FF' },
-  { phase: 'Practice', title: 'Campfire Journal', desc: 'Reflective practice using Gibbs\' cycle. Where experience becomes wisdom.', milestones: null, program: 'Journal', color: '#B88AFF' },
+  { phase: 'Practice', title: 'Lab Notes', desc: 'Reflective practice using Gibbs\' cycle. Where observation becomes insight.', milestones: null, program: 'Lab Notes', color: '#B88AFF' },
 ]
 
 function Nav({ activeTab, setActiveTab }) {
