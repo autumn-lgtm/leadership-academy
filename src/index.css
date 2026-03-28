@@ -57,3 +57,18 @@ input[type="range"]::-moz-range-thumb {
   border: none;
   box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
 }
+
+@keyframes einstein-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.einstein-float {
+  animation: einstein-float 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .einstein-float {
+    animation: none;
+  }
+}

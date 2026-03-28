@@ -5,8 +5,9 @@ import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
 import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
+import EinsteinAvatar from '../components/simulator/EinsteinAvatar'
 
-const TABS = ['Map Your Style', 'Style Decoder', 'Message Translator']
+const TABS = ['Map Your Style', 'Style Decoder', 'Message Translator', 'Brain → Behavior']
 
 const SIGNAL_WORDS = {
   who: [
@@ -447,6 +448,132 @@ function MessageTranslator() {
   )
 }
 
+const BRAIN_BEHAVIOR_INSIGHTS = [
+  {
+    title: 'The Prefrontal Cortex & Decision-Making',
+    axis: 'WHY',
+    color: '#00C8FF',
+    body: 'Your prefrontal cortex is the CEO of your brain — it handles planning, judgment, and impulse control. Strategic leaders lean heavily on this region, weighing long-term vision against short-term pressure. When stressed, the amygdala can hijack this system, pushing you toward reactive decisions.',
+    tip: 'Before any high-stakes decision, take 6 deep breaths. This activates the parasympathetic nervous system and re-engages prefrontal processing.',
+  },
+  {
+    title: 'Mirror Neurons & Empathic Leadership',
+    axis: 'WHO',
+    color: '#B88AFF',
+    body: 'Mirror neurons fire both when you perform an action and when you observe someone else performing it. This neural mirroring is the biological basis of empathy — the foundation of people-focused leadership. Leaders who actively listen literally synchronize brain activity with their team members.',
+    tip: 'In your next 1:1, practice "neural sync" — maintain eye contact, match their energy, and paraphrase what you hear before responding.',
+  },
+  {
+    title: 'The Basal Ganglia & Habit Formation',
+    axis: 'WHAT',
+    color: '#00E896',
+    body: 'The basal ganglia automates repeated behaviors into habits, freeing up cognitive bandwidth. Systems-oriented leaders intuitively build processes that leverage this — creating reliable patterns that let teams operate on autopilot for routine tasks while preserving mental energy for creative problem-solving.',
+    tip: 'Identify one team process that drains cognitive load. Design a checklist or template to shift it from effortful thinking to automatic execution.',
+  },
+  {
+    title: 'Dopamine Loops & Execution Drive',
+    axis: 'HOW',
+    color: '#FFB340',
+    body: 'Dopamine isn\'t just about pleasure — it\'s the molecule of anticipation and motivation. Execution-driven leaders naturally create dopamine loops by setting clear milestones and celebrating small wins. Each completed task triggers a dopamine release that fuels momentum toward the next goal.',
+    tip: 'Break your next project into micro-milestones. Acknowledge each completion — even a quick "done" message creates a dopamine hit that sustains momentum.',
+  },
+  {
+    title: 'Neuroplasticity & Growth Mindset',
+    axis: 'ALL',
+    color: '#FF6B6B',
+    body: 'Your brain physically rewires itself based on experience — this is neuroplasticity. Every new skill, perspective shift, or behavioral change creates new neural pathways. Leadership style isn\'t fixed; it\'s a living network that strengthens with deliberate practice and weakens with neglect.',
+    tip: 'Choose one axis outside your comfort zone and practice it for 10 minutes daily this week. Consistent micro-practice drives more lasting neural change than occasional deep dives.',
+  },
+]
+
+function BrainBehavior() {
+  const [expanded, setExpanded] = useState(null)
+
+  return (
+    <div>
+      {/* Einstein hero section */}
+      <div className="flex flex-col items-center text-center mb-10">
+        <EinsteinAvatar size={160} />
+        <h2 className="font-display text-2xl font-bold text-white mt-4">
+          Meet Einstein
+        </h2>
+        <p className="text-text-muted text-sm max-w-md mt-2 leading-relaxed">
+          Your NeuroLeader guide to the science behind leadership. Explore how your brain
+          shapes the way you lead — and how you can rewire it.
+        </p>
+      </div>
+
+      {/* Insight cards */}
+      <div className="space-y-3">
+        {BRAIN_BEHAVIOR_INSIGHTS.map((insight, i) => (
+          <motion.div
+            key={i}
+            className="bg-bg-surface border border-white/8 rounded-xl overflow-hidden"
+            initial={false}
+          >
+            <button
+              onClick={() => setExpanded(expanded === i ? null : i)}
+              className="w-full text-left p-5 flex items-center gap-4"
+            >
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg"
+                style={{ background: `${insight.color}15`, color: insight.color }}
+              >
+                {['🧠', '🪞', '⚙️', '🚀', '🌱'][i]}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display font-semibold text-white text-sm">
+                  {insight.title}
+                </div>
+                <div className="text-xs text-text-muted mt-0.5">
+                  Axis: <span style={{ color: insight.color }}>{insight.axis}</span>
+                </div>
+              </div>
+              <span className={`text-text-muted text-xs transition-transform ${expanded === i ? 'rotate-180' : ''}`}>▾</span>
+            </button>
+            <AnimatePresence>
+              {expanded === i && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-5 pb-5 border-t border-white/5">
+                    <p className="text-sm text-text-primary mt-4 leading-relaxed">
+                      {insight.body}
+                    </p>
+                    <div
+                      className="mt-4 p-3 rounded-lg text-sm"
+                      style={{ background: `${insight.color}08`, borderLeft: `3px solid ${insight.color}` }}
+                    >
+                      <span className="font-semibold text-xs uppercase tracking-wider" style={{ color: insight.color }}>
+                        Try this
+                      </span>
+                      <p className="text-text-primary mt-1 text-sm leading-relaxed">{insight.tip}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="mt-8 p-6 bg-gradient-to-r from-cyan/5 via-purple/5 to-coral/5 border border-white/8 rounded-xl text-center">
+        <p className="text-sm text-text-muted">
+          Understanding the neuroscience behind your leadership style is just the beginning.
+        </p>
+        <p className="text-xs text-text-muted mt-2">
+          Complete the <Link to="/assessment" className="text-cyan hover:underline">NeuroLeader Assessment</Link> to map your unique neural leadership profile.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export default function Simulator() {
   const [activeTab, setActiveTab] = useState(0)
 
@@ -500,6 +627,7 @@ export default function Simulator() {
             {activeTab === 0 && <MapYourStyle />}
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
+            {activeTab === 3 && <BrainBehavior />}
           </motion.div>
         </AnimatePresence>
       </main>
