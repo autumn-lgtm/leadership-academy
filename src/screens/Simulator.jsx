@@ -8,7 +8,7 @@ import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
-const TABS = ['Map Your Style', 'Style Decoder', 'Message Translator', 'Brain → Behavior']
+const TABS = ['Your Style', 'Read the Room', 'Say It Their Way']
 
 const SIGNAL_WORDS = {
   who: [
@@ -675,7 +675,6 @@ export default function Simulator() {
             {activeTab === 0 && <MapYourStyle />}
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
-            {activeTab === 3 && <BrainBehavior />}
           </motion.div>
         </AnimatePresence>
       </main>
