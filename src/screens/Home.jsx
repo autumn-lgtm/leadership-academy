@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import BrainOrbit from '../components/BrainOrbit'
 import AxonMascot from '../components/simulator/AxonMascot'
+import { SectionHeader, RainbowDivider, NeuralSection, GlowCard, AxonQuote } from '../components/DesignSystem'
 
 const features = [
   {
@@ -148,8 +149,9 @@ export default function Home() {
       </section>
 
       {/* Four Axes — horizontal scroll-like strip */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/50 to-transparent" />
+      <NeuralSection className="py-28">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/50 to-transparent pointer-events-none" />
+        <RainbowDivider className="absolute top-0" />
         <div className="max-w-6xl mx-auto px-8 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -157,12 +159,7 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-center mb-16">
-              <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">The Four Neural Axes</h2>
-              <p className="font-display text-4xl md:text-5xl font-bold text-white">
-                How your brain <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">leads</span>
-              </p>
-            </div>
+            <SectionHeader tag="The Four Neural Axes" title="How your brain" highlight="leads" />
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
@@ -193,22 +190,13 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </NeuralSection>
 
       {/* Features — editorial stacked layout */}
-      <section className="py-24">
+      <section className="py-28">
         <div className="max-w-6xl mx-auto px-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">The Platform</h2>
-            <p className="font-display text-4xl md:text-5xl font-bold text-white">
-              Three tools. <span className="bg-gradient-to-r from-amber to-coral bg-clip-text text-transparent">One system.</span>
-            </p>
-          </motion.div>
+          <SectionHeader tag="The Platform" title="Three tools." highlight="One system." />
+          <div className="mt-16"></div>
 
           <div className="space-y-4">
             {features.map((f, i) => (
@@ -244,20 +232,26 @@ export default function Home() {
       </section>
 
       {/* Meet Axon */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/30 to-transparent" />
+      <NeuralSection className="py-28">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/40 to-transparent pointer-events-none" />
+        <RainbowDivider className="absolute top-0" />
         <div className="max-w-6xl mx-auto px-8 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row items-center gap-10 md:gap-16"
-          >
-            <div className="shrink-0">
-              <AxonMascot size={180} mood="idle" showQuip={false} />
-            </div>
-            <div className="text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="shrink-0"
+            >
+              <AxonMascot size={220} mood="wave" showQuip={false} entrance="portal" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center md:text-left"
+            >
               <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">Your Guide</h2>
               <p className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
                 Meet <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Axon.</span>
@@ -267,32 +261,26 @@ export default function Home() {
                 No jargon. No lectures. Just smart, honest insights about how your brain
                 shapes the way you lead.
               </p>
+              <AxonQuote text="The best leaders aren't born. They're wired through practice." />
               <Link
                 to="/simulator"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-cyan hover:text-white transition-colors"
+                className="group inline-flex items-center gap-2.5 mt-6 text-sm font-semibold text-cyan hover:text-white transition-colors"
               >
-                Explore Brain → Behavior <span>→</span>
+                Explore Brain → Behavior
+                <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
-      </section>
+        <RainbowDivider className="absolute bottom-0" />
+      </NeuralSection>
 
       {/* Four Styles — 2x2 grid */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/30 to-transparent" />
+      <NeuralSection className="py-28">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/30 to-transparent pointer-events-none" />
         <div className="max-w-6xl mx-auto px-8 relative">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">Leadership Styles</h2>
-            <p className="font-display text-4xl md:text-5xl font-bold text-white">
-              Which one are <span className="bg-gradient-to-r from-green to-cyan bg-clip-text text-transparent">you?</span>
-            </p>
-          </motion.div>
+          <SectionHeader tag="Leadership Styles" title="Which one are" highlight="you?" />
+          <div className="mt-16"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {styles.map((s, i) => (
@@ -335,10 +323,11 @@ export default function Home() {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </NeuralSection>
 
       {/* Footer */}
-      <footer className="relative border-t border-white/[0.04]">
+      <footer className="relative">
+        <RainbowDivider />
         <div className="absolute inset-0 bg-gradient-to-t from-bg-surface/40 to-transparent pointer-events-none" />
         <div className="max-w-6xl mx-auto px-8 py-16 relative">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">

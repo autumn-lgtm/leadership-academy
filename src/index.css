@@ -58,20 +58,74 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
 }
 
-@keyframes axon-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 255, 0.15); }
-  50% { box-shadow: 0 0 20px 8px rgba(0, 200, 255, 0.08); }
-}
+/* ── Axon ──────────────────────────────────────────────── */
 
 .axon-mascot {
   will-change: transform;
 }
 
+.axon-img {
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* Portal entrance ring */
+.axon-portal-ring {
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 200, 255, 0.6),
+    rgba(184, 138, 255, 0.6),
+    rgba(0, 232, 150, 0.6),
+    rgba(255, 179, 64, 0.6),
+    rgba(255, 107, 107, 0.6),
+    rgba(0, 200, 255, 0.6)
+  );
+  mask: radial-gradient(circle, transparent 40%, black 42%, black 48%, transparent 50%);
+  -webkit-mask: radial-gradient(circle, transparent 40%, black 42%, black 48%, transparent 50%);
+}
+
+/* ── Design Elements ──────────────────────────────────── */
+
+/* Rainbow gradient line */
+.rainbow-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 107, 0.4),
+    rgba(255, 179, 64, 0.4),
+    rgba(0, 232, 150, 0.4),
+    rgba(0, 200, 255, 0.4),
+    rgba(184, 138, 255, 0.4),
+    transparent
+  );
+}
+
+/* Subtle neural grid background */
+.neural-grid {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0, 200, 255, 0.03) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Section glow */
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 200, 255, 0.3), transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .axon-mascot {
-    animation: none !important;
-  }
+  .axon-mascot,
   .axon-mascot * {
     animation: none !important;
+    transition: none !important;
   }
 }

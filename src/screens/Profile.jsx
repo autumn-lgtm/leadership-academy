@@ -5,6 +5,7 @@ import { STYLES } from '../data/styles'
 import { PROGRAMS, AXIS_COLORS } from '../data/growth'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
+import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
 const TABS = ['Profile', 'Style', 'Apply It', 'Go Deeper', 'Growth Path']
 
@@ -146,19 +147,7 @@ function SignalBars({ axisScores, attrScores, style }) {
 }
 
 function AxonCallout({ text }) {
-  return (
-    <div className="rounded-2xl p-5 my-6 border border-purple/15" style={{ background: 'linear-gradient(135deg, rgba(184,138,255,0.06), rgba(0,200,255,0.03))' }}>
-      <div className="flex items-start gap-3">
-        <div className="shrink-0 -mt-1">
-          <AxonMascot size={44} mood="thinking" showQuip={false} />
-        </div>
-        <div>
-          <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-1">Axon Says</div>
-          <p className="text-sm text-text-primary leading-relaxed">{text}</p>
-        </div>
-      </div>
-    </div>
-  )
+  return <AxonQuote text={text} />
 }
 
 function StyleTab({ style, axisScores }) {
@@ -451,18 +440,8 @@ function GrowthPathTab({ style }) {
       </div>
 
       {/* How it connects */}
-      <div className="mt-8 p-6 rounded-2xl border border-purple/15" style={{ background: 'linear-gradient(135deg, rgba(184,138,255,0.04), rgba(0,200,255,0.02))' }}>
-        <div className="flex items-start gap-3">
-          <div className="shrink-0 -mt-1">
-            <AxonMascot size={44} mood="thinking" showQuip={false} />
-          </div>
-          <div>
-            <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-2">Axon Says</div>
-            <p className="text-sm text-text-primary leading-relaxed">
-              The assessment maps <em>who you are</em> as a leader. The Growth Path develops <em>what you can become</em>. Your {style.name} style isn't a box — it's a starting point. Every neurolink you complete builds new capability.
-            </p>
-          </div>
-        </div>
+      <div className="mt-8">
+        <AxonQuote text={`The assessment maps who you are as a leader. The Growth Path develops what you can become. Your ${style.name} style isn't a box — it's a starting point.`} />
       </div>
 
       {/* Total stats */}
@@ -496,7 +475,7 @@ export default function Profile() {
     return (
       <div className="min-h-screen bg-bg-primary flex items-center justify-center">
         <div className="text-center px-8">
-          <AxonMascot size={140} mood="idle" showQuip={false} />
+          <AxonMascot size={160} mood="wave" showQuip={false} entrance="portal" />
           <h2 className="font-display text-3xl font-bold text-white mb-3 mt-4">
             No Profile <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Yet</span>
           </h2>
@@ -551,6 +530,7 @@ export default function Profile() {
           </motion.div>
         </AnimatePresence>
       </main>
+      <PageFooter />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { computeStyle } from '../data/scoring'
 import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
+import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
 const TABS = ['Map Your Style', 'Style Decoder', 'Message Translator', 'Brain → Behavior']
 
@@ -514,12 +515,12 @@ function BrainBehavior() {
   return (
     <div>
       {/* Axon hero */}
-      <div className="flex flex-col items-center text-center mb-10">
-        <AxonMascot size={160} mood={axonMood} showQuip={expanded === null} />
-        <h2 className="font-display text-2xl font-bold text-white mt-2">
-          Meet Axon
+      <div className="flex flex-col items-center text-center mb-12">
+        <AxonMascot size={200} mood={axonMood} showQuip={expanded === null} entrance="portal" />
+        <h2 className="font-display text-3xl font-bold text-white mt-4">
+          Meet <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Axon</span>
         </h2>
-        <p className="text-text-muted text-sm max-w-sm mt-1.5 leading-relaxed">
+        <p className="text-text-muted text-sm max-w-sm mt-2 leading-relaxed">
           Your guide to how your brain actually runs the show.
           Tap a card — Axon's got thoughts.
         </p>
@@ -597,20 +598,20 @@ function BrainBehavior() {
       </div>
 
       {/* Bottom CTA */}
+      <RainbowDivider className="mt-12 mb-8" />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-8 p-6 bg-gradient-to-r from-cyan/5 via-purple/5 to-coral/5 border border-white/8 rounded-xl text-center"
+        className="p-8 rounded-2xl bg-bg-surface/60 border border-white/[0.06] text-center"
       >
-        <p className="text-sm text-text-primary">
-          Knowing how your brain works is step one. Mapping your style is step two.
-        </p>
+        <AxonQuote text="Knowing how your brain works is step one. Mapping your style is step two. You're already ahead of most leaders." />
         <Link
           to="/assessment"
-          className="inline-block mt-3 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan to-purple text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(0,200,255,0.3)] transition-shadow"
+          className="group inline-flex items-center gap-2 mt-6 px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all"
         >
           Take the Assessment
+          <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </motion.div>
     </div>
@@ -678,6 +679,7 @@ export default function Simulator() {
           </motion.div>
         </AnimatePresence>
       </main>
+      <PageFooter />
     </div>
   )
 }

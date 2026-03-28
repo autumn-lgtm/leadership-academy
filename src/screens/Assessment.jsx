@@ -6,6 +6,7 @@ import { computeScores, computeStyle } from '../data/scoring'
 import { STYLES } from '../data/styles'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
+import { RainbowDivider, PageFooter, AxonQuote } from '../components/DesignSystem'
 
 const ENCOURAGE = [
   'Great choice.',
@@ -135,14 +136,9 @@ function SectionComplete({ sectionIndex, onContinue }) {
     >
       <CelebrationBurst color={colors[sectionIndex]} />
 
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-        className="mb-4"
-      >
-        <AxonMascot size={100} mood="excited" showQuip={false} />
-      </motion.div>
+      <div className="mb-4">
+        <AxonMascot size={120} mood="excited" showQuip={false} entrance="portal" />
+      </div>
 
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
@@ -366,15 +362,12 @@ export default function Assessment() {
                 </p>
                 {/* Axon tip */}
                 <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="mt-6 flex items-center gap-3 p-4 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
+                  className="mt-6"
                 >
-                  <AxonMascot size={48} mood="idle" showQuip={false} />
-                  <p className="text-sm text-text-primary leading-relaxed">
-                    {AXON_SECTION_TIPS[currentSection]}
-                  </p>
+                  <AxonQuote text={AXON_SECTION_TIPS[currentSection]} color="#00C8FF" />
                 </motion.div>
               </div>
 
@@ -545,6 +538,7 @@ export default function Assessment() {
           )}
         </AnimatePresence>
       </main>
+      <PageFooter />
     </div>
   )
 }
