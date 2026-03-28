@@ -42,12 +42,12 @@ export default function Home() {
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
               <span className="text-white font-display font-bold text-sm">N</span>
             </div>
             <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-6">
             <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
             <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
@@ -302,20 +302,61 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.04] py-12">
-        <div className="max-w-6xl mx-auto px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xs">N</span>
+      <footer className="relative border-t border-white/[0.04]">
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-surface/40 to-transparent pointer-events-none" />
+        <div className="max-w-6xl mx-auto px-8 py-16 relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            {/* Brand */}
+            <div>
+              <Link to="/" className="flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+                  <span className="text-white font-display font-bold text-sm">N</span>
+                </div>
+                <span className="font-display font-bold text-white text-lg">NeuroLeader</span>
+              </Link>
+              <p className="text-sm text-text-muted leading-relaxed max-w-xs">
+                Neuroscience-informed leadership development. Map your brain. Understand your style. Bridge the gap.
+              </p>
             </div>
-            <span className="font-display font-bold text-text-muted">NeuroLeader</span>
+
+            {/* Navigation */}
+            <div>
+              <h4 className="font-display text-xs font-bold text-text-muted uppercase tracking-[4px] mb-5">Explore</h4>
+              <div className="flex flex-col gap-3">
+                <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors">Leadership Assessment</Link>
+                <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors">Profile Lab</Link>
+                <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors">Communication Simulator</Link>
+              </div>
+            </div>
+
+            {/* Neural Axes quick ref */}
+            <div>
+              <h4 className="font-display text-xs font-bold text-text-muted uppercase tracking-[4px] mb-5">The Four Axes</h4>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: 'WHO', color: '#B88AFF' },
+                  { label: 'WHY', color: '#00C8FF' },
+                  { label: 'WHAT', color: '#00E896' },
+                  { label: 'HOW', color: '#FFB340' },
+                ].map(a => (
+                  <div key={a.label} className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ background: a.color }} />
+                    <span className="text-sm text-text-muted">{a.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-8">
-            <Link to="/assessment" className="text-xs text-text-muted hover:text-white transition-colors">Assessment</Link>
-            <Link to="/profile" className="text-xs text-text-muted hover:text-white transition-colors">Profile</Link>
-            <Link to="/simulator" className="text-xs text-text-muted hover:text-white transition-colors">Simulator</Link>
+
+          {/* Bottom bar */}
+          <div className="pt-8 border-t border-white/[0.04] flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-6">
+              {['#FF6B6B', '#FFB340', '#00E896', '#00C8FF', '#B88AFF'].map((c, i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full opacity-40" style={{ background: c }} />
+              ))}
+            </div>
+            <p className="text-xs text-text-muted/40">Built on neuroscience. Designed for leaders.</p>
           </div>
-          <p className="text-xs text-text-muted/50">Neuroscience-informed leadership development</p>
         </div>
       </footer>
     </div>

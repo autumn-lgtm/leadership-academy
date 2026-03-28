@@ -81,6 +81,13 @@ function lerpColorAlpha(t, alpha) {
   return `rgba(${a.r + (b.r - a.r) * f | 0}, ${a.g + (b.g - a.g) * f | 0}, ${a.b + (b.b - a.b) * f | 0}, ${alpha})`
 }
 
+// DNA helix configuration
+const HELIX_NODES = 30
+const HELIX_RADIUS = 90
+const HELIX_Y_MIN = -20
+const HELIX_Y_MAX = 120
+const HELIX_TURNS = 3
+
 export default function BrainOrbit({ size = 420 }) {
   const canvasRef = useRef(null)
   const animRef = useRef(null)
@@ -149,6 +156,9 @@ export default function BrainOrbit({ size = 420 }) {
 
       // === ORBITAL RINGS (behind brain) ===
       drawOrbitals(ctx, orbits, cx, cy, t, false)
+
+      // === DNA HELIX (behind brain — back half) ===
+      drawDNAHelix(ctx, cx, cy, brainScale, t, false)
 
       // === BRAIN ===
       ctx.save()
@@ -240,6 +250,9 @@ export default function BrainOrbit({ size = 420 }) {
 
       ctx.restore()
 
+      // === DNA HELIX (in front of brain — front half) ===
+      drawDNAHelix(ctx, cx, cy, brainScale, t, true)
+
       // === ORBITAL RINGS (in front of brain) ===
       ctx.globalAlpha = 1
       drawOrbitals(ctx, orbits, cx, cy, t, true)
@@ -260,6 +273,133 @@ export default function BrainOrbit({ size = 420 }) {
       })
 
       animRef.current = requestAnimationFrame(draw)
+    }
+
+    function drawDNAHelix(ctx, cx, cy, brainScale, t, front) {
+      const rotation = t * 0.3
+
+      // Brain center in screen coords
+      const brainCenterX = cx
+      const brainCenterY = cy
+
+      // Compute node positions for both strands
+      const strands = [0, 1].map(strandIndex => {
+        const phaseOffset = strandIndex * Math.PI
+        const nodes = []
+        for (let i = 0; i < HELIX_NODES; i++) {
+          const frac = i / (HELIX_NODES - 1)
+          // Vertical position: map from HELIX_Y_MIN..HELIX_Y_MAX in brain coords to screen
+          const yNorm = HELIX_Y_MIN + frac * (HELIX_Y_MAX - HELIX_Y_MIN)
+          const screenY = brainCenterY + (yNorm - 50) * brainScale
+
+          // Helix angle for this node
+          const helixAngle = frac * HELIX_TURNS * Math.PI * 2 + rotation + phaseOffset
+
+          // 3D position on helix
+          const x3d = Math.cos(helixAngle) * HELIX_RADIUS * brainScale / (size / 100 * 0.42)
+          const z3d = Math.sin(helixAngle) * HELIX_RADIUS * brainScale / (size / 100 * 0.42)
+
+          // Project to 2D — x3d is the screen offset, z3d determines depth
+          const screenX = brainCenterX + x3d * brainScale
+          const depth = z3d // positive = toward viewer
+
+          nodes.push({
+            sx: screenX,
+            sy: screenY,
+            depth,
+            colorT: (frac + t * 0.05) % 1,
+            frac,
+            index: i,
+          })
+        }
+        return nodes
+      })
+
+      // Determine which nodes are in front vs behind
+      // Draw rungs first (behind layer), then strand dots
+      ctx.save()
+
+      // --- Draw connecting rungs every 3rd node ---
+      for (let i = 0; i < HELIX_NODES; i += 3) {
+        const nodeA = strands[0][i]
+        const nodeB = strands[1][i]
+
+        // A rung is visible if at least part of it is on the correct side
+        const avgDepth = (nodeA.depth + nodeB.depth) / 2
+        const isFront = avgDepth > 0
+
+        if (isFront !== front) continue
+
+        const rungAlpha = 0.15 + Math.abs(avgDepth) / (HELIX_RADIUS * brainScale / (size / 100 * 0.42)) * 0.2
+        const rungColorT = (nodeA.colorT + nodeB.colorT) / 2
+
+        ctx.beginPath()
+        ctx.moveTo(nodeA.sx, nodeA.sy)
+        ctx.lineTo(nodeB.sx, nodeB.sy)
+        ctx.strokeStyle = lerpColorAlpha(rungColorT, rungAlpha)
+        ctx.lineWidth = 0.8
+        ctx.globalAlpha = 1
+        ctx.stroke()
+      }
+
+      // --- Draw strand curves and neuron dots ---
+      strands.forEach((nodes, strandIndex) => {
+        // Draw strand path segments
+        for (let i = 0; i < nodes.length - 1; i++) {
+          const n0 = nodes[i]
+          const n1 = nodes[i + 1]
+          const segDepth = (n0.depth + n1.depth) / 2
+          const isFront = segDepth > 0
+
+          if (isFront !== front) continue
+
+          const depthNorm = (segDepth + HELIX_RADIUS * brainScale / (size / 100 * 0.42)) /
+            (2 * HELIX_RADIUS * brainScale / (size / 100 * 0.42))
+          const segAlpha = 0.1 + depthNorm * 0.35
+
+          ctx.beginPath()
+          ctx.moveTo(n0.sx, n0.sy)
+          ctx.lineTo(n1.sx, n1.sy)
+          ctx.strokeStyle = lerpColorAlpha((n0.colorT + strandIndex * 0.2) % 1, segAlpha)
+          ctx.lineWidth = 1.2
+          ctx.globalAlpha = 1
+          ctx.stroke()
+        }
+
+        // Draw neuron dots on each node
+        nodes.forEach(n => {
+          const isFront = n.depth > 0
+          if (isFront !== front) return
+
+          const maxDepth = HELIX_RADIUS * brainScale / (size / 100 * 0.42)
+          const depthNorm = (n.depth + maxDepth) / (2 * maxDepth)
+          const dotSize = 2 + depthNorm * 2 // 2-4px
+          const dotAlpha = 0.3 + depthNorm * 0.7
+
+          const colorT = (n.colorT + strandIndex * 0.3) % 1
+          const color = lerpColor(colorT)
+
+          // Glow around neuron dot
+          const glowR = dotSize * 2.5
+          const glow = ctx.createRadialGradient(n.sx, n.sy, 0, n.sx, n.sy, glowR)
+          glow.addColorStop(0, lerpColorAlpha(colorT, 0.25 * dotAlpha))
+          glow.addColorStop(1, 'rgba(0,0,0,0)')
+          ctx.fillStyle = glow
+          ctx.globalAlpha = 1
+          ctx.beginPath()
+          ctx.arc(n.sx, n.sy, glowR, 0, Math.PI * 2)
+          ctx.fill()
+
+          // Core neuron dot
+          ctx.fillStyle = color
+          ctx.globalAlpha = dotAlpha
+          ctx.beginPath()
+          ctx.arc(n.sx, n.sy, dotSize, 0, Math.PI * 2)
+          ctx.fill()
+        })
+      })
+
+      ctx.restore()
     }
 
     function drawOrbitals(ctx, orbits, cx, cy, t, front) {

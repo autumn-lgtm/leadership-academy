@@ -456,12 +456,12 @@ export default function Simulator() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-5xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
                 <span className="text-white font-display font-bold text-xs">N</span>
               </div>
               <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
-            </div>
+            </Link>
             <Link
               to="/profile"
               className="text-xs px-4 py-2 rounded-full bg-white/[0.04] text-text-muted hover:text-white border border-white/[0.06] transition-all"

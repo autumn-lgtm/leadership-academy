@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SECTIONS } from '../data/questions'
 import { computeScores, computeStyle } from '../data/scoring'
@@ -88,25 +88,36 @@ function LiveInsight({ answers }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex items-center gap-4 p-4 rounded-2xl bg-bg-surface/80 border border-white/[0.06]"
+      className="flex items-center gap-5 p-5 rounded-2xl bg-bg-surface/80 border border-white/[0.06]"
     >
       <div className="shrink-0">
-        <QuadrantPlot {...norm} size={80} />
+        <QuadrantPlot {...norm} size={120} />
       </div>
       <div className="min-w-0">
-        <div className="text-[10px] text-text-muted uppercase tracking-widest mb-0.5">Emerging pattern</div>
-        <div className="font-display text-sm font-bold" style={{ color: styleData.color }}>
+        <div className="text-xs text-text-muted uppercase tracking-widest mb-1">Emerging pattern</div>
+        <div className="font-display text-base font-bold" style={{ color: styleData.color }}>
           {styleData.name} — {styleData.short}
+        </div>
+        <div className="mt-1 text-xs text-text-muted">
+          {answered} of {SECTIONS[0].questions.length} scenarios mapped
         </div>
       </div>
     </motion.div>
   )
 }
 
+const SECTION_REWARDS = [
+  { msg: 'Your instincts are revealing a pattern.', sub: 'Scenarios show how you naturally respond under pressure.' },
+  { msg: 'Signal calibration locked in.', sub: 'Your leadership signals shape how others experience you.' },
+  { msg: 'Full neural map complete.', sub: 'Your unique leadership fingerprint is ready to explore.' },
+]
+
 function SectionComplete({ sectionIndex, onContinue }) {
   const section = SECTION_INTROS[sectionIndex]
   const next = SECTION_INTROS[sectionIndex + 1]
   const colors = ['#00C8FF', '#B88AFF', '#00E896']
+  const reward = SECTION_REWARDS[sectionIndex]
+  const pct = Math.round(((sectionIndex + 1) / 3) * 100)
 
   return (
     <motion.div
@@ -121,17 +132,17 @@ function SectionComplete({ sectionIndex, onContinue }) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-        className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-        style={{ background: `${colors[sectionIndex]}20`, border: `2px solid ${colors[sectionIndex]}` }}
+        className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
+        style={{ background: `${colors[sectionIndex]}15`, border: `2px solid ${colors[sectionIndex]}` }}
       >
-        <span className="text-2xl">✓</span>
+        <span className="text-3xl">✓</span>
       </motion.div>
 
       <motion.h2
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="font-display text-2xl font-bold text-white mb-2"
+        className="font-display text-3xl md:text-4xl font-bold text-white mb-3"
       >
         {section.title} complete
       </motion.h2>
@@ -139,21 +150,64 @@ function SectionComplete({ sectionIndex, onContinue }) {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="text-text-muted text-sm mb-8"
+        transition={{ delay: 0.55 }}
+        className="text-base text-white/80 font-medium mb-1"
       >
-        {sectionIndex < 2 ? `Next up: ${next.title}` : 'Your profile is ready.'}
+        {reward.msg}
       </motion.p>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="text-sm text-text-muted mb-6 max-w-sm"
+      >
+        {reward.sub}
+      </motion.p>
+
+      {/* Progress anchoring — shows commitment */}
+      <motion.div
+        initial={{ opacity: 0, width: 0 }}
+        animate={{ opacity: 1, width: 200 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="mb-8"
+      >
+        <div className="flex justify-between text-xs text-text-muted mb-1.5">
+          <span>Progress</span>
+          <span className="font-bold" style={{ color: colors[sectionIndex] }}>{pct}%</span>
+        </div>
+        <div className="w-[200px] h-1.5 bg-bg-surface2 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            style={{ background: colors[sectionIndex] }}
+            initial={{ width: 0 }}
+            animate={{ width: `${pct}%` }}
+            transition={{ delay: 1, duration: 0.8, ease: 'easeOut' }}
+          />
+        </div>
+      </motion.div>
 
       <motion.button
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 1.1 }}
         onClick={onContinue}
-        className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all"
+        className="group px-10 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all flex items-center gap-2"
       >
-        {sectionIndex < 2 ? 'Continue' : 'See My Profile →'}
+        {sectionIndex < 2 ? `Continue to ${next.title}` : 'See My Profile'}
+        <span className="transition-transform group-hover:translate-x-1">→</span>
       </motion.button>
+
+      {sectionIndex < 2 && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4 }}
+          className="mt-4 text-xs text-text-muted/60"
+        >
+          {3 - sectionIndex - 1} section{sectionIndex === 1 ? '' : 's'} remaining
+        </motion.p>
+      )}
     </motion.div>
   )
 }
@@ -245,12 +299,12 @@ export default function Assessment() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-2xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
                 <span className="text-white font-display font-bold text-xs">N</span>
               </div>
               <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
-            </div>
+            </Link>
             <div className="flex items-center gap-3">
               <span className="text-xs text-text-muted">
                 {SECTION_INTROS[currentSection].icon} / 03
@@ -288,15 +342,16 @@ export default function Assessment() {
             >
               {/* Section header */}
               <div className="mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-4">
-                  <span className="text-[10px] text-text-muted font-medium tracking-widest uppercase">
-                    Section {SECTION_INTROS[currentSection].icon}
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-4">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
+                  <span className="text-xs text-text-muted font-medium tracking-widest uppercase">
+                    Section {SECTION_INTROS[currentSection].icon} of 03
                   </span>
                 </div>
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-white mb-2">
+                <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-3">
                   {SECTION_INTROS[currentSection].title}
                 </h1>
-                <p className="text-sm text-text-muted leading-relaxed max-w-md">
+                <p className="text-base text-text-muted leading-relaxed max-w-lg">
                   {SECTION_INTROS[currentSection].sub}
                 </p>
               </div>
@@ -319,7 +374,7 @@ export default function Assessment() {
                     ))}
                   </div>
 
-                  <h3 className="font-display text-xl font-bold text-white mb-6 leading-snug">
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-8 leading-snug">
                     {scenarioQ.text}
                   </h3>
 
@@ -332,16 +387,16 @@ export default function Assessment() {
                         transition={{ delay: optIdx * 0.08 }}
                         onClick={() => handleScenarioSelect(optIdx)}
                         disabled={answers.scenarios[currentQ] !== null}
-                        className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 ${
+                        className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 ${
                           answers.scenarios[currentQ] === optIdx
-                            ? 'border-cyan bg-cyan/10 shadow-[0_0_30px_rgba(0,200,255,0.12)]'
+                            ? 'border-cyan bg-cyan/10 shadow-[0_0_30px_rgba(0,200,255,0.12)] scale-[1.01]'
                             : answers.scenarios[currentQ] !== null
                             ? 'border-white/[0.04] bg-bg-surface/40 opacity-40'
-                            : 'border-white/[0.06] bg-bg-surface/60 hover:border-white/10 hover:bg-bg-surface'
+                            : 'border-white/[0.06] bg-bg-surface/60 hover:border-white/10 hover:bg-bg-surface hover:scale-[1.01]'
                         }`}
                       >
-                        <span className={`text-sm leading-relaxed ${
-                          answers.scenarios[currentQ] === optIdx ? 'text-cyan' : 'text-text-primary'
+                        <span className={`text-base leading-relaxed ${
+                          answers.scenarios[currentQ] === optIdx ? 'text-cyan font-medium' : 'text-text-primary'
                         }`}>
                           {option.label}
                         </span>
@@ -358,7 +413,7 @@ export default function Assessment() {
                         exit={{ opacity: 0 }}
                         className="mt-6 text-center"
                       >
-                        <span className="text-sm text-cyan font-medium">{ENCOURAGE[currentQ] || ENCOURAGE[0]}</span>
+                        <span className="text-base text-cyan font-medium">{ENCOURAGE[currentQ] || ENCOURAGE[0]}</span>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -394,9 +449,9 @@ export default function Assessment() {
                         transition={{ delay: i * 0.04 }}
                         className="p-5 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
                       >
-                        <label className="block text-sm font-medium text-white mb-3">{q.label}</label>
+                        <label className="block text-base font-medium text-white mb-4">{q.label}</label>
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] text-text-muted w-14 text-right shrink-0">Disagree</span>
+                          <span className="text-xs text-text-muted w-16 text-right shrink-0">Disagree</span>
                           <input
                             type="range" min="0" max="100"
                             value={answers.sliders[i]}
@@ -404,10 +459,10 @@ export default function Assessment() {
                             className="flex-1"
                             style={{ background: `linear-gradient(to right, ${q.color} ${answers.sliders[i]}%, rgba(255,255,255,0.06) ${answers.sliders[i]}%)` }}
                           />
-                          <span className="text-[10px] text-text-muted w-14 shrink-0">Agree</span>
+                          <span className="text-xs text-text-muted w-16 shrink-0">Agree</span>
                         </div>
-                        <div className="text-center mt-1">
-                          <span className="text-xs font-bold" style={{ color: q.color }}>{answers.sliders[i]}</span>
+                        <div className="text-center mt-2">
+                          <span className="text-sm font-bold" style={{ color: q.color }}>{answers.sliders[i]}</span>
                         </div>
                       </motion.div>
                     ))}
@@ -435,9 +490,9 @@ export default function Assessment() {
                         transition={{ delay: i * 0.04 }}
                         className="p-5 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
                       >
-                        <label className="block text-sm font-medium text-white mb-3">{q.label}</label>
+                        <label className="block text-base font-medium text-white mb-4">{q.label}</label>
                         <div className="flex items-center gap-4">
-                          <span className="text-[10px] text-text-muted w-20 text-right shrink-0">{q.lo}</span>
+                          <span className="text-xs text-text-muted w-24 text-right shrink-0">{q.lo}</span>
                           <input
                             type="range" min="0" max="100"
                             value={answers.attrs[i]}
@@ -445,10 +500,10 @@ export default function Assessment() {
                             className="flex-1"
                             style={{ background: `linear-gradient(to right, ${q.color} ${answers.attrs[i]}%, rgba(255,255,255,0.06) ${answers.attrs[i]}%)` }}
                           />
-                          <span className="text-[10px] text-text-muted w-20 shrink-0">{q.hi}</span>
+                          <span className="text-xs text-text-muted w-24 shrink-0">{q.hi}</span>
                         </div>
-                        <div className="text-center mt-1">
-                          <span className="text-xs font-bold" style={{ color: q.color }}>{answers.attrs[i]}</span>
+                        <div className="text-center mt-2">
+                          <span className="text-sm font-bold" style={{ color: q.color }}>{answers.attrs[i]}</span>
                         </div>
                       </motion.div>
                     ))}
