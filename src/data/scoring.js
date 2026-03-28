@@ -241,7 +241,7 @@ export function computeTrustIndex(trustAnswers = [], wbAnswers = {}) {
  * @returns {{ selfAwareness, selfRegulation, motivation, empathy, socialSkill, composite, regulationStyle }}
  */
 export function computeEQScore(eqAnswers = [], existingScores = {}) {
-  const { axisScores = {}, attrScores = {}, trustIndex = {}, stressDelta = {}, scenarioAnswers = [] } = existingScores;
+  const { axisScores = {}, attrScores = {}, trustIndex = {}, stressDelta = {}, scenarioAnswers = [], wbAnswers = {} } = existingScores;
 
   // ── Self-Regulation (from EQ-1, EQ-2, EQ-3, EQ-4) ───
   let selfRegRaw = 0;
@@ -278,12 +278,18 @@ export function computeEQScore(eqAnswers = [], existingScores = {}) {
   const empathyFromEQ = clamp((empathyRaw / 15) * 100);
   const empathy = clamp((empathyFromEQ * 0.6) + ((trustIndex.relational || 50) * 0.4));
 
-  // ── Self-Awareness: stressDelta magnitude + shadow WB ───
-  let saRaw = 50; // baseline
+  // ── Self-Awareness: stressDelta magnitude + shadow WB (WB-8) ───
+  let saRaw = 30; // baseline
   if (stressDelta && stressDelta.deltas) {
     const totalDeltaMag = Object.values(stressDelta.deltas).reduce((s, d) => s + Math.abs(d), 0);
-    // Higher awareness of stress patterns = higher score. Map 0-80 range to 0-50 bonus.
-    saRaw += clamp((totalDeltaMag / 80) * 50, 0, 50);
+    // Higher awareness of stress patterns = higher score. Map 0-80 range to 0-35 bonus.
+    saRaw += clamp((totalDeltaMag / 80) * 35, 0, 35);
+  }
+  // WB-8 shadow side: more selections = higher self-awareness of development areas
+  const wb8 = wbAnswers['WB-8'];
+  if (wb8 && wb8.length > 0) {
+    // WB-8 has 11 words. Selecting 3-6 is healthy self-awareness. Map to 0-35 bonus.
+    saRaw += clamp((Math.min(wb8.length, 8) / 8) * 35, 0, 35);
   }
   const selfAwareness = clamp(saRaw);
 
@@ -398,6 +404,7 @@ export function computeFullProfile(allAnswers = {}) {
       trustIndex: trustIndex || {},
       stressDelta: stressDeltaResult,
       scenarioAnswers,
+      wbAnswers,
     });
   }
 
