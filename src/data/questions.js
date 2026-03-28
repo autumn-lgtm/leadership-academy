@@ -155,3 +155,48 @@ export function getQuestionsBySection(section) {
     default: return [];
   }
 }
+
+// ── Legacy compatibility (consumed by existing Assessment.jsx) ──────────
+// Maps old 3-section format so existing screens don't break during transition
+export const SECTIONS = [
+  {
+    type: 'scenarios',
+    title: 'Leadership Scenarios',
+    subtitle: SECTION_INTROS.A,
+    questions: SECTION_A.map(q => ({
+      text: q.prompt,
+      ctx: q.id,
+      options: q.options.map(o => ({
+        label: o.label,
+        axes: {
+          who: o.scoring.who || 0,
+          why: o.scoring.why || 0,
+          what: o.scoring.what || 0,
+          how: o.scoring.how || 0,
+        },
+      })),
+    })),
+  },
+  {
+    type: 'sliders',
+    title: 'Leadership Signals',
+    subtitle: SECTION_INTROS.B,
+    questions: SLIDER_ITEMS.filter(s => s.direction !== 'trap').map(s => ({
+      label: s.question,
+      axis: s.axis === 'independence' ? 'who' : (s.axis === 'innovation' ? 'why' : (s.axis === 'recognition' ? 'what' : (s.scoringTarget || 'who'))),
+      color: s.axis === 'who' ? '#B88AFF' : s.axis === 'why' ? '#00C8FF' : s.axis === 'how' ? '#FFB340' : '#00E896',
+    })),
+  },
+  {
+    type: 'attributes',
+    title: 'Forced Choice',
+    subtitle: SECTION_INTROS.C,
+    questions: SECTION_C.map(q => ({
+      label: q.prompt,
+      attr: q.id,
+      lo: q.options[0]?.label?.substring(0, 30) || '',
+      hi: q.options[1]?.label?.substring(0, 30) || '',
+      color: '#00C8FF',
+    })),
+  },
+];

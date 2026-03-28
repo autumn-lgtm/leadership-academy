@@ -435,3 +435,46 @@ export function computeFullProfile(allAnswers = {}) {
     } : null,
   };
 }
+
+// ── Legacy compatibility (consumed by existing Assessment.jsx) ──────────
+// Maps old computeScores(scenarios, sliders, attrs) → new engine
+export function computeScores(scenarioAnswers = [], sliderAnswers = [], attrAnswers = []) {
+  const axis = { who: 0, why: 0, what: 0, how: 0 };
+
+  // Process old-format scenario answers (selected option index per question)
+  SECTION_A.forEach((q, i) => {
+    const sel = scenarioAnswers[i];
+    if (sel == null || !q.options[sel]) return;
+    const s = q.options[sel].scoring;
+    if (s.who) axis.who += s.who;
+    if (s.why) axis.why += s.why;
+    if (s.what) axis.what += s.what;
+    if (s.how) axis.how += s.how;
+  });
+
+  // Process slider values (0-100 per slider)
+  sliderAnswers.forEach((val, i) => {
+    if (val == null) return;
+    const axes = ['who', 'why', 'who', 'how', 'who', 'who', 'why', 'what', 'who', 'what'];
+    const a = axes[i % axes.length];
+    axis[a] += (val / 100) * 3;
+  });
+
+  const maxAxis = Math.max(...Object.values(axis), 1);
+  const axisScores = {
+    who: clamp((axis.who / maxAxis) * 100),
+    why: clamp((axis.why / maxAxis) * 100),
+    what: clamp((axis.what / maxAxis) * 100),
+    how: clamp((axis.how / maxAxis) * 100),
+  };
+
+  const attrScores = {};
+  const attrKeys = ['empathy', 'vision', 'structure', 'decisiveness', 'communication', 'risk', 'collaboration', 'innovation'];
+  attrAnswers.forEach((val, i) => {
+    if (attrKeys[i]) attrScores[attrKeys[i]] = val ?? 50;
+  });
+
+  const dominantStyle = computeStyle(axisScores.who, axisScores.why, axisScores.what, axisScores.how);
+
+  return { axisScores, attrScores, dominantStyle };
+}
