@@ -2,16 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
+import { PROGRAMS, AXIS_COLORS } from '../data/growth'
 import QuadrantPlot from '../components/QuadrantPlot'
 
 const TABS = ['Profile', 'Style', 'Apply It', 'Go Deeper', 'Growth Path']
-
-const GROWTH_MODULES = [
-  { phase: 'Foundation', title: 'New Leader Foundations', desc: 'Trust, motivation, 1:1s, delegation — the trailhead of leadership.', milestones: 7, program: 'MGMT 101', color: '#00E896' },
-  { phase: 'Core', title: 'Leadership Development Experience', desc: 'Strategy, culture, coaching, conflict — the desert crossing.', milestones: 49, program: 'LDE', color: '#FFB340' },
-  { phase: 'Advanced', title: 'Advanced Leadership Development', desc: 'Org design, executive presence, board dynamics — the ascent.', milestones: 40, program: 'ALDE', color: '#00C8FF' },
-  { phase: 'Practice', title: 'Lab Notes', desc: 'Reflective practice using Gibbs\' cycle. Where observation becomes insight.', milestones: null, program: 'Lab Notes', color: '#B88AFF' },
-]
 
 function Nav({ activeTab, setActiveTab }) {
   return (
@@ -284,67 +278,193 @@ function GoDeeperTab({ style }) {
   )
 }
 
-function GrowthPathTab({ style }) {
+function NeuroLinkCard({ link, index, color }) {
   return (
-    <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Growth Path</h2>
-      <p className="text-sm text-text-muted mb-3">
-        Your <span style={{ color: style.color }}>{style.name}</span> style shapes how you move through these programs.
-      </p>
-      <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
-        The Leadership Academy curriculum builds on your natural strengths while developing complementary skills. Each phase maps to real leadership challenges.
-      </p>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.03 }}
+      className="p-4 rounded-xl bg-bg-primary/60 border border-white/[0.04] hover:border-white/[0.08] transition-all"
+    >
+      <div className="flex items-start gap-3">
+        <div className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold mt-0.5"
+          style={{ background: `${color}15`, color }}>
+          {index + 1}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h4 className="text-sm font-bold text-white mb-0.5">{link.title}</h4>
+          <p className="text-xs text-text-muted leading-relaxed mb-2">{link.sub}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/[0.04] text-text-muted border border-white/[0.06]">
+              {link.framework}
+            </span>
+            {link.axes?.map(a => (
+              <span key={a} className="w-1.5 h-1.5 rounded-full" style={{ background: AXIS_COLORS[a] }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
-      <div className="space-y-4">
-        {GROWTH_MODULES.map((m, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/10 transition-all group"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest"
-                    style={{ background: `${m.color}12`, color: m.color }}>
-                    {m.phase}
-                  </span>
-                  <span className="text-[10px] text-text-muted">{m.program}</span>
-                </div>
-                <h3 className="font-display text-lg font-bold text-white mb-1">{m.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed">{m.desc}</p>
+function ProgramCard({ program, styleKey, isExpanded, onToggle }) {
+  const styleInsight = program.styleInsight?.[styleKey]
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-all"
+    >
+      <button
+        onClick={onToggle}
+        className="w-full text-left p-6 transition-all"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-widest"
+                style={{ background: `${program.color}15`, color: program.color }}>
+                {program.phase}
+              </span>
+              <span className="text-[10px] text-text-muted">{program.program}</span>
+              {program.hours && (
+                <span className="text-[10px] text-text-muted">{program.hours} hrs</span>
+              )}
+            </div>
+            <h3 className="font-display text-lg font-bold text-white mb-1">{program.title}</h3>
+            <p className="text-sm text-text-muted leading-relaxed">{program.desc}</p>
+          </div>
+          <div className="shrink-0 flex flex-col items-end gap-2">
+            {program.neurolinks && (
+              <div className="text-right">
+                <div className="font-display text-2xl font-bold" style={{ color: program.color }}>{program.neurolinks}</div>
+                <div className="text-[10px] text-text-muted">neurolinks</div>
               </div>
-              {m.milestones && (
-                <div className="shrink-0 text-right">
-                  <div className="font-display text-2xl font-bold" style={{ color: m.color }}>{m.milestones}</div>
-                  <div className="text-[10px] text-text-muted">milestones</div>
+            )}
+            <motion.div
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              className="w-6 h-6 rounded-full bg-white/[0.04] flex items-center justify-center text-text-muted"
+            >
+              <span className="text-xs">▼</span>
+            </motion.div>
+          </div>
+        </div>
+      </button>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-6 pb-6 space-y-4">
+              {/* Science foundation */}
+              <div className="p-4 rounded-xl border border-white/[0.04]" style={{ background: `${program.color}06` }}>
+                <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: program.color }}>
+                  Science Foundation
+                </div>
+                <p className="text-xs text-text-muted leading-relaxed">{program.science}</p>
+              </div>
+
+              {/* Style-specific insight */}
+              {styleInsight && (
+                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div className="text-[9px] font-bold uppercase tracking-widest mb-1.5 text-purple">
+                    For Your Style
+                  </div>
+                  <p className="text-xs text-text-muted leading-relaxed">{styleInsight}</p>
+                </div>
+              )}
+
+              {/* Phases (LDE/ALDE) */}
+              {program.phases && (
+                <div>
+                  <div className="text-[9px] font-bold uppercase tracking-widest text-text-muted mb-2 px-1">
+                    Phases
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {program.phases.map((p, pi) => (
+                      <div key={pi} className="p-3 rounded-lg bg-bg-primary/40 border border-white/[0.04]">
+                        <div className="text-[10px] font-bold text-white mb-0.5">{p.name}</div>
+                        <div className="text-[9px] text-text-muted">{p.range} — {p.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Neurolinks list */}
+              {program.neurolinksData && (
+                <div>
+                  <div className="text-[9px] font-bold uppercase tracking-widest text-text-muted mb-2 px-1">
+                    {program.neurolinks} Neurolinks
+                  </div>
+                  <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+                    {program.neurolinksData.map((link, li) => (
+                      <NeuroLinkCard key={li} link={link} index={li} color={program.color} />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-
-            {/* Style-specific insight */}
-            <div className="mt-4 pt-3 border-t border-white/[0.04]">
-              <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: style.color }}>
-                For {style.name} leaders
-              </div>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {i === 0 && `Focus on ${style.axes.who === 'high' ? 'leveraging your natural people skills in 1:1s' : 'building stronger interpersonal foundations'}.`}
-                {i === 1 && `Your ${style.orientation.toLowerCase()} orientation means you'll ${style.axes.why === 'high' ? 'excel at strategic milestones but should push on execution skills' : 'move fast through tactical milestones but should slow down for vision work'}.`}
-                {i === 2 && `At the advanced level, lean into ${style.complement[0]?.style} partnerships to round out your leadership architecture.`}
-                {i === 3 && `Reflection is especially valuable for ${style.name} leaders — it strengthens your ${style.axes.who === 'high' ? 'systems thinking' : 'empathic accuracy'}.`}
-              </p>
-            </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+function GrowthPathTab({ style }) {
+  const [expanded, setExpanded] = useState(null)
+  const styleKey = style.name.toLowerCase()
+
+  return (
+    <div>
+      <h2 className="font-display text-2xl font-bold text-white mb-2">Growth Path</h2>
+      <p className="text-sm text-text-muted mb-2">
+        Your <span style={{ color: style.color }}>{style.name}</span> style shapes how you move through these programs.
+      </p>
+      <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
+        Each program builds neural pathways through deliberate practice, spaced repetition, and retrieval-based learning. Neurolinks are your units of progress — each one strengthens a specific leadership circuit.
+      </p>
+
+      <div className="space-y-4">
+        {PROGRAMS.map((program, i) => (
+          <ProgramCard
+            key={program.id}
+            program={program}
+            styleKey={styleKey}
+            isExpanded={expanded === i}
+            onToggle={() => setExpanded(expanded === i ? null : i)}
+          />
         ))}
       </div>
 
+      {/* How it connects */}
       <div className="mt-8 p-6 rounded-2xl border border-purple/15" style={{ background: 'linear-gradient(135deg, rgba(184,138,255,0.04), rgba(0,200,255,0.02))' }}>
         <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-2">How it connects</div>
         <p className="text-sm text-text-primary leading-relaxed">
           Your NeuroLeader assessment maps <em>who you are</em> as a leader. The Growth Path develops <em>what you can become</em>. Your {style.name} style isn't a box — it's a starting point. The curriculum builds the neural pathways you need to lead across all four axes.
         </p>
+      </div>
+
+      {/* Total stats */}
+      <div className="mt-6 grid grid-cols-3 gap-3">
+        {[
+          { label: 'Total Neurolinks', value: '59', color: '#00C8FF' },
+          { label: 'Total Hours', value: '~144', color: '#00E896' },
+          { label: 'Programs', value: '3 + Lab Notes', color: '#B88AFF' },
+        ].map((s, i) => (
+          <div key={i} className="p-4 rounded-xl bg-bg-surface/60 border border-white/[0.06] text-center">
+            <div className="font-display text-xl font-bold" style={{ color: s.color }}>{s.value}</div>
+            <div className="text-[10px] text-text-muted mt-0.5">{s.label}</div>
+          </div>
+        ))}
       </div>
     </div>
   )
