@@ -453,18 +453,18 @@ export default function Simulator() {
   return (
     <div className="min-h-screen bg-bg-primary">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
+        <div className="max-w-5xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan to-purple flex items-center justify-center">
-                <span className="text-white font-display font-bold text-sm">N</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+                <span className="text-white font-display font-bold text-xs">N</span>
               </div>
-              <span className="font-display font-bold text-text-primary">NeuroLeader</span>
+              <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
             </div>
             <Link
               to="/profile"
-              className="text-sm text-text-muted hover:text-text-primary transition-colors flex items-center gap-1"
+              className="text-xs px-4 py-2 rounded-full bg-white/[0.04] text-text-muted hover:text-white border border-white/[0.06] transition-all"
             >
               ← Profile
             </Link>
@@ -475,10 +475,10 @@ export default function Simulator() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className={`px-4 py-2 text-sm rounded-lg transition-all ${
+                className={`px-4 py-2 text-xs rounded-full transition-all ${
                   activeTab === i
-                    ? 'bg-cyan/10 text-cyan font-semibold'
-                    : 'text-text-muted hover:text-text-primary hover:bg-white/5'
+                    ? 'bg-white text-bg-primary font-bold'
+                    : 'text-text-muted hover:text-white hover:bg-white/[0.04]'
                 }`}
               >
                 {tab}
@@ -488,7 +488,7 @@ export default function Simulator() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-5xl mx-auto px-6 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
