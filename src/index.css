@@ -58,17 +58,20 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
 }
 
-@keyframes einstein-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+@keyframes axon-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 255, 0.15); }
+  50% { box-shadow: 0 0 20px 8px rgba(0, 200, 255, 0.08); }
 }
 
-.einstein-float {
-  animation: einstein-float 3s ease-in-out infinite;
+.axon-mascot {
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .einstein-float {
-    animation: none;
+  .axon-mascot {
+    animation: none !important;
+  }
+  .axon-mascot * {
+    animation: none !important;
   }
 }

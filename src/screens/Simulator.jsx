@@ -5,7 +5,7 @@ import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
 import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
-import EinsteinAvatar from '../components/simulator/EinsteinAvatar'
+import AxonMascot from '../components/simulator/AxonMascot'
 
 const TABS = ['Map Your Style', 'Style Decoder', 'Message Translator', 'Brain → Behavior']
 
@@ -448,88 +448,120 @@ function MessageTranslator() {
   )
 }
 
-const BRAIN_BEHAVIOR_INSIGHTS = [
+const BRAIN_INSIGHTS = [
   {
-    title: 'The Prefrontal Cortex & Decision-Making',
+    title: 'Why You Panic in Meetings',
+    subtitle: 'Your inner alarm system',
     axis: 'WHY',
     color: '#00C8FF',
-    body: 'Your prefrontal cortex is the CEO of your brain — it handles planning, judgment, and impulse control. Strategic leaders lean heavily on this region, weighing long-term vision against short-term pressure. When stressed, the amygdala can hijack this system, pushing you toward reactive decisions.',
-    tip: 'Before any high-stakes decision, take 6 deep breaths. This activates the parasympathetic nervous system and re-engages prefrontal processing.',
+    icon: '🧠',
+    body: 'Your brain has a built-in panic button called the amygdala. When stakes feel high, it hijacks your thinking brain and throws you into fight-or-flight. That brilliant point you had? Gone. Replaced by "uhh, what she said." Great leaders learn to notice the hijack happening — and hit pause before it takes over.',
+    move: 'Next time you feel your chest tighten in a meeting, pause for one breath before you speak. That single second lets your thinking brain get back in the driver\'s seat. Sounds too simple? Try it once.',
   },
   {
-    title: 'Mirror Neurons & Empathic Leadership',
+    title: 'Why Your Team Mirrors Your Mood',
+    subtitle: 'Emotions are contagious — literally',
     axis: 'WHO',
     color: '#B88AFF',
-    body: 'Mirror neurons fire both when you perform an action and when you observe someone else performing it. This neural mirroring is the biological basis of empathy — the foundation of people-focused leadership. Leaders who actively listen literally synchronize brain activity with their team members.',
-    tip: 'In your next 1:1, practice "neural sync" — maintain eye contact, match their energy, and paraphrase what you hear before responding.',
+    icon: '🪞',
+    body: 'Your brain has special cells that fire when you watch someone else do something — as if you were doing it yourself. This is why yawns spread and why a stressed leader creates a stressed team. Your people are unconsciously copying your emotional state all day long. No pressure, right?',
+    move: 'Before your next team meeting, do a quick mood check. If you\'re frazzled, your team will feel it before you say a word. Take 30 seconds to reset. Walk in calm, and watch the room shift.',
   },
   {
-    title: 'The Basal Ganglia & Habit Formation',
+    title: 'How Habits Actually Work',
+    subtitle: 'Your brain\'s autopilot mode',
     axis: 'WHAT',
     color: '#00E896',
-    body: 'The basal ganglia automates repeated behaviors into habits, freeing up cognitive bandwidth. Systems-oriented leaders intuitively build processes that leverage this — creating reliable patterns that let teams operate on autopilot for routine tasks while preserving mental energy for creative problem-solving.',
-    tip: 'Identify one team process that drains cognitive load. Design a checklist or template to shift it from effortful thinking to automatic execution.',
+    icon: '⚙️',
+    body: 'About 40% of what you do each day isn\'t a conscious decision — it\'s habit. Your brain automates repeated behaviors to save energy for harder stuff. This is why great systems leaders build clear processes: they\'re literally freeing up their team\'s brainpower for creative work instead of wasting it on "wait, how do we do this again?"',
+    move: 'Pick one thing your team asks about repeatedly. Turn it into a dead-simple template or checklist. You just gave everyone back mental energy they didn\'t know they were spending.',
   },
   {
-    title: 'Dopamine Loops & Execution Drive',
+    title: 'The Science of Getting Stuff Done',
+    subtitle: 'Dopamine isn\'t what you think',
     axis: 'HOW',
     color: '#FFB340',
-    body: 'Dopamine isn\'t just about pleasure — it\'s the molecule of anticipation and motivation. Execution-driven leaders naturally create dopamine loops by setting clear milestones and celebrating small wins. Each completed task triggers a dopamine release that fuels momentum toward the next goal.',
-    tip: 'Break your next project into micro-milestones. Acknowledge each completion — even a quick "done" message creates a dopamine hit that sustains momentum.',
+    icon: '🚀',
+    body: 'Dopamine isn\'t a "pleasure chemical" — it\'s an anticipation chemical. Your brain releases it when you expect a reward, not when you get one. That\'s why checking off a to-do feels so good, and why massive projects with no milestones feel like a slog. Smart leaders break big goals into small wins — not because they\'re soft, but because that\'s how brains actually work.',
+    move: 'Take your biggest current project and chop it into 3 pieces you could finish this week. Celebrate each one — even a quick message to the team. You\'re not being cheesy. You\'re hacking dopamine.',
   },
   {
-    title: 'Neuroplasticity & Growth Mindset',
+    title: 'You Can Actually Rewire This',
+    subtitle: 'Your leadership style isn\'t permanent',
     axis: 'ALL',
     color: '#FF6B6B',
-    body: 'Your brain physically rewires itself based on experience — this is neuroplasticity. Every new skill, perspective shift, or behavioral change creates new neural pathways. Leadership style isn\'t fixed; it\'s a living network that strengthens with deliberate practice and weakens with neglect.',
-    tip: 'Choose one axis outside your comfort zone and practice it for 10 minutes daily this week. Consistent micro-practice drives more lasting neural change than occasional deep dives.',
+    icon: '🌱',
+    body: 'Here\'s the good news: your brain physically changes based on what you practice. Every time you try a new approach — listening more, delegating differently, speaking up — you\'re building new neural pathways. Do it enough and it stops feeling forced. That\'s not positive thinking. That\'s biology.',
+    move: 'Pick one leadership behavior that doesn\'t come naturally. Practice it for 5 minutes a day this week. Awkward at first? Good. That\'s your brain building new wiring. By Friday, it\'ll feel 10% more natural. By next month, it\'ll be yours.',
   },
 ]
 
 function BrainBehavior() {
   const [expanded, setExpanded] = useState(null)
+  const [axonMood, setAxonMood] = useState('idle')
+
+  function handleExpand(i) {
+    if (expanded === i) {
+      setExpanded(null)
+      setAxonMood('idle')
+    } else {
+      setExpanded(i)
+      setAxonMood('excited')
+      setTimeout(() => setAxonMood('thinking'), 800)
+    }
+  }
 
   return (
     <div>
-      {/* Einstein hero section */}
+      {/* Axon hero */}
       <div className="flex flex-col items-center text-center mb-10">
-        <EinsteinAvatar size={160} />
-        <h2 className="font-display text-2xl font-bold text-white mt-4">
-          Meet Einstein
+        <AxonMascot size={160} mood={axonMood} showQuip={expanded === null} />
+        <h2 className="font-display text-2xl font-bold text-white mt-2">
+          Meet Axon
         </h2>
-        <p className="text-text-muted text-sm max-w-md mt-2 leading-relaxed">
-          Your NeuroLeader guide to the science behind leadership. Explore how your brain
-          shapes the way you lead — and how you can rewire it.
+        <p className="text-text-muted text-sm max-w-sm mt-1.5 leading-relaxed">
+          Your guide to how your brain actually runs the show.
+          Tap a card — Axon's got thoughts.
         </p>
       </div>
 
       {/* Insight cards */}
       <div className="space-y-3">
-        {BRAIN_BEHAVIOR_INSIGHTS.map((insight, i) => (
+        {BRAIN_INSIGHTS.map((insight, i) => (
           <motion.div
             key={i}
             className="bg-bg-surface border border-white/8 rounded-xl overflow-hidden"
             initial={false}
+            whileHover={{ borderColor: `${insight.color}25` }}
+            transition={{ duration: 0.2 }}
           >
             <button
-              onClick={() => setExpanded(expanded === i ? null : i)}
+              onClick={() => handleExpand(i)}
               className="w-full text-left p-5 flex items-center gap-4"
             >
-              <div
+              <motion.div
                 className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 text-lg"
-                style={{ background: `${insight.color}15`, color: insight.color }}
+                style={{ background: `${insight.color}15` }}
+                animate={expanded === i ? { scale: [1, 1.15, 1], rotate: [0, 5, 0] } : {}}
+                transition={{ duration: 0.4 }}
               >
-                {['🧠', '🪞', '⚙️', '🚀', '🌱'][i]}
-              </div>
+                {insight.icon}
+              </motion.div>
               <div className="flex-1 min-w-0">
                 <div className="font-display font-semibold text-white text-sm">
                   {insight.title}
                 </div>
                 <div className="text-xs text-text-muted mt-0.5">
-                  Axis: <span style={{ color: insight.color }}>{insight.axis}</span>
+                  {insight.subtitle}
                 </div>
               </div>
-              <span className={`text-text-muted text-xs transition-transform ${expanded === i ? 'rotate-180' : ''}`}>▾</span>
+              <motion.span
+                className="text-text-muted text-xs"
+                animate={{ rotate: expanded === i ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                ▾
+              </motion.span>
             </button>
             <AnimatePresence>
               {expanded === i && (
@@ -537,22 +569,25 @@ function BrainBehavior() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="overflow-hidden"
                 >
                   <div className="px-5 pb-5 border-t border-white/5">
                     <p className="text-sm text-text-primary mt-4 leading-relaxed">
                       {insight.body}
                     </p>
-                    <div
-                      className="mt-4 p-3 rounded-lg text-sm"
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="mt-4 p-4 rounded-lg"
                       style={{ background: `${insight.color}08`, borderLeft: `3px solid ${insight.color}` }}
                     >
                       <span className="font-semibold text-xs uppercase tracking-wider" style={{ color: insight.color }}>
-                        Try this
+                        Your move
                       </span>
-                      <p className="text-text-primary mt-1 text-sm leading-relaxed">{insight.tip}</p>
-                    </div>
+                      <p className="text-text-primary mt-1.5 text-sm leading-relaxed">{insight.move}</p>
+                    </motion.div>
                   </div>
                 </motion.div>
               )}
@@ -562,14 +597,22 @@ function BrainBehavior() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-cyan/5 via-purple/5 to-coral/5 border border-white/8 rounded-xl text-center">
-        <p className="text-sm text-text-muted">
-          Understanding the neuroscience behind your leadership style is just the beginning.
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-8 p-6 bg-gradient-to-r from-cyan/5 via-purple/5 to-coral/5 border border-white/8 rounded-xl text-center"
+      >
+        <p className="text-sm text-text-primary">
+          Knowing how your brain works is step one. Mapping your style is step two.
         </p>
-        <p className="text-xs text-text-muted mt-2">
-          Complete the <Link to="/assessment" className="text-cyan hover:underline">NeuroLeader Assessment</Link> to map your unique neural leadership profile.
-        </p>
-      </div>
+        <Link
+          to="/assessment"
+          className="inline-block mt-3 px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan to-purple text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(0,200,255,0.3)] transition-shadow"
+        >
+          Take the Assessment
+        </Link>
+      </motion.div>
     </div>
   )
 }
