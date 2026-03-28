@@ -62,93 +62,72 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero — Giant typography + orbital brain */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20">
+      {/* Hero — Centered brain above, text below */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16">
         {/* Background radial glow */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-cyan/8 via-purple/4 to-transparent rounded-full blur-3xl" />
-          <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-gradient-radial from-purple/6 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-gradient-radial from-coral/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[120px]"
+            style={{ background: 'radial-gradient(circle, rgba(0,200,255,0.08) 0%, rgba(184,138,255,0.04) 50%, transparent 100%)' }} />
+          <div className="absolute top-[20%] left-[20%] w-[300px] h-[300px] rounded-full blur-[100px] bg-purple/[0.04]" />
+          <div className="absolute top-[40%] right-[15%] w-[250px] h-[250px] rounded-full blur-[100px] bg-coral/[0.03]" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left — text */}
+        {/* Brain — centered hero element */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 mb-8"
+        >
+          <BrainOrbit size={380} />
+        </motion.div>
+
+        {/* Text — centered below brain */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 text-center max-w-2xl mx-auto px-8"
+        >
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-6"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-8"
+            <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+            <span className="text-xs text-text-muted font-medium tracking-wide">Neuroscience-informed leadership</span>
+          </motion.div>
+
+          <h1 className="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1] tracking-tight mb-5">
+            <span className="text-white">Map your </span>
+            <span className="bg-gradient-to-r from-coral via-amber via-green via-cyan to-purple bg-clip-text text-transparent">
+              leadership
+            </span>
+            <span className="text-white"> brain.</span>
+          </h1>
+
+          <p className="text-base md:text-lg text-text-muted max-w-lg mx-auto mb-8 leading-relaxed">
+            Discover how you lead across four neural axes.
+            Understand your style. Decode others. Bridge the gap.
+          </p>
+
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link
+              to="/assessment"
+              className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2.5"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-              <span className="text-xs text-text-muted font-medium tracking-wide">Neuroscience-informed leadership</span>
-            </motion.div>
-
-            <h1 className="font-display text-[clamp(3rem,7vw,5.5rem)] font-extrabold leading-[0.95] tracking-tight mb-6">
-              <span className="text-white">Map your</span>
-              <br />
-              <span className="bg-gradient-to-r from-coral via-amber via-green via-cyan to-purple bg-clip-text text-transparent">
-                leadership
-              </span>
-              <br />
-              <span className="text-white">brain.</span>
-            </h1>
-
-            <p className="text-lg text-text-muted max-w-md mb-10 leading-relaxed">
-              Discover how you lead across four neural axes.
-              Understand your style. Decode others. Bridge the gap.
-            </p>
-
-            <div className="flex items-center gap-4">
-              <Link
-                to="/assessment"
-                className="group px-8 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all flex items-center gap-3"
-              >
-                Start Assessment
-                <span className="text-lg transition-transform group-hover:translate-x-1">→</span>
-              </Link>
-              <Link
-                to="/profile"
-                className="px-8 py-4 rounded-2xl border border-white/10 text-white font-semibold text-base hover:bg-white/5 transition-all"
-              >
-                View Profile
-              </Link>
-            </div>
-          </motion.div>
-
-          {/* Right — orbital brain */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex items-center justify-center relative"
-          >
-            <BrainOrbit size={480} />
-            {/* Floating axis labels around brain */}
-            {[
-              { label: 'WHO', sub: 'People', x: '-10%', y: '30%', color: '#B88AFF' },
-              { label: 'WHY', sub: 'Purpose', x: '40%', y: '-5%', color: '#00C8FF' },
-              { label: 'WHAT', sub: 'Systems', x: '85%', y: '30%', color: '#00E896' },
-              { label: 'HOW', sub: 'Execution', x: '40%', y: '90%', color: '#FFB340' },
-            ].map((a, i) => (
-              <motion.div
-                key={a.label}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 + i * 0.15 }}
-                className="absolute text-center"
-                style={{ left: a.x, top: a.y }}
-              >
-                <div className="font-display text-xs font-bold tracking-[3px]" style={{ color: a.color }}>{a.label}</div>
-                <div className="text-[10px] text-text-muted">{a.sub}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+              Start Assessment
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+            <Link
+              to="/profile"
+              className="px-8 py-3.5 rounded-2xl border border-white/10 text-white font-semibold text-sm hover:bg-white/5 transition-all"
+            >
+              View Profile
+            </Link>
+          </div>
+        </motion.div>
 
         {/* Scroll indicator */}
         <motion.div
