@@ -624,28 +624,32 @@ export default function Simulator() {
     <div className="min-h-screen bg-bg-primary">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
-        <div className="max-w-5xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between mb-4">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-                <span className="text-white font-display font-bold text-xs">N</span>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+                <span className="text-white font-display font-bold text-sm">N</span>
               </div>
-              <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
+              <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
             </Link>
-            <Link
-              to="/profile"
-              className="text-xs px-4 py-2 rounded-full bg-white/[0.04] text-text-muted hover:text-white border border-white/[0.06] transition-all"
-            >
-              ← Profile
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+              <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
+              <Link
+                to="/profile"
+                className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
+              >
+                View Profile
+              </Link>
+            </div>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1 overflow-x-auto">
             {TABS.map((tab, i) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className={`px-4 py-2 text-xs rounded-full transition-all ${
+                className={`px-4 py-2 text-xs rounded-full whitespace-nowrap transition-all ${
                   activeTab === i
                     ? 'bg-white text-bg-primary font-bold'
                     : 'text-text-muted hover:text-white hover:bg-white/[0.04]'
@@ -658,7 +662,7 @@ export default function Simulator() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pt-32 pb-16">
+      <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

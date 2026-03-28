@@ -4,25 +4,28 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
 import { PROGRAMS, AXIS_COLORS } from '../data/growth'
 import QuadrantPlot from '../components/QuadrantPlot'
+import AxonMascot from '../components/simulator/AxonMascot'
 
 const TABS = ['Profile', 'Style', 'Apply It', 'Go Deeper', 'Growth Path']
 
 function Nav({ activeTab, setActiveTab }) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
-      <div className="max-w-5xl mx-auto px-6 py-4">
+      <div className="max-w-6xl mx-auto px-8 py-4">
         <div className="flex items-center justify-between mb-4">
           <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xs">N</span>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+              <span className="text-white font-display font-bold text-sm">N</span>
             </div>
-            <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
+            <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Link to="/simulator" className="text-xs px-4 py-2 rounded-full bg-white/[0.04] text-text-muted hover:text-white border border-white/[0.06] transition-all">
-              Simulator
-            </Link>
-            <Link to="/assessment" className="text-xs px-4 py-2 rounded-full bg-white/[0.04] text-text-muted hover:text-white border border-white/[0.06] transition-all">
+          <div className="flex items-center gap-6">
+            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+            <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
+            <Link
+              to="/assessment"
+              className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
+            >
               Retake
             </Link>
           </div>
@@ -142,13 +145,15 @@ function SignalBars({ axisScores, attrScores, style }) {
   )
 }
 
-function NeuroCallout({ text }) {
+function AxonCallout({ text }) {
   return (
     <div className="rounded-2xl p-5 my-6 border border-purple/15" style={{ background: 'linear-gradient(135deg, rgba(184,138,255,0.06), rgba(0,200,255,0.03))' }}>
       <div className="flex items-start gap-3">
-        <span className="text-lg">🧠</span>
+        <div className="shrink-0 -mt-1">
+          <AxonMascot size={44} mood="thinking" showQuip={false} />
+        </div>
         <div>
-          <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-1">Neuroscience</div>
+          <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-1">Axon Says</div>
           <p className="text-sm text-text-primary leading-relaxed">{text}</p>
         </div>
       </div>
@@ -180,7 +185,7 @@ function StyleTab({ style, axisScores }) {
           </div>
 
           <p className="text-sm text-text-primary leading-relaxed mb-6">{style.desc}</p>
-          <NeuroCallout text={style.neuro} />
+          <AxonCallout text={style.neuro} />
         </div>
 
         <div>
@@ -268,7 +273,7 @@ function GoDeeperTab({ style }) {
           </motion.div>
         ))}
       </div>
-      <NeuroCallout text="Reflection activates the Default Mode Network — the same neural circuitry responsible for self-awareness, empathy, and creative insight. Regular reflection strengthens connections between your prefrontal cortex and limbic system, improving emotional regulation and decision-making under pressure." />
+      <AxonCallout text="Writing things down forces your brain to process differently than just thinking about them. That's why journaling works — it activates the same networks responsible for self-awareness and creative insight. You're not just reflecting. You're literally rewiring." />
       <div className="mt-8 text-center">
         <Link to="/simulator" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all">
           Communication Simulator →
@@ -430,7 +435,7 @@ function GrowthPathTab({ style }) {
         Your <span style={{ color: style.color }}>{style.name}</span> style shapes how you move through these programs.
       </p>
       <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
-        Each program builds neural pathways through deliberate practice, spaced repetition, and retrieval-based learning. Neurolinks are your units of progress — each one strengthens a specific leadership circuit.
+        Neurolinks are your units of progress. Each one builds a specific leadership skill through practice, not theory. Your style shapes how you'll move through the work.
       </p>
 
       <div className="space-y-4">
@@ -447,10 +452,17 @@ function GrowthPathTab({ style }) {
 
       {/* How it connects */}
       <div className="mt-8 p-6 rounded-2xl border border-purple/15" style={{ background: 'linear-gradient(135deg, rgba(184,138,255,0.04), rgba(0,200,255,0.02))' }}>
-        <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-2">How it connects</div>
-        <p className="text-sm text-text-primary leading-relaxed">
-          Your NeuroLeader assessment maps <em>who you are</em> as a leader. The Growth Path develops <em>what you can become</em>. Your {style.name} style isn't a box — it's a starting point. The curriculum builds the neural pathways you need to lead across all four axes.
-        </p>
+        <div className="flex items-start gap-3">
+          <div className="shrink-0 -mt-1">
+            <AxonMascot size={44} mood="thinking" showQuip={false} />
+          </div>
+          <div>
+            <div className="text-[10px] font-display font-bold text-purple uppercase tracking-widest mb-2">Axon Says</div>
+            <p className="text-sm text-text-primary leading-relaxed">
+              The assessment maps <em>who you are</em> as a leader. The Growth Path develops <em>what you can become</em>. Your {style.name} style isn't a box — it's a starting point. Every neurolink you complete builds new capability.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Total stats */}
@@ -483,14 +495,17 @@ export default function Profile() {
   if (!profile) {
     return (
       <div className="min-h-screen bg-bg-primary flex items-center justify-center">
-        <div className="text-center px-6">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center mx-auto mb-6">
-            <span className="text-white font-display font-bold text-2xl">N</span>
-          </div>
-          <h2 className="font-display text-3xl font-bold text-white mb-3">No Profile Yet</h2>
-          <p className="text-text-muted mb-8 max-w-sm mx-auto">Complete the assessment to discover your leadership style and unlock your profile.</p>
-          <button onClick={() => navigate('/assessment')} className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm">
-            Take Assessment →
+        <div className="text-center px-8">
+          <AxonMascot size={140} mood="idle" showQuip={false} />
+          <h2 className="font-display text-3xl font-bold text-white mb-3 mt-4">
+            No Profile <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Yet</span>
+          </h2>
+          <p className="text-text-muted mb-8 max-w-sm mx-auto">
+            Take the assessment and Axon will break down your leadership style — who you are, how you lead, and where you can grow.
+          </p>
+          <button onClick={() => navigate('/assessment')} className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all inline-flex items-center gap-2">
+            Take Assessment
+            <span className="transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>
       </div>
@@ -504,7 +519,7 @@ export default function Profile() {
     <div className="min-h-screen bg-bg-primary">
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <main className="max-w-5xl mx-auto px-6 pt-32 pb-16">
+      <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -524,7 +539,7 @@ export default function Profile() {
                       <div className="text-[10px] text-text-muted uppercase tracking-widest mb-2">Quadrant Detail</div>
                       <p className="text-sm text-text-primary leading-relaxed">{style.quadDetail}</p>
                     </div>
-                    <NeuroCallout text={style.neuro} />
+                    <AxonCallout text={style.neuro} />
                   </div>
                 </div>
               </div>

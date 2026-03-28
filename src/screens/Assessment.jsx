@@ -5,6 +5,7 @@ import { SECTIONS } from '../data/questions'
 import { computeScores, computeStyle } from '../data/scoring'
 import { STYLES } from '../data/styles'
 import QuadrantPlot from '../components/QuadrantPlot'
+import AxonMascot from '../components/simulator/AxonMascot'
 
 const ENCOURAGE = [
   'Great choice.',
@@ -13,6 +14,12 @@ const ENCOURAGE = [
   'That says a lot about how you lead.',
   'The picture is getting clearer.',
   'Almost there — powerful insights ahead.',
+]
+
+const AXON_SECTION_TIPS = [
+  'Be honest, not aspirational. Pick the response that feels most like you — not the one that sounds best.',
+  'Almost there. Slide toward your real default, not your "I just read a leadership book" self.',
+  'Last stretch. Rate yourself honestly — this calibrates everything.',
 ]
 
 const SECTION_INTROS = [
@@ -132,10 +139,9 @@ function SectionComplete({ sectionIndex, onContinue }) {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 200, delay: 0.2 }}
-        className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-        style={{ background: `${colors[sectionIndex]}15`, border: `2px solid ${colors[sectionIndex]}` }}
+        className="mb-4"
       >
-        <span className="text-3xl">✓</span>
+        <AxonMascot size={100} mood="excited" showQuip={false} />
       </motion.div>
 
       <motion.h2
@@ -297,19 +303,23 @@ export default function Assessment() {
     <div className="min-h-screen bg-bg-primary">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
-        <div className="max-w-2xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between mb-3">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-                <span className="text-white font-display font-bold text-xs">N</span>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
+                <span className="text-white font-display font-bold text-sm">N</span>
               </div>
-              <span className="font-display font-bold text-white text-sm">NeuroLeader</span>
+              <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
             </Link>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-text-muted">
-                {SECTION_INTROS[currentSection].icon} / 03
-              </span>
-              <span className="text-xs font-semibold text-cyan">{Math.round(progress)}%</span>
+            <div className="flex items-center gap-6">
+              <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
+              <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
+              <div className="flex items-center gap-3 pl-4 border-l border-white/[0.06]">
+                <span className="text-xs text-text-muted">
+                  {SECTION_INTROS[currentSection].icon} / 03
+                </span>
+                <span className="text-xs font-semibold text-cyan">{Math.round(progress)}%</span>
+              </div>
             </div>
           </div>
           {/* Progress bar */}
@@ -324,7 +334,7 @@ export default function Assessment() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-28 pb-32">
+      <main className="max-w-3xl mx-auto px-8 pt-28 pb-32">
         <AnimatePresence mode="wait">
           {showSectionComplete ? (
             <SectionComplete
@@ -354,6 +364,18 @@ export default function Assessment() {
                 <p className="text-base text-text-muted leading-relaxed max-w-lg">
                   {SECTION_INTROS[currentSection].sub}
                 </p>
+                {/* Axon tip */}
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-6 flex items-center gap-3 p-4 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
+                >
+                  <AxonMascot size={48} mood="idle" showQuip={false} />
+                  <p className="text-sm text-text-primary leading-relaxed">
+                    {AXON_SECTION_TIPS[currentSection]}
+                  </p>
+                </motion.div>
               </div>
 
               {/* === SCENARIOS: one at a time === */}

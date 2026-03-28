@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import BrainOrbit from '../components/BrainOrbit'
+import AxonMascot from '../components/simulator/AxonMascot'
 
 const features = [
   {
     title: 'Leadership Assessment',
-    desc: 'Discover your leadership style through scenarios, signal mapping, and attribute profiling across 4 neural axes.',
+    desc: 'Answer real scenarios, map your signals, and discover which of four leadership styles fits you best.',
     color: '#00C8FF',
     link: '/assessment',
     cta: 'Take Assessment',
@@ -13,7 +14,7 @@ const features = [
   },
   {
     title: 'Profile Lab',
-    desc: 'Explore your results with interactive quadrant plots, neuroscience insights, and team complement analysis.',
+    desc: 'See your results come alive with interactive plots, personalized insights, and team complement analysis.',
     color: '#B88AFF',
     link: '/profile',
     cta: 'View Profile',
@@ -21,7 +22,7 @@ const features = [
   },
   {
     title: 'Communication Simulator',
-    desc: 'Decode others\' styles, map your signals, and translate messages across all four leadership styles with AI.',
+    desc: 'Decode how others lead, translate your message into their style, and bridge the gap — with AI help.',
     color: '#00E896',
     link: '/simulator',
     cta: 'Open Simulator',
@@ -239,6 +240,41 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Meet Axon */}
+      <section className="py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/30 to-transparent" />
+        <div className="max-w-6xl mx-auto px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col md:flex-row items-center gap-10 md:gap-16"
+          >
+            <div className="shrink-0">
+              <AxonMascot size={180} mood="idle" showQuip={false} />
+            </div>
+            <div className="text-center md:text-left">
+              <h2 className="font-display text-xs font-bold text-text-muted uppercase tracking-[6px] mb-4">Your Guide</h2>
+              <p className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+                Meet <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Axon.</span>
+              </p>
+              <p className="text-base text-text-muted max-w-lg leading-relaxed mb-6">
+                Axon breaks down the science of leadership into stuff you can actually use.
+                No jargon. No lectures. Just smart, honest insights about how your brain
+                shapes the way you lead.
+              </p>
+              <Link
+                to="/simulator"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-cyan hover:text-white transition-colors"
+              >
+                Explore Brain → Behavior <span>→</span>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
 
