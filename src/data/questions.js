@@ -1,103 +1,152 @@
-export const SECTIONS = [
-  {
-    type: 'scenarios',
-    title: 'Scenario Responses',
-    subtitle: 'How would you handle each situation?',
-    questions: [
-      {
-        text: 'A key team member tells you they\'re thinking about leaving. What do you do first?',
-        ctx: 'retention',
-        options: [
-          { label: 'Have a deep 1:1 to understand their motivations and feelings', axes: { who: 3, why: 1, what: 0, how: 0 } },
-          { label: 'Review their growth path and connect their role to the company mission', axes: { who: 1, why: 3, what: 0, how: 0 } },
-          { label: 'Build a concrete retention plan with milestones and compensation review', axes: { who: 0, why: 0, what: 3, how: 1 } },
-          { label: 'Make a direct counteroffer and ask what it would take to stay', axes: { who: 1, why: 0, what: 0, how: 3 } }
-        ]
-      },
-      {
-        text: 'You\'re leading a cross-functional project that\'s behind schedule. What\'s your first move?',
-        ctx: 'project-recovery',
-        options: [
-          { label: 'Meet with each team lead to understand their blockers and rebuild trust', axes: { who: 3, why: 1, what: 0, how: 0 } },
-          { label: 'Reframe the project purpose and realign everyone on why it matters', axes: { who: 0, why: 3, what: 1, how: 0 } },
-          { label: 'Audit the project plan, identify gaps, and restructure the timeline', axes: { who: 0, why: 0, what: 3, how: 1 } },
-          { label: 'Cut scope immediately, reassign owners, and set daily check-ins', axes: { who: 1, why: 0, what: 0, how: 3 } }
-        ]
-      },
-      {
-        text: 'Your team just shipped a major feature that\'s getting mixed reviews. How do you respond?',
-        ctx: 'feedback-response',
-        options: [
-          { label: 'Acknowledge the team\'s effort publicly and create a safe space for honest debrief', axes: { who: 3, why: 0, what: 1, how: 0 } },
-          { label: 'Analyze the feedback patterns to understand what the market is really telling you', axes: { who: 0, why: 3, what: 1, how: 0 } },
-          { label: 'Build a structured feedback categorization system and prioritized fix roadmap', axes: { who: 0, why: 1, what: 3, how: 0 } },
-          { label: 'Identify the top 3 complaints, assign owners, and set a 2-week fix sprint', axes: { who: 0, why: 0, what: 1, how: 3 } }
-        ]
-      },
-      {
-        text: 'You\'re asked to present your team\'s strategy to the executive team. What do you emphasize?',
-        ctx: 'exec-communication',
-        options: [
-          { label: 'The people — who\'s on the team, what they\'re capable of, and how they\'re growing', axes: { who: 3, why: 0, what: 1, how: 0 } },
-          { label: 'The vision — why this work matters for the company\'s long-term trajectory', axes: { who: 0, why: 3, what: 1, how: 0 } },
-          { label: 'The system — architecture, dependencies, risk mitigation, and scalability', axes: { who: 0, why: 1, what: 3, how: 0 } },
-          { label: 'The results — what we shipped, metrics moved, and what we\'re shipping next', axes: { who: 0, why: 0, what: 1, how: 3 } }
-        ]
-      },
-      {
-        text: 'Two of your direct reports are in conflict. How do you handle it?',
-        ctx: 'conflict-resolution',
-        options: [
-          { label: 'Mediate a conversation focused on understanding each person\'s perspective', axes: { who: 3, why: 1, what: 0, how: 0 } },
-          { label: 'Help them see how the conflict connects to misaligned values or goals', axes: { who: 1, why: 3, what: 0, how: 0 } },
-          { label: 'Document the issues, create clear role boundaries, and formalize agreements', axes: { who: 0, why: 0, what: 3, how: 1 } },
-          { label: 'Have direct 1:1s with each person, set expectations, and hold them accountable', axes: { who: 1, why: 0, what: 0, how: 3 } }
-        ]
-      },
-      {
-        text: 'You\'ve been given a new team with low morale. What\'s your approach in the first month?',
-        ctx: 'turnaround',
-        options: [
-          { label: 'Listen deeply — 1:1s with everyone, understand history, build trust first', axes: { who: 3, why: 1, what: 0, how: 0 } },
-          { label: 'Reconnect the team to purpose — why their work matters and what success looks like', axes: { who: 1, why: 3, what: 0, how: 0 } },
-          { label: 'Audit current processes, remove friction, and give the team structure to rely on', axes: { who: 0, why: 0, what: 3, how: 1 } },
-          { label: 'Identify one quick win, deliver it together, and build momentum from there', axes: { who: 1, why: 0, what: 0, how: 3 } }
-        ]
-      }
-    ]
-  },
-  {
-    type: 'sliders',
-    title: 'Leadership Signals',
-    subtitle: 'Where do you fall on each spectrum?',
-    questions: [
-      { label: 'I lead with relationships', axis: 'who', color: '#B88AFF' },
-      { label: 'I lead with purpose and meaning', axis: 'why', color: '#00C8FF' },
-      { label: 'I lead with systems and structure', axis: 'what', color: '#00E896' },
-      { label: 'I lead with speed and action', axis: 'how', color: '#FFB340' },
-      { label: 'I prioritize team harmony over individual performance', axis: 'who', color: '#B88AFF' },
-      { label: 'I need to understand "why" before I can commit', axis: 'why', color: '#00C8FF' },
-      { label: 'I naturally create processes and documentation', axis: 'what', color: '#00E896' },
-      { label: 'I\'d rather ship imperfect than wait for perfect', axis: 'how', color: '#FFB340' },
-      { label: 'I invest heavily in 1:1 relationships with my team', axis: 'who', color: '#B88AFF' },
-      { label: 'I think about long-term impact more than short-term wins', axis: 'why', color: '#00C8FF' },
-      { label: 'I believe most problems are process problems', axis: 'what', color: '#00E896' },
-      { label: 'I make decisions quickly, even with incomplete information', axis: 'how', color: '#FFB340' }
-    ]
-  },
-  {
-    type: 'attributes',
-    title: 'Leadership Attributes',
-    subtitle: 'Rate yourself on each dimension',
-    questions: [
-      { label: 'Empathy', attr: 'empathy', lo: 'Task-focused', hi: 'People-focused', color: '#B88AFF' },
-      { label: 'Vision', attr: 'vision', lo: 'Pragmatic', hi: 'Visionary', color: '#00C8FF' },
-      { label: 'Structure', attr: 'structure', lo: 'Flexible', hi: 'Systematic', color: '#00E896' },
-      { label: 'Decisiveness', attr: 'decisiveness', lo: 'Deliberate', hi: 'Decisive', color: '#FFB340' },
-      { label: 'Communication', attr: 'communication', lo: 'Direct', hi: 'Diplomatic', color: '#B88AFF' },
-      { label: 'Risk Tolerance', attr: 'risk', lo: 'Risk-averse', hi: 'Risk-taking', color: '#FFB340' },
-      { label: 'Collaboration', attr: 'collaboration', lo: 'Independent', hi: 'Collaborative', color: '#B88AFF' },
-      { label: 'Innovation', attr: 'innovation', lo: 'Conservative', hi: 'Innovative', color: '#00C8FF' }
-    ]
-  }
+/**
+ * questions.js — NeuroLeader Proprietary Assessment Instrument
+ * 52 questions · 6 sections · 8 word banks · 8 EQ items
+ * Source of truth: NeuroLeader_MASTER_FINAL.docx
+ */
+
+import { SLIDER_ITEMS, GAP_PROMPT } from '../utils/sliderTransforms.js';
+
+// ── Assessment modes ─────────────────────────────────────────────────────
+export const MODES = {
+  SHORT: { id: 'short', questions: 24, minutes: 8, outputs: ['quadrant', 'attributes'] },
+  LONG:  { id: 'long',  questions: 52, minutes: 18, outputs: ['quadrant', 'attributes', 'stress', 'trust', 'eq'] },
+};
+
+// ── Section intro copy ───────────────────────────────────────────────────
+export const SECTION_INTROS = {
+  A: 'Six situations. Choose what\'s true for you.',
+  B: 'Rate how true each statement is. Not your best self. The real one.',
+  C: 'Two options. Pick one. No middle ground.',
+  D: 'Same questions. Different version of you.',
+  E: 'The last section. These ones feel different.',
+  F: 'Fast. Instinctual. Select everything that feels true.',
+};
+
+export const SECTION_B_INSTRUCTION = {
+  line1: 'Think about what you actually did in the last two weeks.',
+  line2: 'Not what you usually try to do. Not your best week. What actually happened.',
+  pause: 'Take 10 seconds. Think of one specific situation.',
+};
+
+// ── Recovery screens ─────────────────────────────────────────────────────
+export const RECOVERY_BEATS = [
+  { beat: 1, after: 'A', quote: 'Knowing yourself is the beginning of all wisdom.', attribution: 'Aristotle', autoAdvance: 3000 },
+  { beat: 2, after: 'C', quote: 'It is not the strongest who survive. It is the most adaptable.', attribution: 'Megginson paraphrasing Darwin, 1963', tap: true },
+  { beat: 3, before: 'D', quote: 'Between the stimulus and response, the most important thing is what happens inside us.', attribution: 'Covey', tap: true },
+  { beat: 4, after: 'D', quote: 'We are wounded in relationship. We are healed in relationship.', attribution: 'Hendrix', tap: true },
+  { beat: 5, before: 'profile', lines: ['You showed up honestly. That\'s the hardest part.'], loadingMs: 2000 },
 ];
+
+// ── SECTION A: Leadership Scenarios (Q1-Q8) — Short + Long ──────────────
+export const SECTION_A = [
+  {
+    id: 'Q1', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'A decision needs to be made today. You have 60% of the information you\'d want.',
+    options: [
+      { label: 'I move. Waiting for more data costs more than deciding with what I have.', scoring: { what: 2, risk: 2 } },
+      { label: 'I identify the one person whose input would change my decision and get it.', scoring: { who: 2, why: 1 } },
+      { label: 'I map the downside scenarios first, then decide based on what I can absorb.', scoring: { risk: 2, independence: 1 } },
+      { label: 'I ask what reversing this decision would cost if I\'m wrong.', scoring: { what: 1, why: 2 } },
+    ],
+  },
+  {
+    id: 'Q2', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'Your team just delivered something that missed the mark. The client is unhappy.',
+    options: [
+      { label: 'I want to understand what the team experienced before I say anything to the client.', scoring: { who: 2, why: 1 } },
+      { label: 'I want the specific data on where and why it fell short before I form any view.', scoring: { what: 3 } },
+      { label: 'I get on a call with the client immediately \u2014 the relationship is the first priority.', scoring: { who: 3, 'trust-relational': 1 } },
+      { label: 'I want a corrective plan in my hands within 24 hours.', scoring: { how: 3, achievement: 1 } },
+    ],
+  },
+  {
+    id: 'Q3', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'You\'re asked to build a team from scratch. What do you do first?',
+    options: [
+      { label: 'I define the outcomes the team needs to produce, then work backward to the roles.', scoring: { what: 2, achievement: 2 } },
+      { label: 'I map the skills gaps, then find people who complement each other.', scoring: { how: 2, what: 1 } },
+      { label: 'I think about the culture first \u2014 what does this team need to feel like to do its best work?', scoring: { who: 3, why: 2, 'trust-relational': 1 } },
+      { label: 'I design the operating system: how decisions get made, how work flows, how we communicate.', scoring: { how: 3, independence: 1 } },
+    ],
+  },
+  {
+    id: 'Q4', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'A peer leader consistently takes credit for collaborative work in front of senior leadership.',
+    options: [
+      { label: 'I address it directly with them \u2014 privately, specifically, once.', scoring: { independence: 2, 'trust-relational': 2 } },
+      { label: 'I make my own contributions more visible without making it a conflict.', scoring: { achievement: 2, recognition: 2 } },
+      { label: 'I talk to my manager about the pattern before it damages the relationship further.', scoring: { who: 1, 'trust-systemic': 1 } },
+      { label: 'I document my contributions more carefully going forward.', scoring: { what: 2, how: 2 } },
+    ],
+  },
+  {
+    id: 'Q5', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'You are brought into a failing project midway through. The previous leader is still on the team.',
+    options: [
+      { label: 'I spend the first week listening \u2014 I want to understand what happened from everyone\'s perspective.', scoring: { who: 3, 'trust-relational': 1 } },
+      { label: 'I get the data: what was promised, what was delivered, where the gaps are.', scoring: { what: 3 } },
+      { label: 'I establish clear ownership and process changes immediately \u2014 the team needs stability.', scoring: { how: 3, achievement: 1 } },
+      { label: 'I understand the original intent of the project before I change anything.', scoring: { why: 3 } },
+    ],
+  },
+  {
+    id: 'Q6', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'Someone on your team is technically excellent but quietly disengaged.',
+    options: [
+      { label: 'I create a direct conversation about what they need to feel energized here.', scoring: { who: 2, why: 1, 'trust-relational': 1 } },
+      { label: 'I look at what they\'re working on \u2014 I think the problem is the work, not them.', scoring: { what: 2, how: 1 } },
+      { label: 'I find out if there\'s something happening outside work that I should know about.', scoring: { who: 3 } },
+      { label: 'I give them more ownership and autonomy and see if that changes things.', scoring: { how: 2, independence: 1 } },
+    ],
+  },
+  {
+    id: 'Q7', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'You have to deliver feedback that will be painful to receive. You know the person will get defensive.',
+    options: [
+      { label: 'I deliver it directly and let them have their reaction \u2014 it\'s not mine to manage.', scoring: { independence: 2, how: 1 } },
+      { label: 'I build the relational context first, then deliver the feedback in that container.', scoring: { who: 3, 'trust-relational': 2 } },
+      { label: 'I prepare specific examples so the conversation stays anchored in what actually happened.', scoring: { what: 3 } },
+      { label: 'I think carefully about what outcome I\'m trying to achieve before I say a word.', scoring: { why: 2, achievement: 1 } },
+    ],
+  },
+  {
+    id: 'Q8', section: 'A', form: 'both', type: 'scenario',
+    prompt: 'Senior leadership announces a major strategic shift. You have concerns about the direction.',
+    options: [
+      { label: 'I ask for a meeting to share my concerns with specifics \u2014 I owe them my honest assessment.', scoring: { independence: 2, why: 1, 'trust-competence': 1 } },
+      { label: 'I voice my concerns in the announcement meeting so others know the questions are on the table.', scoring: { who: 1, recognition: 1 } },
+      { label: 'I implement the direction and document my concerns \u2014 I\'ve said my piece, now I execute.', scoring: { how: 2, independence: 1 } },
+      { label: 'I understand the full rationale before I form a view on whether I agree.', scoring: { why: 3 } },
+    ],
+  },
+];
+
+// ── Placeholder exports for sections B-F (next pushes) ──────────────────
+export const SECTION_B = SLIDER_ITEMS;
+export const SECTION_B_GAP = GAP_PROMPT;
+export { SLIDER_ITEMS, GAP_PROMPT };
+export const SECTION_C = [];  // forced choice — next push
+export const SECTION_D = [];  // pressure — next push
+export const SECTION_E = [];  // trust — next push
+export const EQ_ITEMS = [];   // EQ — next push
+export const WORD_BANKS = []; // word banks — next push
+
+// ── Master question list ─────────────────────────────────────────────────
+export function getAllQuestions(mode = 'long') {
+  const all = [...SECTION_A, ...SECTION_C, ...SECTION_D, ...SECTION_E, ...EQ_ITEMS];
+  if (mode === 'short') return all.filter(q => q.form === 'both' || q.form === 'short');
+  return all;
+}
+
+export function getQuestionsBySection(section) {
+  switch (section) {
+    case 'A': return SECTION_A;
+    case 'B': return SECTION_B;
+    case 'C': return SECTION_C;
+    case 'D': return SECTION_D;
+    case 'E': return SECTION_E;
+    case 'EQ': return EQ_ITEMS;
+    case 'F': return WORD_BANKS;
+    default: return [];
+  }
+}
