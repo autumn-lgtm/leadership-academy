@@ -107,9 +107,9 @@ export default function SignIn() {
         input:focus { outline: none; border-color: #00C8FF !important; box-shadow: 0 0 0 3px rgba(0,200,255,0.12); }
         @media (max-width: 768px) {
           .split-layout { flex-direction: column !important; }
-          .left-panel { width: 100% !important; min-height: 60vh !important; padding: 40px 24px 120px !important; }
+          .left-panel { width: 100% !important; min-height: 90vh !important; padding: 40px 24px 160px !important; overflow: visible !important; }
           .right-panel { width: 100% !important; padding: 40px 24px !important; }
-          .axon-wrap { bottom: -60px !important; }
+          .axon-wrap { bottom: -120px !important; left: 50% !important; transform: translateX(-50%) !important; }
           .hero-h1 { font-size: 36px !important; }
           .hero-h2 { font-size: 28px !important; }
         }
@@ -122,14 +122,15 @@ export default function SignIn() {
         display: 'flex', minHeight: '100vh',
         fontFamily: "'DM Sans', sans-serif",
         background: '#050810',
+        overflowX: 'clip',
       }} className="split-layout">
 
         {/* ── LEFT PANEL ── */}
         <div className="left-panel" style={{
           width: '55%', minHeight: '100vh',
-          padding: '48px 56px 160px',
+          padding: '48px 56px 200px',
           display: 'flex', flexDirection: 'column',
-          position: 'relative', overflow: 'hidden',
+          position: 'relative', overflow: 'visible',
           borderRight: '1px solid rgba(255,255,255,0.04)',
         }}>
 
@@ -221,10 +222,10 @@ export default function SignIn() {
 
           {/* ── Axon zone ── */}
 
-          {/* "Closes the gap" label — sits just above Axon */}
+          {/* "Closes the gap" label — sits above Axon */}
           <div style={{
             ...fadeStyle(1600),
-            position: 'absolute', bottom: '18%', left: '6%',
+            position: 'absolute', bottom: '5%', left: '6%',
             fontFamily: "'Syne', sans-serif", fontWeight: 700,
             fontSize: 13, color: 'rgba(255,255,255,0.35)',
             letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -235,8 +236,8 @@ export default function SignIn() {
           {/* Speech bubble quote — floats right of Axon */}
           <div style={{
             ...fadeStyle(2000),
-            position: 'absolute', bottom: '22%', left: '44%',
-            maxWidth: 200,
+            position: 'absolute', bottom: '10%', left: '46%',
+            maxWidth: 210,
           }}>
             <div style={{
               background: 'rgba(255,179,64,0.08)',
@@ -266,7 +267,7 @@ export default function SignIn() {
           {/* Axon + neuron burst */}
           <div className="axon-wrap" style={{
             ...fadeStyle(900),
-            position: 'absolute', bottom: '-30%', left: '0%',
+            position: 'absolute', bottom: '-42%', left: '-2%',
           }}>
             {/* Neuron particles */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
