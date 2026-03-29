@@ -73,6 +73,14 @@ input[type="range"]::-moz-range-thumb {
   50%       { transform: translateY(-10px); }
 }
 
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Portal entrance ring */
 .axon-portal-ring {
   background: conic-gradient(

@@ -28,6 +28,36 @@ function StyleName({ name }) {
   )
 }
 
+function ProfileHero({ style }) {
+  const highAxes = Object.entries(style.axes)
+    .filter(([, v]) => v === 'high')
+    .map(([k]) => k.toUpperCase())
+  return (
+    <div className="mb-10 pb-10 border-b border-white/[0.04]">
+      <p className="text-[10px] text-text-muted uppercase tracking-[6px] mb-4">Your Leadership Identity</p>
+      <h1 className="font-display text-6xl md:text-7xl font-black leading-none mb-3">
+        <StyleName name={style.name} />
+      </h1>
+      <p className="text-lg text-text-muted font-medium mb-4">{style.short}</p>
+      <div className="flex flex-wrap items-center gap-3">
+        {highAxes.map(axis => (
+          <span key={axis} className="text-xs px-3 py-1 rounded-full border border-white/10 text-white/60 font-mono tracking-widest">
+            {axis}
+          </span>
+        ))}
+        <span className="text-sm text-text-muted">{style.orientation}</span>
+      </div>
+    </div>
+  )
+}
+
+function scoreLabel(score) {
+  if (score >= 80) return { text: 'Dominant', color: '#00E896' }
+  if (score >= 56) return { text: 'High',     color: '#00C8FF' }
+  if (score >= 31) return { text: 'Moderate', color: '#FFB340' }
+  return              { text: 'Low',      color: '#B88AFF' }
+}
+
 function ProfileWelcome({ style, onDismiss }) {
   const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
   return (
@@ -111,14 +141,13 @@ function Nav({ activeTab, setActiveTab }) {
   )
 }
 
-function HeroStats({ style, axisScores }) {
+function HeroStats({ style }) {
   const stats = [
-    { label: 'Leadership Style', value: style.name, sub: style.short, color: style.color, rainbow: true },
     { label: 'Orientation', value: style.orientation, sub: style.orientDesc.split('.')[0], color: '#00C8FF' },
     { label: 'Best Environment', value: style.env.split(',')[0], sub: style.envDesc.split('.')[0], color: '#00E896' },
   ]
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
       {stats.map((s, i) => (
         <motion.div
           key={i}
@@ -128,10 +157,7 @@ function HeroStats({ style, axisScores }) {
           className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/10 transition-all"
         >
           <div className="text-[10px] text-text-muted uppercase tracking-widest mb-2">{s.label}</div>
-          {s.rainbow
-            ? <div className="font-display text-xl font-bold mb-1"><StyleName name={s.value} /></div>
-            : <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
-          }
+          <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
           <p className="text-xs text-text-muted leading-relaxed">{s.sub}</p>
         </motion.div>
       ))}
@@ -172,7 +198,13 @@ function SignalBars({ axisScores, attrScores, style }) {
               <span className="font-display text-xs font-bold tracking-wider" style={{ color: a.color }}>{a.label}</span>
               <span className="text-[10px] text-text-muted">{a.sub}</span>
             </div>
-            <span className="text-xs font-bold" style={{ color: a.color }}>{axisScores[a.key] || 0}</span>
+            <div className="flex items-center gap-2">
+              {(() => { const sl = scoreLabel(axisScores[a.key] || 0); return (
+                <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded"
+                  style={{ color: sl.color, background: `${sl.color}18` }}>{sl.text}</span>
+              )})()}
+              <span className="text-xs font-bold" style={{ color: a.color }}>{axisScores[a.key] || 0}</span>
+            </div>
           </div>
           <div className="relative h-2 bg-white/[0.04] rounded-full overflow-hidden">
             <motion.div
@@ -524,6 +556,31 @@ function GrowthPathTab({ style }) {
   )
 }
 
+function ActivationTeaser({ style, onOpen }) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      onClick={onOpen}
+      className="mt-8 w-full text-left p-5 rounded-2xl border border-white/[0.06] bg-bg-surface/40 hover:border-white/10 hover:bg-bg-surface/60 transition-all group"
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-[4px] text-text-muted mb-1.5">Communication Gap</div>
+          <p className="text-sm text-white font-semibold mb-1">
+            How a <StyleName name={style.name} /> message lands on a different style.
+          </p>
+          <p className="text-xs text-text-muted">See where communication breaks down — and how to close it.</p>
+        </div>
+        <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-all shrink-0 ml-4 text-text-muted group-hover:text-white text-sm">
+          →
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
 export default function Profile() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
@@ -531,6 +588,7 @@ export default function Profile() {
   const [showWelcome, setShowWelcome] = useState(() =>
     !localStorage.getItem('neuroleader_welcome_dismissed')
   )
+  const [showActivation, setShowActivation] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem('neuroleader_profile')
@@ -574,7 +632,7 @@ export default function Profile() {
     <div className="min-h-screen bg-bg-primary">
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <ActivationCard styleName={styleName} />
+      <ActivationCard styleName={styleName} open={showActivation} onClose={() => setShowActivation(false)} />
       <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
@@ -586,12 +644,13 @@ export default function Profile() {
           >
             {activeTab === 0 && (
               <div>
+                <ProfileHero style={style} />
                 <AnimatePresence>
                   {showWelcome && style && (
                     <ProfileWelcome style={style} onDismiss={dismissWelcome} />
                   )}
                 </AnimatePresence>
-                <HeroStats style={style} axisScores={axisScores} />
+                <HeroStats style={style} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <SignalBars axisScores={axisScores} attrScores={attrScores} style={style} />
                   <div className="flex flex-col items-center">
@@ -603,6 +662,7 @@ export default function Profile() {
                     <AxonCallout text={style.neuro} />
                   </div>
                 </div>
+                <ActivationTeaser style={style} onOpen={() => setShowActivation(true)} />
                 {nugget && (
                   <div className="mt-8">
                     <NuggetCard nugget={nugget} />

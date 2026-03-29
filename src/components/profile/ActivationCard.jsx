@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 const MESSAGES = {
@@ -24,26 +23,16 @@ function getTranslation(styleName) {
   return { label: 'Diplomatic', message: MESSAGES.diplomatic }
 }
 
-export default function ActivationCard({ styleName }) {
-  const [visible, setVisible] = useState(false)
-  const [dismissed, setDismissed] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 3000)
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (dismissed || !MESSAGES[styleName]) return null
+export default function ActivationCard({ styleName, open, onClose }) {
+  if (!open || !MESSAGES[styleName]) return null
 
   const naturalLabel = STYLE_LABELS[styleName]
   const naturalMessage = MESSAGES[styleName]
   const { label: translatedLabel, message: translatedMessage } = getTranslation(styleName)
 
   return (
-    <div
-      className="fixed bottom-0 left-0 right-0 z-40 transition-transform duration-700 ease-out"
-      style={{ transform: visible ? 'translateY(0)' : 'translateY(100%)' }}
-    >
+    <div className="fixed bottom-0 left-0 right-0 z-40 animate-slide-up">
+
       <div className="max-w-2xl mx-auto px-4 pb-6">
         <div className="bg-gray-950 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
@@ -52,7 +41,7 @@ export default function ActivationCard({ styleName }) {
               Activation
             </span>
             <button
-              onClick={() => setDismissed(true)}
+              onClick={onClose}
               className="text-white/30 hover:text-white/60 text-sm transition-colors leading-none"
               aria-label="Dismiss"
             >
