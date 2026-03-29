@@ -320,7 +320,7 @@ export default function Assessment() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className="min-h-screen">
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between mb-3">

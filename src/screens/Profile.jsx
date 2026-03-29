@@ -722,7 +722,7 @@ export default function Profile() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center px-8">
           <AxonMascot size={160} mood="wave" showQuip={false} entrance="portal" />
           <h2 className="font-display text-3xl font-bold text-white mb-3 mt-4">
@@ -750,7 +750,7 @@ export default function Profile() {
 
 
   return (
-    <div className="min-h-screen bg-bg-primary">
+    <div className="min-h-screen">
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <ActivationCard styleName={styleName} open={showActivation} onClose={() => setShowActivation(false)} />

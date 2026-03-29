@@ -7,6 +7,7 @@ import Home from './screens/Home'
 import Assessment from './screens/Assessment'
 import Profile from './screens/Profile'
 import Simulator from './screens/Simulator'
+import NeuralBackground from './components/NeuralBackground'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -68,11 +69,14 @@ export default function App() {
   if (!user) return <SignIn />
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/assessment" element={<Assessment />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/simulator" element={<Simulator />} />
-    </Routes>
+    <>
+      <NeuralBackground />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/assessment" element={<Assessment />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/simulator" element={<Simulator />} />
+      </Routes>
+    </>
   )
 }
