@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
 import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
+import TeamSignalMap from '../components/simulator/TeamSignalMap'
+import { ParallelRealityEngine } from '../components/simulator/ParallelRealityEngine'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
-const TABS = ['Your Style', 'Read the Room', 'Say It Their Way']
+const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map', 'Parallel Reality']
 
 const SIGNAL_WORDS = {
   who: [
@@ -610,7 +612,7 @@ function BrainBehavior() {
           to="/assessment"
           className="group inline-flex items-center gap-2 mt-6 px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all"
         >
-          Take the Assessment
+          Take the Map
           <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </motion.div>
@@ -620,6 +622,22 @@ function BrainBehavior() {
 
 export default function Simulator() {
   const [activeTab, setActiveTab] = useState(0)
+  const location = useLocation()
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const tab = params.get('tab')
+    if (tab !== null) setActiveTab(Number(tab))
+  }, [location.search])
+
+  // Navigation event from ParallelRealityEngine CTA → switch to Say It Their Way
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail === 'say-it-their-way') setActiveTab(2)
+    }
+    window.addEventListener('neuroleader:navigate', handler)
+    return () => window.removeEventListener('neuroleader:navigate', handler)
+  }, [])
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -635,14 +653,24 @@ export default function Simulator() {
             </Link>
             <div className="flex items-center gap-6">
               <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
-              <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
+              <button
+                onClick={() => setActiveTab(3)}
+                className="text-sm text-text-muted hover:text-white transition-colors hidden md:block"
+              >
+                Signal Map
+              </button>
               <Link
                 to="/profile"
                 className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
               >
-                View Profile
+                Profile
               </Link>
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-[9px] font-bold text-text-muted/40 uppercase tracking-[0.18em] hidden md:block whitespace-nowrap">Practice Lab</span>
+            <div className="flex-1 h-px bg-white/[0.04] hidden md:block" />
           </div>
 
           <div className="flex gap-1 overflow-x-auto">
@@ -675,6 +703,8 @@ export default function Simulator() {
             {activeTab === 0 && <MapYourStyle />}
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
+            {activeTab === 3 && <TeamSignalMap />}
+            {activeTab === 4 && <ParallelRealityEngine />}
           </motion.div>
         </AnimatePresence>
       </main>
