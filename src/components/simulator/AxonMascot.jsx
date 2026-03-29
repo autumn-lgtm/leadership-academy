@@ -180,13 +180,10 @@ export default function AxonMascot({
         </AnimatePresence>
       )}
 
-      <motion.div
-        className="relative"
-        style={{ width: size, height: size }}
-        variants={entrance !== 'none' ? entranceVariant : undefined}
-        initial={entrance !== 'none' ? 'hidden' : undefined}
-        animate={entrance !== 'none' ? 'visible' : undefined}
-      >
+      {/* Outer wrapper — portal effects live here, outside the fading container */}
+      <div className="relative" style={{ width: size, height: size }}>
+
+        {/* Portal ring — must be a sibling of (not child of) the opacity-animated div */}
         {entrance === 'portal' && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -199,6 +196,7 @@ export default function AxonMascot({
           </motion.div>
         )}
 
+        {/* Burst particles */}
         {entrance === 'portal' && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -226,32 +224,40 @@ export default function AxonMascot({
           </motion.div>
         )}
 
-        {/* Ambient glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(0,200,255,0.15) 0%, rgba(184,138,255,0.08) 40%, transparent 70%)',
-            filter: 'blur(24px)',
-            transform: 'scale(1.8)',
-          }}
-        />
-
-        {glbFailed ? (
-          <img
-            src={FALLBACK_IMG}
-            alt="Axon"
-            width={size}
-            height={size}
+        {/* Mascot — this is the only thing that fades/spins in */}
+        <motion.div
+          className="absolute inset-0"
+          variants={entrance !== 'none' ? entranceVariant : undefined}
+          initial={entrance !== 'none' ? 'hidden' : undefined}
+          animate={entrance !== 'none' ? 'visible' : undefined}
+        >
+          {/* Ambient glow */}
+          <div
+            className="absolute inset-0 pointer-events-none"
             style={{
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
-              mixBlendMode: 'screen',
+              background: 'radial-gradient(circle, rgba(0,200,255,0.15) 0%, rgba(184,138,255,0.08) 40%, transparent 70%)',
+              filter: 'blur(24px)',
+              transform: 'scale(1.8)',
             }}
           />
-        ) : (
-          <Axon3D size={size} mood={mood} onError={() => setGlbFailed(true)} />
-        )}
-      </motion.div>
+
+          {glbFailed ? (
+            <img
+              src={FALLBACK_IMG}
+              alt="Axon"
+              width={size}
+              height={size}
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
+                mixBlendMode: 'screen',
+              }}
+            />
+          ) : (
+            <Axon3D size={size} mood={mood} onError={() => setGlbFailed(true)} />
+          )}
+        </motion.div>
+      </div>
     </div>
   )
 }
