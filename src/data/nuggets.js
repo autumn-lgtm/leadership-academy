@@ -93,11 +93,21 @@ export const NUGGETS = [
     id: 'NN-46',
     category: 'practice',
     topic: 'Catch people doing things right',
-    text: 'Most leadership systems are built to catch what went wrong. Performance reviews, incident reports, and escalation paths are all calibrated toward identifying failure. The leaders who build the highest-trust teams invert this. They build a deliberate practice of noticing and naming what went right — not as a motivational technique, but as a signal that the team\'s effort is actually being seen.',
+    text: 'Most leadership systems are built to catch what went wrong. Missed metrics, escalations, performance gaps. The problem is that these are lagging indicators — by the time they show up, the damage is already done. The leading indicator of culture and performance is recognition. Who is improving quietly. Who is carrying weight nobody is tracking. Who is doing the right thing when no one is watching. Building a system that surfaces those signals before any outcome appears in a dashboard is the difference between a culture that runs on fear of being caught and one that runs on the motivation of being seen.',
     axonLine: 'The best management system ever built is the one that catches people doing things right.',
     attribution: 'leader',
     trigger: (profile) => true,
     placement: ['profile', 'team_signal_map'],
+  },
+  {
+    id: 'NN-47',
+    category: 'practice',
+    topic: 'What if it works out',
+    text: 'Most leadership systems are built around risk. What could go wrong. Who might fail. What needs to be caught before it becomes a problem. The result is a culture oriented toward threat — and a brain that follows. Under perceived threat, your prefrontal cortex loses budget. Options narrow. Creativity drops. The room gets smaller. The leader who starts from "what if it works out" is not ignoring risk. They are choosing a different anchor question — one that opens the brain rather than closing it. That question pulls different thinking out of a team, different decisions, different energy into the room. Possibility is not naivety. It is a physiological starting condition.',
+    axonLine: 'Risk mitigation protects you from the downside. Possibility thinking is the only thing that creates the upside.',
+    attribution: 'leader',
+    trigger: (profile) => true,
+    placement: ['profile', 'activation_card'],
   },
 ];
 
