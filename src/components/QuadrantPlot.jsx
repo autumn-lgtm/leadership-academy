@@ -7,12 +7,15 @@ const QUADRANT_LABELS = [
   { label: 'LOGISTICAL', sub: 'Systems + Execution', x: '75%', y: '75%', color: '#00E896' },
 ]
 
-export default function QuadrantPlot({ who = 50, why = 50, what = 50, how = 50, size = 320 }) {
+export default function QuadrantPlot({ who = 50, why = 50, what = 50, how = 50, size = 320, compareAxes = null, compareLabel = null }) {
   // Map axes to x,y position
   // X axis: WHO (left) vs WHAT (right) — people vs systems
   // Y axis: WHY (top) vs HOW (bottom) — purpose vs execution
   const x = ((100 - who + what) / 200) * 100
   const y = ((100 - why + how) / 200) * 100
+
+  const cx = compareAxes ? ((100 - compareAxes.who + compareAxes.what) / 200) * 100 : null
+  const cy = compareAxes ? ((100 - compareAxes.why + compareAxes.how) / 200) * 100 : null
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -32,6 +35,16 @@ export default function QuadrantPlot({ who = 50, why = 50, what = 50, how = 50, 
         <text x="88" y="52" fill="#00E896" fontSize="3.5" fontWeight="600" fontFamily="Syne, sans-serif">WHAT</text>
         <text x="48" y="5" fill="#00C8FF" fontSize="3.5" fontWeight="600" fontFamily="Syne, sans-serif" textAnchor="middle">WHY</text>
         <text x="48" y="98" fill="#FFB340" fontSize="3.5" fontWeight="600" fontFamily="Syne, sans-serif" textAnchor="middle">HOW</text>
+
+        {/* Dashed connecting line between primary and compare dots */}
+        {compareAxes && (
+          <line
+            x1={x} y1={y} x2={cx} y2={cy}
+            stroke="rgba(255,255,255,0.12)"
+            strokeDasharray="2,3"
+            strokeWidth="0.5"
+          />
+        )}
       </svg>
 
       {/* Quadrant labels */}
@@ -47,6 +60,34 @@ export default function QuadrantPlot({ who = 50, why = 50, what = 50, how = 50, 
           <div className="text-[7px] text-text-muted opacity-30">{q.sub}</div>
         </div>
       ))}
+
+      {/* Compare dot (second dot, dimmer style, no pulsing ring) */}
+      {compareAxes && (
+        <div
+          className="absolute w-3 h-3 rounded-full pointer-events-none"
+          style={{
+            background: 'rgba(255,255,255,0.5)',
+            boxShadow: '0 0 10px rgba(255,255,255,0.2)',
+            left: `calc(${cx}% - 6px)`,
+            top: `calc(${cy}% - 6px)`,
+          }}
+        >
+          {compareLabel && (
+            <div
+              className="absolute pointer-events-none whitespace-nowrap"
+              style={{
+                fontSize: '7px',
+                color: 'rgba(255,255,255,0.4)',
+                top: '14px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+              }}
+            >
+              {compareLabel}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Animated marker */}
       <motion.div

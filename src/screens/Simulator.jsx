@@ -153,6 +153,13 @@ function StyleDecoder() {
     if (stored) setUserProfile(JSON.parse(stored))
   }, [])
 
+  const decodeCompareAxes = decoded ? {
+    who: decoded.style.axes.who === 'high' ? 75 : 30,
+    why: decoded.style.axes.why === 'high' ? 75 : 30,
+    what: decoded.style.axes.what === 'high' ? 75 : 30,
+    how: decoded.style.axes.how === 'high' ? 75 : 30,
+  } : null
+
   return (
     <div>
       <p className="text-sm text-text-muted mb-6">
@@ -238,6 +245,59 @@ function StyleDecoder() {
               ))}
             </div>
             <p className="text-sm text-text-primary mb-4">{decoded.style.orientDesc}</p>
+
+            {/* Two-dot comparison */}
+            <div className="mt-4 pt-4 border-t border-white/[0.05]">
+              <div className="text-[10px] text-text-muted uppercase tracking-widest mb-3">Quadrant comparison</div>
+              <div className="flex items-start gap-6">
+                <div className="shrink-0">
+                  {userProfile?.axisScores ? (
+                    <QuadrantPlot
+                      {...userProfile.axisScores}
+                      compareAxes={decodeCompareAxes}
+                      compareLabel={decoded.style.name}
+                      size={180}
+                    />
+                  ) : (
+                    <QuadrantPlot
+                      who={decodeCompareAxes.who} why={decodeCompareAxes.why}
+                      what={decodeCompareAxes.what} how={decodeCompareAxes.how}
+                      size={180}
+                    />
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-2 h-2 rounded-full bg-cyan/80 shrink-0" />
+                    <span className="text-text-muted">You — {userProfile ? (userProfile.dominantStyle || 'Your style') : 'Your profile'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-2 h-2 rounded-full bg-white/40 shrink-0" />
+                    <span className="text-text-muted">{decoded.style.name}</span>
+                  </div>
+                  {userProfile?.axisScores && (
+                    <div className="mt-3 pt-3 border-t border-white/[0.04] space-y-1">
+                      {['who', 'why', 'what', 'how'].map(axis => {
+                        const userVal = userProfile.axisScores[axis] || 50
+                        const theirVal = decodeCompareAxes[axis]
+                        const diff = Math.abs(userVal - theirVal)
+                        const color = diff < 20 ? '#00E896' : diff < 40 ? '#FFB340' : '#FF6B6B'
+                        return (
+                          <div key={axis} className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold w-8" style={{ color: {who:'#B88AFF',why:'#00C8FF',what:'#00E896',how:'#FFB340'}[axis] }}>{axis.toUpperCase()}</span>
+                            <div className="flex-1 h-1 bg-white/[0.04] rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${diff}%`, background: color }} />
+                            </div>
+                            <span className="text-[10px] text-text-muted w-6">{diff}</span>
+                          </div>
+                        )
+                      })}
+                      <div className="text-[10px] text-text-muted mt-1">Gap score per axis</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {/* Adjustment guide */}
             {userProfile && (

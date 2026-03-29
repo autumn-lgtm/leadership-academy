@@ -238,6 +238,16 @@ function AxonCallout({ text }) {
 }
 
 function StyleTab({ style, axisScores }) {
+  const complementStyle = style.complement && style.complement[0]
+    ? STYLES[style.complement[0].style]
+    : null
+  const compareAxes = complementStyle ? {
+    who: complementStyle.axes.who === 'high' ? 75 : 30,
+    why: complementStyle.axes.why === 'high' ? 75 : 30,
+    what: complementStyle.axes.what === 'high' ? 75 : 30,
+    how: complementStyle.axes.how === 'high' ? 75 : 30,
+  } : null
+
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -265,9 +275,27 @@ function StyleTab({ style, axisScores }) {
         </div>
 
         <div>
-          <div className="flex justify-center mb-6">
-            <QuadrantPlot {...axisScores} size={260} />
+          <div className="flex justify-center mb-3">
+            <QuadrantPlot
+              {...axisScores}
+              size={260}
+              compareAxes={compareAxes}
+              compareLabel={style.complement && style.complement[0] ? style.complement[0].style : null}
+            />
           </div>
+
+          {style.complement && style.complement[0] && (
+            <div className="flex items-center gap-4 mb-3 text-[10px] text-text-muted">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-cyan/80" />
+                <span>You</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-white/40" />
+                <span>{style.complement[0].style} (complement)</span>
+              </div>
+            </div>
+          )}
 
           <div className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-5 mb-6">
             <div className="text-[10px] text-text-muted uppercase tracking-widest mb-2">Quadrant Position</div>
