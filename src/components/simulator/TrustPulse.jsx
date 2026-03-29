@@ -165,6 +165,161 @@ const FINDING_COLORS = {
   concern:  { border: '#FF6B6B', labelColor: '#FF6B6B' },
 }
 
+// ── Warmth × Competence map ───────────────────────────────────────
+
+const WC_QUADRANTS = [
+  {
+    id: 'tl', x: 0, y: 0, label: 'Liked, not followed',
+    color: '#FFB340', desc: "Warm intentions — but people don't trust your calls.",
+    science: "High warmth / low competence leaders are pitied. People like them but route around their decisions.",
+  },
+  {
+    id: 'tr', x: 1, y: 0, label: 'Trusted',
+    color: '#00E896', desc: "The only quadrant where people follow without friction.",
+    science: "High warmth + high competence = the full trust signal. Admired. People extend benefit of the doubt here.",
+  },
+  {
+    id: 'bl', x: 0, y: 1, label: 'Neither',
+    color: '#FF6B6B', desc: "No perceived intent and no perceived capability.",
+    science: "Low warmth / low competence generates contempt. Discretionary effort collapses entirely.",
+  },
+  {
+    id: 'br', x: 1, y: 1, label: 'Respected, not liked',
+    color: '#00C8FF', desc: "Capable — but people don't bring you the real picture.",
+    science: "High competence / low warmth triggers envy. People comply but don't invest. Information gets filtered.",
+  },
+]
+
+function WarmthCompetenceMap({ warmth, competence }) {
+  // warmth = rAvg (0–10), competence = cAvg (0–10)
+  // Map to quadrant position: x = competence, y = warmth (inverted for SVG)
+  const dotX = 10 + (competence / 10) * 80   // 10–90% of width
+  const dotY = 10 + ((10 - warmth) / 10) * 80 // inverted: high warmth = top
+
+  const activeQuadrant = WC_QUADRANTS.find(q => {
+    const inRight = competence >= 5
+    const inTop = warmth >= 5
+    return (inRight ? q.x === 1 : q.x === 0) && (!inTop ? q.y === 1 : q.y === 0)
+  })
+
+  return (
+    <div className="rounded-2xl border mt-4 mb-3 overflow-hidden"
+      style={{ background: '#0D1422', borderColor: 'rgba(255,255,255,0.06)' }}>
+
+      {/* Header */}
+      <div className="px-5 pt-5 pb-3">
+        <div className="flex items-baseline justify-between mb-1">
+          <div className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            Warmth × Competence
+          </div>
+          <div className="text-[9px]" style={{ color: 'rgba(255,255,255,0.2)' }}>Fiske, Cuddy & Glick, 2002</div>
+        </div>
+        <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          People judge <strong style={{ color: 'rgba(255,255,255,0.8)' }}>warmth first</strong> — within 100ms of meeting you.
+          It answers the survival question: <em>are their intentions good?</em> Competence is assessed second.
+          Leaders who optimize for competence before warmth lose trust before the meeting ends.
+        </p>
+      </div>
+
+      {/* Grid */}
+      <div className="px-5 pb-2">
+        <svg viewBox="0 0 100 100" className="w-full" style={{ maxHeight: 240 }}>
+          {/* Quadrant fills */}
+          {WC_QUADRANTS.map(q => (
+            <rect
+              key={q.id}
+              x={q.x === 0 ? 0 : 50} y={q.y === 0 ? 0 : 50}
+              width={50} height={50}
+              fill={activeQuadrant?.id === q.id ? `${q.color}12` : 'rgba(255,255,255,0.015)'}
+              stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"
+            />
+          ))}
+
+          {/* Axis labels */}
+          {/* X axis: Competence */}
+          <text x={25} y={98} textAnchor="middle" fontSize="4" fill="rgba(255,255,255,0.25)">Low competence</text>
+          <text x={75} y={98} textAnchor="middle" fontSize="4" fill="rgba(255,255,255,0.25)">High competence</text>
+          {/* Y axis: Warmth */}
+          <text x={2} y={26} textAnchor="middle" fontSize="3.5" fill="rgba(255,255,255,0.25)" transform="rotate(-90,2,26)">High warmth</text>
+          <text x={2} y={76} textAnchor="middle" fontSize="3.5" fill="rgba(255,255,255,0.25)" transform="rotate(-90,2,76)">Low warmth</text>
+
+          {/* Quadrant labels */}
+          {WC_QUADRANTS.map(q => (
+            <text
+              key={q.id + 'l'}
+              x={q.x === 0 ? 25 : 75} y={q.y === 0 ? 14 : 64}
+              textAnchor="middle" fontSize="4.2" fontWeight="700"
+              fill={activeQuadrant?.id === q.id ? q.color : 'rgba(255,255,255,0.25)'}
+            >
+              {q.label}
+            </text>
+          ))}
+
+          {/* Center lines */}
+          <line x1={50} y1={0} x2={50} y2={100} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" strokeDasharray="2,2" />
+          <line x1={0} y1={50} x2={100} y2={50} stroke="rgba(255,255,255,0.08)" strokeWidth="0.5" strokeDasharray="2,2" />
+
+          {/* User dot */}
+          <motion.circle
+            cx={dotX} cy={dotY} r={3.5}
+            fill={activeQuadrant?.color || '#00C8FF'}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            style={{ filter: `drop-shadow(0 0 4px ${activeQuadrant?.color || '#00C8FF'})` }}
+          />
+          {/* Pulse ring */}
+          <motion.circle
+            cx={dotX} cy={dotY} r={3.5}
+            fill="none"
+            stroke={activeQuadrant?.color || '#00C8FF'}
+            strokeWidth="0.8"
+            strokeOpacity="0.4"
+            animate={{ r: [3.5, 7, 3.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </svg>
+      </div>
+
+      {/* Active quadrant explanation */}
+      {activeQuadrant && (
+        <motion.div
+          key={activeQuadrant.id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mx-5 mb-5 px-4 py-3 rounded-xl"
+          style={{
+            background: `${activeQuadrant.color}08`,
+            borderLeft: `3px solid ${activeQuadrant.color}50`,
+          }}
+        >
+          <div className="text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: activeQuadrant.color }}>
+            You're here: {activeQuadrant.label}
+          </div>
+          <p className="text-xs leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            {activeQuadrant.science}
+          </p>
+          <p className="text-[11px] leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            {activeQuadrant.desc}
+          </p>
+        </motion.div>
+      )}
+
+      {/* Warmth-first principle */}
+      <div className="mx-5 mb-5 px-4 py-3 rounded-xl"
+        style={{ background: 'rgba(255,179,64,0.05)', borderLeft: '2px solid rgba(255,179,64,0.2)' }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: '#FFB340' }}>
+          The order matters
+        </div>
+        <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          Cuddy's research shows warmth drives ~60% of the trust judgment, competence the remaining ~40%.
+          A leader who projects high competence but low warmth triggers envy and compliance — not trust.
+          The practical implication: every act of visible competence should be preceded by a signal of intent.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // ── Self-Report view ──────────────────────────────────────────────
 
 function SelfReport() {
@@ -279,6 +434,9 @@ function SelfReport() {
       </div>
 
       <TrustBar score={ti} />
+
+      {/* Warmth × Competence science */}
+      <WarmthCompetenceMap warmth={rAvg} competence={cAvg} />
 
       {/* V2 gap panel */}
       <div className="rounded-2xl border p-5 mt-3" style={{ background: '#0D1422', borderColor: 'rgba(255,255,255,0.06)' }}>
