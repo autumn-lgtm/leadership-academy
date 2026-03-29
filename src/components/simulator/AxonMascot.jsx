@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, Suspense, Component } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, Environment } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 
 const MODEL_URL = `${import.meta.env.BASE_URL}axon-final.glb`
 const FALLBACK_IMG = `${import.meta.env.BASE_URL}axon-final.webp`
@@ -213,17 +213,20 @@ export default function AxonMascot({
         {/* Three.js canvas with fallback */}
         <GLBErrorBoundary size={size} mood={mood}>
           <Canvas
-            style={{ width: size, height: size }}
+            style={{ width: size, height: size, background: 'transparent' }}
             camera={{ position: [0, 0, 2.8], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
+            onCreated={({ gl, scene }) => {
+              gl.setClearColor(0x000000, 0)
+              scene.background = null
+            }}
           >
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[2, 4, 3]} intensity={1.2} color="#ffffff" />
-            <directionalLight position={[-2, 1, -2]} intensity={0.4} color="#B88AFF" />
-            <pointLight position={[0, 2, 2]} intensity={0.8} color="#00C8FF" />
+            <ambientLight intensity={0.9} />
+            <directionalLight position={[2, 4, 3]} intensity={1.4} color="#ffffff" />
+            <directionalLight position={[-2, 1, -2]} intensity={0.5} color="#B88AFF" />
+            <pointLight position={[0, 2, 2]} intensity={1.0} color="#00C8FF" />
             <Suspense fallback={null}>
               <AxonModel mood={mood} />
-              <Environment preset="city" />
             </Suspense>
           </Canvas>
         </GLBErrorBoundary>
