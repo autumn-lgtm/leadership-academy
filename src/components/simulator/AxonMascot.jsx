@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Center } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 const MODEL_URL = `${import.meta.env.BASE_URL}axon-final.glb`
 const FALLBACK_IMG = `${import.meta.env.BASE_URL}axon-final.webp`
@@ -65,13 +66,20 @@ function Axon3D({ size, mood, onError }) {
   const [scene, setScene] = useState(null)
 
   useEffect(() => {
+    const draco = new DRACOLoader()
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
     const loader = new GLTFLoader()
+    loader.setDRACOLoader(draco)
     loader.load(
       MODEL_URL,
-      (gltf) => setScene(gltf.scene),
+      (gltf) => {
+        draco.dispose()
+        setScene(gltf.scene)
+      },
       undefined,
       (err) => {
         console.error('[AxonMascot] GLB load failed:', err)
+        draco.dispose()
         onError()
       }
     )
