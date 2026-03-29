@@ -3,9 +3,49 @@ import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
 import { PROGRAMS, AXIS_COLORS } from '../data/growth'
+import { getProfileQuotes, getRandomQuote } from '../data/quotes'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
+
+function ProfileWelcome({ style, onDismiss }) {
+  const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="mb-8 p-6 rounded-2xl border relative"
+      style={{ borderColor: `${style.color}30`, background: `${style.color}08` }}
+    >
+      <button
+        onClick={onDismiss}
+        className="absolute top-4 right-4 text-text-muted hover:text-white text-xs transition-colors"
+      >
+        Dismiss
+      </button>
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: `${style.color}20` }}>
+          <span className="text-lg">&#x2728;</span>
+        </div>
+        <div>
+          <h3 className="font-display text-lg font-bold text-white mb-1">
+            Welcome, <span style={{ color: style.color }}>{style.name}</span> leader.
+          </h3>
+          <p className="text-sm text-text-muted leading-relaxed mb-3">
+            Your profile is ready. Explore your style, see how you compare, and find your growth path.
+          </p>
+          {quote && (
+            <p className="text-xs italic text-text-muted">
+              &ldquo;{quote.text}&rdquo; &mdash; {quote.attribution}
+            </p>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 const TABS = ['Profile', 'Style', 'Apply It', 'Go Deeper', 'Growth Path']
 
@@ -491,8 +531,20 @@ export default function Profile() {
     )
   }
 
-  const style = STYLES[profile.dominantStyle]
-  const { axisScores, attrScores } = profile
+  // Support both legacy (dominantStyle) and new (quadrant.style) profile formats
+  const styleName = profile.dominantStyle || profile.quadrant?.style
+  const style = STYLES[styleName]
+  const axisScores = profile.axisScores || profile.quadrant || {}
+  const attrScores = profile.attrScores || profile.attributes || {}
+
+  const [showWelcome, setShowWelcome] = useState(() => {
+    return !localStorage.getItem('neuroleader_welcome_dismissed')
+  })
+
+  function dismissWelcome() {
+    setShowWelcome(false)
+    localStorage.setItem('neuroleader_welcome_dismissed', '1')
+  }
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -509,6 +561,11 @@ export default function Profile() {
           >
             {activeTab === 0 && (
               <div>
+                <AnimatePresence>
+                  {showWelcome && style && (
+                    <ProfileWelcome style={style} onDismiss={dismissWelcome} />
+                  )}
+                </AnimatePresence>
                 <HeroStats style={style} axisScores={axisScores} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <SignalBars axisScores={axisScores} attrScores={attrScores} style={style} />
