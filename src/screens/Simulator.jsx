@@ -660,7 +660,7 @@ export default function Simulator() {
               <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
             </Link>
             <div className="flex items-center gap-6">
-              <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+              <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
               <button
                 onClick={() => setActiveTab(3)}
                 className="text-sm text-text-muted hover:text-white transition-colors hidden md:block"
