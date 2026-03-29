@@ -11,6 +11,23 @@ import ActivationCard from '../components/profile/ActivationCard'
 import NuggetCard from '../components/nuggets/NuggetCard'
 import { getNuggetForPlacement } from '../data/nuggets'
 
+const RAINBOW_STYLE = {
+  background: 'linear-gradient(90deg, #B88AFF 0%, #00C8FF 35%, #00E896 65%, #FFB340 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  display: 'inline',
+  fontWeight: 700,
+}
+
+function StyleName({ name }) {
+  return (
+    <span style={RAINBOW_STYLE}>
+      {name.charAt(0).toUpperCase() + name.slice(1)}
+    </span>
+  )
+}
+
 function ProfileWelcome({ style, onDismiss }) {
   const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
   return (
@@ -34,7 +51,7 @@ function ProfileWelcome({ style, onDismiss }) {
         </div>
         <div>
           <h3 className="font-display text-lg font-bold text-white mb-1">
-            Welcome, <span style={{ color: style.color }}>{style.name}</span> leader.
+            Welcome, <StyleName name={style.name} /> leader.
           </h3>
           <p className="text-sm text-text-muted leading-relaxed mb-3">
             Your profile is ready. Explore your style, see how you compare, and find your growth path.
@@ -96,7 +113,7 @@ function Nav({ activeTab, setActiveTab }) {
 
 function HeroStats({ style, axisScores }) {
   const stats = [
-    { label: 'Leadership Style', value: style.name, sub: style.short, color: style.color },
+    { label: 'Leadership Style', value: style.name, sub: style.short, color: style.color, rainbow: true },
     { label: 'Orientation', value: style.orientation, sub: style.orientDesc.split('.')[0], color: '#00C8FF' },
     { label: 'Best Environment', value: style.env.split(',')[0], sub: style.envDesc.split('.')[0], color: '#00E896' },
   ]
@@ -111,7 +128,10 @@ function HeroStats({ style, axisScores }) {
           className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/10 transition-all"
         >
           <div className="text-[10px] text-text-muted uppercase tracking-widest mb-2">{s.label}</div>
-          <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
+          {s.rainbow
+            ? <div className="font-display text-xl font-bold mb-1"><StyleName name={s.value} /></div>
+            : <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
+          }
           <p className="text-xs text-text-muted leading-relaxed">{s.sub}</p>
         </motion.div>
       ))}
@@ -203,7 +223,7 @@ function StyleTab({ style, axisScores }) {
               <span className="font-display text-2xl font-bold" style={{ color: style.color }}>{style.name[0]}</span>
             </div>
             <div>
-              <h3 className="font-display text-3xl font-bold" style={{ color: style.color }}>{style.name}</h3>
+              <h3 className="font-display text-3xl font-bold"><StyleName name={style.name} /></h3>
               <p className="text-sm text-text-muted">{style.short}</p>
             </div>
           </div>
@@ -251,7 +271,7 @@ function ApplyItTab({ style }) {
   const [expanded, setExpanded] = useState(null)
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for {style.name} Leaders</h2>
+      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for <StyleName name={style.name} /> Leaders</h2>
       <p className="text-sm text-text-muted mb-8">Practice applying your style to real situations.</p>
       <div className="space-y-3">
         {style.scenarios.map((s, i) => (
@@ -464,7 +484,7 @@ function GrowthPathTab({ style }) {
     <div>
       <h2 className="font-display text-2xl font-bold text-white mb-2">Growth Path</h2>
       <p className="text-sm text-text-muted mb-2">
-        Your <span style={{ color: style.color }}>{style.name}</span> style shapes how you move through these programs.
+        Your <StyleName name={style.name} /> style shapes how you move through these programs.
       </p>
       <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
         Neurolinks are your units of progress. Each one builds a specific leadership skill through practice, not theory. Your style shapes how you'll move through the work.
