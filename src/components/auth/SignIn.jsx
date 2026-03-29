@@ -232,13 +232,13 @@ export default function SignIn() {
           <div className="axon-wrap" style={{
             ...fadeStyle(900),
             position: 'absolute', bottom: '-12%', left: '8%',
+            mixBlendMode: 'screen',
           }}>
             <img
               src="/NeuroLeader/axon-final.webp"
               alt="Axon"
               style={{
                 width: 220, height: 'auto',
-                mixBlendMode: 'screen',
                 filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
                 animation: 'axon-float 4s ease-in-out infinite',
               }}
