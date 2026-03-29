@@ -222,6 +222,9 @@ export default function AxonMascot({
             className="relative select-none pointer-events-none axon-img"
             style={{
               objectFit: 'contain',
+              mixBlendMode: 'screen',
+              filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
+              animation: 'axon-float 4s ease-in-out infinite',
             }}
           />
         </motion.div>

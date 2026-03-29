@@ -68,6 +68,11 @@ input[type="range"]::-moz-range-thumb {
   filter: brightness(1.15) contrast(1.05);
 }
 
+@keyframes axon-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
 /* Portal entrance ring */
 .axon-portal-ring {
   background: conic-gradient(
