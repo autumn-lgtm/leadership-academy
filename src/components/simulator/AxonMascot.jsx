@@ -67,7 +67,7 @@ function Axon3D({ size, mood, onError }) {
 
   useEffect(() => {
     const draco = new DRACOLoader()
-    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+    draco.setDecoderPath(`${import.meta.env.BASE_URL}draco/`)
     const loader = new GLTFLoader()
     loader.setDRACOLoader(draco)
     loader.load(
