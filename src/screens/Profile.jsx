@@ -508,11 +508,19 @@ export default function Profile() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
   const [profile, setProfile] = useState(null)
+  const [showWelcome, setShowWelcome] = useState(() =>
+    !localStorage.getItem('neuroleader_welcome_dismissed')
+  )
 
   useEffect(() => {
     const stored = localStorage.getItem('neuroleader_profile')
     if (stored) setProfile(JSON.parse(stored))
   }, [])
+
+  function dismissWelcome() {
+    setShowWelcome(false)
+    localStorage.setItem('neuroleader_welcome_dismissed', '1')
+  }
 
   if (!profile) {
     return (
@@ -541,15 +549,6 @@ export default function Profile() {
   const attrScores = profile.attrScores || profile.attributes || {}
 
   const nugget = getNuggetForPlacement('profile', { style: styleName })
-
-  const [showWelcome, setShowWelcome] = useState(() => {
-    return !localStorage.getItem('neuroleader_welcome_dismissed')
-  })
-
-  function dismissWelcome() {
-    setShowWelcome(false)
-    localStorage.setItem('neuroleader_welcome_dismissed', '1')
-  }
 
   return (
     <div className="min-h-screen bg-bg-primary">
