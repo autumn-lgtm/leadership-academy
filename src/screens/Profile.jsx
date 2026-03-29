@@ -11,18 +11,9 @@ import ActivationCard from '../components/profile/ActivationCard'
 import NuggetCard from '../components/nuggets/NuggetCard'
 import { getNuggetForPlacement } from '../data/nuggets'
 
-const RAINBOW_STYLE = {
-  background: 'linear-gradient(90deg, #B88AFF 0%, #00C8FF 35%, #00E896 65%, #FFB340 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
-  display: 'inline',
-  fontWeight: 700,
-}
-
-function StyleName({ name }) {
+function StyleName({ name, color = '#FFFFFF' }) {
   return (
-    <span style={RAINBOW_STYLE}>
+    <span style={{ color, fontWeight: 700 }}>
       {name.charAt(0).toUpperCase() + name.slice(1)}
     </span>
   )
@@ -36,7 +27,7 @@ function ProfileHero({ style }) {
     <div className="mb-10 pb-10 border-b border-white/[0.04]">
       <p className="text-[10px] text-text-muted uppercase tracking-[6px] mb-4">Your Leadership Identity</p>
       <h1 className="font-display text-6xl md:text-7xl font-black leading-none mb-3">
-        <StyleName name={style.name} />
+        <StyleName name={style.name} color={style.color} />
       </h1>
       <p className="text-lg text-text-muted font-medium mb-4">{style.short}</p>
       <div className="flex flex-wrap items-center gap-3">
@@ -81,7 +72,7 @@ function ProfileWelcome({ style, onDismiss }) {
         </div>
         <div>
           <h3 className="font-display text-lg font-bold text-white mb-1">
-            Welcome, <StyleName name={style.name} /> leader.
+            Welcome, <StyleName name={style.name} color={style.color} /> leader.
           </h3>
           <p className="text-sm text-text-muted leading-relaxed mb-3">
             Your profile is ready. Explore your style, see how you compare, and find your growth path.
@@ -143,8 +134,8 @@ function Nav({ activeTab, setActiveTab }) {
 
 function HeroStats({ style }) {
   const stats = [
-    { label: 'Orientation', value: style.orientation, sub: style.orientDesc.split('.')[0], color: '#00C8FF' },
-    { label: 'Best Environment', value: style.env.split(',')[0], sub: style.envDesc.split('.')[0], color: '#00E896' },
+    { label: 'Orientation', value: style.orientation, sub: style.orientDesc.split('.')[0] },
+    { label: 'Best Environment', value: style.env.split(',')[0], sub: style.envDesc.split('.')[0] },
   ]
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
@@ -157,7 +148,7 @@ function HeroStats({ style }) {
           className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/10 transition-all"
         >
           <div className="text-[10px] text-text-muted uppercase tracking-widest mb-2">{s.label}</div>
-          <div className="font-display text-xl font-bold mb-1" style={{ color: s.color }}>{s.value}</div>
+          <div className="font-display text-xl font-bold text-white mb-1">{s.value}</div>
           <p className="text-xs text-text-muted leading-relaxed">{s.sub}</p>
         </motion.div>
       ))}
@@ -173,14 +164,15 @@ function SignalBars({ axisScores, attrScores, style }) {
     { label: 'HOW', sub: 'Execution', key: 'how', color: '#FFB340', high: style.axes.how === 'high' },
   ]
 
+  const ATTR_COLOR = 'rgba(255,255,255,0.25)'
   const attrs = [
-    { label: 'Empathy', key: 'empathy', color: '#B88AFF' },
-    { label: 'Vision', key: 'vision', color: '#00C8FF' },
-    { label: 'Structure', key: 'structure', color: '#00E896' },
-    { label: 'Decisiveness', key: 'decisiveness', color: '#FFB340' },
-    { label: 'Communication', key: 'communication', color: '#B88AFF' },
-    { label: 'Risk Tolerance', key: 'risk', color: '#FFB340' },
-    { label: 'Collaboration', key: 'collaboration', color: '#00C8FF' },
+    { label: 'Empathy', key: 'empathy' },
+    { label: 'Vision', key: 'vision' },
+    { label: 'Structure', key: 'structure' },
+    { label: 'Decisiveness', key: 'decisiveness' },
+    { label: 'Communication', key: 'communication' },
+    { label: 'Risk Tolerance', key: 'risk' },
+    { label: 'Collaboration', key: 'collaboration' },
   ]
 
   return (
@@ -227,13 +219,13 @@ function SignalBars({ axisScores, attrScores, style }) {
             <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
-                style={{ background: a.color }}
+                style={{ background: ATTR_COLOR }}
                 initial={{ width: 0 }}
                 animate={{ width: `${attrScores[a.key] || 50}%` }}
                 transition={{ duration: 0.6, delay: 0.5 + i * 0.04 }}
               />
             </div>
-            <span className="text-xs font-bold w-6" style={{ color: a.color }}>{attrScores[a.key] || 50}</span>
+            <span className="text-xs text-text-muted w-6">{attrScores[a.key] || 50}</span>
           </div>
         ))}
       </div>
@@ -255,7 +247,7 @@ function StyleTab({ style, axisScores }) {
               <span className="font-display text-2xl font-bold" style={{ color: style.color }}>{style.name[0]}</span>
             </div>
             <div>
-              <h3 className="font-display text-3xl font-bold"><StyleName name={style.name} /></h3>
+              <h3 className="font-display text-3xl font-bold"><StyleName name={style.name} color={style.color} /></h3>
               <p className="text-sm text-text-muted">{style.short}</p>
             </div>
           </div>
@@ -303,7 +295,7 @@ function ApplyItTab({ style }) {
   const [expanded, setExpanded] = useState(null)
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for <StyleName name={style.name} /> Leaders</h2>
+      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for <StyleName name={style.name} color={style.color} /> Leaders</h2>
       <p className="text-sm text-text-muted mb-8">Practice applying your style to real situations.</p>
       <div className="space-y-3">
         {style.scenarios.map((s, i) => (
@@ -516,7 +508,7 @@ function GrowthPathTab({ style }) {
     <div>
       <h2 className="font-display text-2xl font-bold text-white mb-2">Growth Path</h2>
       <p className="text-sm text-text-muted mb-2">
-        Your <StyleName name={style.name} /> style shapes how you move through these programs.
+        Your <StyleName name={style.name} color={style.color} /> style shapes how you move through these programs.
       </p>
       <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
         Neurolinks are your units of progress. Each one builds a specific leadership skill through practice, not theory. Your style shapes how you'll move through the work.
@@ -569,7 +561,7 @@ function ActivationTeaser({ style, onOpen }) {
         <div>
           <div className="text-[10px] font-bold uppercase tracking-[4px] text-text-muted mb-1.5">Communication Gap</div>
           <p className="text-sm text-white font-semibold mb-1">
-            How a <StyleName name={style.name} /> message lands on a different style.
+            How a <StyleName name={style.name} color={style.color} /> message lands on a different style.
           </p>
           <p className="text-xs text-text-muted">See where communication breaks down — and how to close it.</p>
         </div>
