@@ -7,9 +7,10 @@ import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import TeamSignalMap from '../components/simulator/TeamSignalMap'
+import { ParallelRealityEngine } from '../components/simulator/ParallelRealityEngine'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
-const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map']
+const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map', 'Parallel Reality']
 
 const SIGNAL_WORDS = {
   who: [
@@ -629,6 +630,15 @@ export default function Simulator() {
     if (tab !== null) setActiveTab(Number(tab))
   }, [location.search])
 
+  // Navigation event from ParallelRealityEngine CTA → switch to Say It Their Way
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail === 'say-it-their-way') setActiveTab(2)
+    }
+    window.addEventListener('neuroleader:navigate', handler)
+    return () => window.removeEventListener('neuroleader:navigate', handler)
+  }, [])
+
   return (
     <div className="min-h-screen bg-bg-primary">
       {/* Header */}
@@ -684,6 +694,7 @@ export default function Simulator() {
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
             {activeTab === 3 && <TeamSignalMap />}
+            {activeTab === 4 && <ParallelRealityEngine />}
           </motion.div>
         </AnimatePresence>
       </main>
