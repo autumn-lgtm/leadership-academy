@@ -754,7 +754,7 @@ export default function Profile() {
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <ActivationCard styleName={styleName} open={showActivation} onClose={() => setShowActivation(false)} />
-      <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
+      <main className="max-w-6xl mx-auto px-8 pt-36 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
