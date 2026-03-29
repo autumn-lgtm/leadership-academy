@@ -1055,7 +1055,7 @@ export default function Simulator() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
+      <main className="max-w-6xl mx-auto px-8 pt-40 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
