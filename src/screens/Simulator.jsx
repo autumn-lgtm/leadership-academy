@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
-import { translateMessage } from '../api/anthropic'
+import { translateMessage, analyzeConversationStyle } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import TeamSignalMap from '../components/simulator/TeamSignalMap'
@@ -181,10 +181,15 @@ function MapYourStyle() {
 }
 
 function StyleDecoder() {
+  const [mode, setMode] = useState('words') // 'words' | 'convo'
   const [selected, setSelected] = useState({
     who: new Set(), why: new Set(), what: new Set(), how: new Set()
   })
   const [decoded, setDecoded] = useState(null)
+  const [convText, setConvText] = useState('')
+  const [convLoading, setConvLoading] = useState(false)
+  const [convError, setConvError] = useState(null)
+  const [detectedSignals, setDetectedSignals] = useState(null)
 
   const axisColors = { who: '#B88AFF', why: '#00C8FF', what: '#00E896', how: '#FFB340' }
   const axisLabels = { who: 'WHO', why: 'WHY', what: 'WHAT', how: 'HOW' }
@@ -218,6 +223,54 @@ function StyleDecoder() {
     }
     const styleKey = computeStyle(normalized.who, normalized.why, normalized.what, normalized.how)
     setDecoded({ style: STYLES[styleKey], scores: normalized, styleKey })
+  }
+
+  async function analyzeConvo() {
+    if (convText.trim().length < 20) return
+    setConvLoading(true)
+    setConvError(null)
+    setDecoded(null)
+    setDetectedSignals(null)
+    try {
+      const result = await analyzeConversationStyle(convText)
+      // Build signal sets from detected words
+      const nextSelected = {
+        who: new Set(result.detected_signals?.who || []),
+        why: new Set(result.detected_signals?.why || []),
+        what: new Set(result.detected_signals?.what || []),
+        how: new Set(result.detected_signals?.how || []),
+      }
+      setSelected(nextSelected)
+      setDetectedSignals({ ...result })
+      // Compute style from counts
+      const rawCounts = {
+        who: result.who_count || 0,
+        why: result.why_count || 0,
+        what: result.what_count || 0,
+        how: result.how_count || 0,
+      }
+      const max = Math.max(...Object.values(rawCounts), 1)
+      const normalized = {
+        who: Math.round((rawCounts.who / max) * 100),
+        why: Math.round((rawCounts.why / max) * 100),
+        what: Math.round((rawCounts.what / max) * 100),
+        how: Math.round((rawCounts.how / max) * 100),
+      }
+      const styleKey = computeStyle(normalized.who, normalized.why, normalized.what, normalized.how)
+      setDecoded({ style: STYLES[styleKey], scores: normalized, styleKey })
+    } catch (err) {
+      setConvError(err.message)
+    } finally {
+      setConvLoading(false)
+    }
+  }
+
+  function handleConvFile(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => setConvText(ev.target.result)
+    reader.readAsText(file)
   }
 
   const counts = getCounts()
@@ -257,8 +310,147 @@ function StyleDecoder() {
         </p>
       </div>
 
+      {/* Mode toggle */}
+      <div className="flex gap-1 p-1 rounded-xl border mb-7"
+        style={{ background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.06)' }}>
+        {[
+          { key: 'words', label: '◈ Tap Words' },
+          { key: 'convo', label: '⬡ Drop a Conversation' },
+        ].map(m => (
+          <button
+            key={m.key}
+            onClick={() => { setMode(m.key); setDecoded(null); setDetectedSignals(null) }}
+            className="flex-1 py-2 px-3 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all"
+            style={mode === m.key ? {
+              background: '#18263a', color: 'rgba(255,255,255,0.9)',
+              border: '1px solid rgba(100,180,255,0.14)',
+            } : {
+              background: 'transparent', color: 'rgba(255,255,255,0.35)',
+              border: '1px solid transparent',
+            }}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Conversation analysis mode */}
+      {mode === 'convo' && (
+        <div className="mb-6">
+          {/* File drop */}
+          <label
+            className="flex flex-col items-center justify-center rounded-2xl border border-dashed p-6 text-center cursor-pointer transition-all mb-3"
+            style={{ borderColor: 'rgba(100,180,255,0.15)' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(184,138,255,0.35)'; e.currentTarget.style.background = 'rgba(184,138,255,0.02)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(100,180,255,0.15)'; e.currentTarget.style.background = 'transparent' }}
+          >
+            <input type="file" accept=".txt,.md" className="hidden" onChange={handleConvFile} />
+            <div className="font-display text-sm font-bold text-white mb-1">Drop a conversation</div>
+            <div className="text-xs leading-relaxed mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Slack thread · Email · Meeting notes · 1:1 transcript<br />Nothing is stored.
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border"
+              style={{ background: '#111b28', borderColor: 'rgba(184,138,255,0.2)', color: '#B88AFF' }}>
+              Choose file
+            </span>
+          </label>
+
+          <div className="flex items-center gap-3 my-3">
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
+            <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.2)' }}>or paste it</span>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
+          </div>
+
+          <textarea
+            value={convText}
+            onChange={e => setConvText(e.target.value)}
+            rows={5}
+            placeholder={"Paste what they said, wrote, or how they communicate.\n\nExample: 'We need to hit Q3 targets. I want a plan by Friday with clear owners and milestones. If someone's behind, I want to know immediately.'"}
+            className="w-full rounded-2xl border p-4 text-sm leading-relaxed resize-y outline-none transition-colors"
+            style={{
+              background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.07)',
+              color: 'rgba(255,255,255,0.85)', minHeight: 120,
+            }}
+            onFocus={e => e.target.style.borderColor = 'rgba(184,138,255,0.25)'}
+            onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.07)'}
+          />
+
+          {convError && (
+            <div className="mt-2 px-3 py-2 rounded-xl text-xs border"
+              style={{ background: 'rgba(255,107,107,0.06)', borderColor: 'rgba(255,107,107,0.2)', color: '#FF6B6B' }}>
+              {convError}
+            </div>
+          )}
+
+          <button
+            onClick={analyzeConvo}
+            disabled={convLoading || convText.trim().length < 20}
+            className="mt-3 px-6 py-3 rounded-xl font-bold text-sm transition-all"
+            style={convLoading || convText.trim().length < 20 ? {
+              background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.25)', cursor: 'not-allowed',
+              border: '1px solid rgba(255,255,255,0.06)',
+            } : {
+              background: 'linear-gradient(to right, #B88AFF, #00C8FF)',
+              color: '#fff', cursor: 'pointer', border: 'none',
+              boxShadow: '0 0 20px rgba(184,138,255,0.25)',
+            }}
+          >
+            {convLoading ? (
+              <span className="flex items-center gap-2">
+                <motion.span
+                  className="inline-block w-3 h-3 rounded-full border border-white/30 border-t-white"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                />
+                Reading their language…
+              </span>
+            ) : 'Decode from conversation →'}
+          </button>
+        </div>
+      )}
+
+      {/* Detected signals from conversation analysis */}
+      {mode === 'convo' && detectedSignals && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-5 p-4 rounded-2xl border"
+          style={{ background: 'rgba(184,138,255,0.04)', borderColor: 'rgba(184,138,255,0.15)' }}
+        >
+          <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3" style={{ color: '#B88AFF' }}>
+            Signals detected in conversation
+          </div>
+          <div className="flex gap-3 mb-3">
+            {['who', 'why', 'what', 'how'].map(axis => {
+              const count = detectedSignals[`${axis}_count`] || 0
+              return (
+                <div key={axis} className="flex-1 text-center">
+                  <div className="font-display font-black text-lg" style={{ color: axisColors[axis] }}>{count}</div>
+                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.3)' }}>{axisLabels[axis]}</div>
+                </div>
+              )
+            })}
+          </div>
+          {detectedSignals.explanation && (
+            <p className="text-xs leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              "{detectedSignals.explanation}"
+            </p>
+          )}
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {['who', 'why', 'what', 'how'].flatMap(axis =>
+              Array.from(selected[axis]).map(word => (
+                <span key={`${axis}-${word}`} className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                  style={{ background: `${axisColors[axis]}18`, color: axisColors[axis], border: `1px solid ${axisColors[axis]}35` }}>
+                  {word}
+                </span>
+              ))
+            )}
+          </div>
+        </motion.div>
+      )}
+
       {/* Signal detection summary strip */}
-      {totalSelected > 0 && (
+      {mode === 'words' && totalSelected > 0 && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -286,7 +478,7 @@ function StyleDecoder() {
         </motion.div>
       )}
 
-      <div className="space-y-4">
+      {mode === 'words' && <div className="space-y-4">
         {Object.entries(SIGNAL_WORDS).map(([axis, words]) => (
           <div
             key={axis}
@@ -339,9 +531,9 @@ function StyleDecoder() {
             </div>
           </div>
         ))}
-      </div>
+      </div>}
 
-      <div className="flex gap-3 mt-6">
+      {mode === 'words' && <div className="flex gap-3 mt-6">
         <button
           onClick={decode}
           disabled={totalSelected === 0}
@@ -363,7 +555,19 @@ function StyleDecoder() {
             Build a translated message →
           </button>
         )}
-      </div>
+      </div>}
+
+      {/* In convo mode, show the "Build a translated message" CTA once decoded */}
+      {mode === 'convo' && decoded && (
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={() => localStorage.setItem('neuroleader_decoded_target', decoded.styleKey)}
+            className="px-6 py-3 rounded-xl border border-cyan/20 text-cyan text-sm hover:bg-cyan/10 transition-all"
+          >
+            Build a translated message →
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {decoded && (

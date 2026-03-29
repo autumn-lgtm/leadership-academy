@@ -1,5 +1,61 @@
 const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
 
+export async function analyzeConversationStyle(text) {
+  if (!API_KEY || API_KEY === 'your_key_here') {
+    throw new Error('Please set VITE_ANTHROPIC_API_KEY in your .env file');
+  }
+
+  const system = `You are a leadership communication analyst. Your job is to read a conversation or text and detect which of four leadership axes dominate the language.
+
+The four axes and their signal words/concepts:
+- WHO (people, relationships, team): trust, relationship, empathy, listen, together, support, care, connect, collaborate, harmony, morale, feelings, inclusive, bond, respect, safe, belonging, compassion, loyalty, warmth, mentor, nurture, team, people
+- WHY (purpose, vision, meaning): purpose, vision, mission, meaning, strategy, future, impact, values, culture, inspire, alignment, north star, legacy, principle, belief, direction, aspire, transform, paradigm, framework, systemic, pattern, insight, why
+- WHAT (systems, process, structure): process, system, structure, plan, organize, document, checklist, workflow, procedure, standard, optimize, efficient, reliable, consistent, template, architecture, scale, infrastructure, audit, compliance, protocol, sequence, method
+- HOW (execution, speed, results): execute, ship, deliver, action, results, deadline, fast, sprint, metrics, KPI, accountable, own, drive, hustle, pivot, tactical, urgent, priority, target, milestone, velocity, outcome, ROI
+
+Count how many concepts/signals from each axis appear (including synonyms and paraphrases, not just exact words).
+
+Respond ONLY in valid JSON, no markdown:
+{
+  "who_count": number,
+  "why_count": number,
+  "what_count": number,
+  "how_count": number,
+  "detected_signals": {
+    "who": ["exact word or short phrase from the text"],
+    "why": ["exact word or short phrase from the text"],
+    "what": ["exact word or short phrase from the text"],
+    "how": ["exact word or short phrase from the text"]
+  },
+  "explanation": "One sentence: what specific language patterns in this text revealed the dominant style."
+}`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 700,
+      system,
+      messages: [{ role: 'user', content: text }],
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error?.message || `API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const raw = (data.content?.[0]?.text || '').replace(/```json|```/g, '').trim();
+  return JSON.parse(raw);
+}
+
 export async function analyzeTrustSignals(text, contextType, role) {
   if (!API_KEY || API_KEY === 'your_key_here') {
     throw new Error('Please set VITE_ANTHROPIC_API_KEY in your .env file');
