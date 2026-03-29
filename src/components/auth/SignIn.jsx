@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { signInWithMagicLink } from '../../lib/auth';
-import { AxonAvatar3D } from '../ui/AxonAvatar';
 
 // Neural network background
 function NeuralCanvas() {
@@ -95,10 +94,6 @@ export default function SignIn() {
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #050810; }
-        @keyframes axon-float {
-          0%,100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
         @keyframes glow-pulse {
           0%,100% { opacity: 0.6; }
           50% { opacity: 1; }
@@ -237,9 +232,17 @@ export default function SignIn() {
           <div className="axon-wrap" style={{
             ...fadeStyle(900),
             position: 'absolute', bottom: '-12%', left: '8%',
-            animation: 'axon-float 4s ease-in-out infinite',
           }}>
-            <AxonAvatar3D size={220} mood="wave" />
+            <img
+              src="/NeuroLeader/axon-final.webp"
+              alt="Axon"
+              style={{
+                width: 220, height: 'auto',
+                mixBlendMode: 'screen',
+                filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
+                animation: 'axon-float 4s ease-in-out infinite',
+              }}
+            />
           </div>
 
           {/* Axonism near Axon */}
@@ -362,12 +365,9 @@ export default function SignIn() {
                 </p>
                 <div style={{
                   display: 'flex', alignItems: 'flex-start', gap: 14,
-                  background: 'rgba(255,179,64,0.06)',
-                  border: '1px solid rgba(255,179,64,0.15)',
-                  borderRadius: 12, padding: '16px 18px',
                   textAlign: 'left',
                 }}>
-                  <AxonAvatar3D size={44} mood="idle" style={{ flexShrink: 0 }} />
+                  <img src="/NeuroLeader/axon-final.webp" alt="Axon" style={{ width: 44, height: 'auto', flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))', animation: 'axon-float 4s ease-in-out infinite' }} />
                   <p style={{ fontSize: 13, color: '#FFB340', fontStyle: 'italic', lineHeight: 1.6 }}>
                     "That took honesty. Most people answer assessments the way they want to be seen."
                   </p>

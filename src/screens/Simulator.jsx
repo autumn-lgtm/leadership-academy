@@ -622,7 +622,15 @@ function BrainBehavior() {
 
 export default function Simulator() {
   const [activeTab, setActiveTab] = useState(0)
+  const [profile, setProfile] = useState(null)
   const location = useLocation()
+
+  useEffect(() => {
+    const stored = localStorage.getItem('neuroleader_profile')
+    if (stored) {
+      try { setProfile(JSON.parse(stored)) } catch { /* ignore */ }
+    }
+  }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -703,7 +711,7 @@ export default function Simulator() {
             {activeTab === 0 && <MapYourStyle />}
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
-            {activeTab === 3 && <TeamSignalMap />}
+            {activeTab === 3 && <TeamSignalMap profile={profile} />}
             {activeTab === 4 && <ParallelRealityEngine />}
           </motion.div>
         </AnimatePresence>

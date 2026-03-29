@@ -1,130 +1,143 @@
+// src/components/simulator/TeamSignalMap.jsx
+// Team Signal Map — stage detection + animated spider chart alignment view
+
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STAGES, QUESTIONS, scoreResponses, deriveInsights } from '../../lib/teamSignalMap'
+import { SpiderMap, STAGE_DATA } from './SpiderMap'
+
+const AXON_IMG = `${import.meta.env.BASE_URL}axon-final.webp`
 
 const TEAM_TYPES = [
-  { value: 'direct', label: 'Direct reports' },
-  { value: 'project', label: 'Project team' },
+  { value: 'direct',       label: 'Direct reports' },
+  { value: 'project',      label: 'Project team' },
   { value: 'crossfunctional', label: 'Cross-functional' },
-  { value: 'other', label: 'Other' },
+  { value: 'other',        label: 'Other' },
 ]
 
-const THIS_WEEK = {
-  diplomatic: {
-    forming: [
-      'Hold a structured conversation that clarifies roles, expectations, and what success looks like — before you try to build connection.',
-      'Ask each team member one question about what they need from you this week.',
-      'Resist leading with relationship. Sequence it: clarity first, then warmth.',
-    ],
-    storming: [
-      'Call out the dynamic directly in your next team conversation — without assigning blame.',
-      'Ask "what is not being said in this team right now?" and let silence do the work.',
-      'Resist smoothing the conflict. Hold the tension long enough for it to become productive.',
-    ],
-    norming: [
-      'Publicly affirm two or three specific behaviors you want to see more of.',
-      'Deliberately step back from one decision and let the team make it without you.',
-      'Check in individually with each person to reinforce the emerging culture.',
-    ],
-    performing: [
-      'Stay connected through brief, frequent check-ins rather than structured meetings.',
-      'Ask the team what obstacles you can remove — then remove them.',
-      'Celebrate a win publicly this week. Performing teams still need recognition.',
-    ],
-    adjourning: [
-      'Name specifically what the team accomplished — out loud, in a team setting.',
-      'Create a moment for the team to mark the ending, even if it is only 20 minutes.',
-      'Check in individually with each person about what comes next for them.',
-    ],
-  },
-  logistical: {
-    forming: [
-      'Document the three most important operating norms and share them with the team this week.',
-      'Create a simple reference that answers the most common logistics questions before they are asked.',
-      'Run a structured kickoff with a clear agenda, explicit role assignments, and documented next steps.',
-    ],
-    storming: [
-      'Identify the specific unresolved issue driving the conflict — name it in your next team conversation.',
-      'Run one-to-ones this week focused on listening, not problem-solving.',
-      'Suspend the process improvement instinct temporarily. Fix the relationship first.',
-    ],
-    norming: [
-      'Delegate ownership of one process to the team and let them define how it works.',
-      'Resist the urge to refine systems that are working well enough. Norming needs emergence, not optimization.',
-      'Document the norms forming naturally and reflect them back to the team.',
-    ],
-    performing: [
-      'Ask the team what process friction is slowing them down — and remove it.',
-      'Step back from one area of oversight this week and observe what happens.',
-      'Direct your energy toward organizational interference. Be a shield, not a manager.',
-    ],
-    adjourning: [
-      'Create a structured closure document — what was built, what was learned, what was decided.',
-      'Carve out time in your next team meeting specifically to acknowledge the ending, not just the transition.',
-      'Ask each person what they are most proud of from this team\'s work.',
-    ],
-  },
-  strategic: {
-    forming: [
-      'Share a clear and honest account of where this team is going and why it matters.',
-      'Connect each person\'s role to the larger purpose in your one-to-ones this week.',
-      'Create a simple team north star document and share it — one page is enough.',
-    ],
-    storming: [
-      'Reframe the current conflict publicly as productive disagreement toward a shared goal.',
-      'Hold the long view in your next team conversation. Name what the team is working toward beyond the immediate tension.',
-      'State the non-negotiables clearly so the team knows what can be debated and what cannot.',
-    ],
-    norming: [
-      'Introduce a new challenge or stretch goal that gives the emerging team something to grow toward.',
-      'Ask the team to define their own operating norms — then affirm them.',
-      'Step back from tactical involvement and focus on where the team is heading next quarter.',
-    ],
-    performing: [
-      'Share a vision that extends beyond the current scope — give the team something new to build toward.',
-      'Run interference with the organization this week. Your job is to protect the team\'s capacity.',
-      'Ask the team what they would build if there were no constraints. Listen carefully to the answer.',
-    ],
-    adjourning: [
-      'Connect this team\'s work to a lasting impact — what did this change beyond the deliverable?',
-      'Name the significance of what was accomplished in the context of the larger mission.',
-      'Help each person see how this chapter connects to the next one in their development.',
-    ],
-  },
-  tactical: {
-    forming: [
-      'Drive one early, visible win this week to give the team momentum and a shared reference point.',
-      'Define exactly what success looks like in the next 30 days — be specific and measurable.',
-      'Assign clear ownership to every major task on the team\'s plate before the week is out.',
-    ],
-    storming: [
-      'Stop for one hour this week and just listen to the team\'s frustrations — without solving.',
-      'Identify the one relationship tension most affecting performance and address it directly.',
-      'Resist the urge to out-execute the conflict. It will resurface if you do.',
-    ],
-    norming: [
-      'Delegate one decision area fully this week and do not re-enter it.',
-      'When you see the team solving something well, name it out loud in the moment.',
-      'Resist adding tasks to a team that is developing its own rhythm. Protect the space.',
-    ],
-    performing: [
-      'Introduce a stretch target that requires the team to operate at a genuinely new level.',
-      'Identify what execution bottlenecks exist at the organizational level — and remove them.',
-      'Spend this week working on the strategy, not inside the team\'s execution.',
-    ],
-    adjourning: [
-      'Block 30 minutes in your next team meeting specifically to mark the ending — nothing else on the agenda.',
-      'Ask each team member what they are most proud of and listen to the full answer before responding.',
-      'Resist moving immediately to the next objective. This team earned a moment.',
-    ],
-  },
+const STAGE_COLORS = {
+  forming: '#00C8FF', storming: '#FF6B6B',
+  norming: '#00E896', performing: '#00C8FF', adjourning: '#FFB340',
 }
 
 const FIT_CONFIG = {
-  strongest: { label: 'Strong fit',    color: '#00E896', headerColor: 'text-green' },
-  strong:    { label: 'Good fit',      color: '#00C8FF', headerColor: 'text-cyan' },
-  moderate:  { label: 'Moderate fit',  color: '#B88AFF', headerColor: 'text-purple' },
-  gap:       { label: 'Watch point',   color: '#FFB340', headerColor: 'text-amber' },
+  strongest: { label: 'Strongest fit', color: '#00E896', bg: 'rgba(0,232,150,0.1)',   border: 'rgba(0,232,150,0.25)' },
+  strong:    { label: 'Strong fit',    color: '#00E896', bg: 'rgba(0,232,150,0.08)',  border: 'rgba(0,232,150,0.2)'  },
+  moderate:  { label: 'Moderate fit',  color: '#FFB340', bg: 'rgba(255,179,64,0.1)',  border: 'rgba(255,179,64,0.25)' },
+  gap:       { label: 'Gap — watch this', color: '#FF6B6B', bg: 'rgba(255,107,107,0.1)', border: 'rgba(255,107,107,0.25)' },
+}
+
+const STAGE_INSIGHTS = {
+  forming: {
+    need: 'Clear structure, explicit expectations, and visible presence. The team needs certainty before connection.',
+    align: {
+      diplomatic: 'Your relational instinct helps but structure is what Forming needs first. Lead with clarity, then connection.',
+      strategic:  'Vision gives the forming team direction. Connect the work to the why.',
+      logistical: 'Structure, clarity, and process are exactly what Forming needs. This is your natural stage.',
+      tactical:   'Clear execution orientation gives Forming teams momentum. Drive early wins.',
+    },
+    week: {
+      diplomatic: 'Define explicit expectations. Be visible and directive. Name what success looks like before you build relationships.',
+      strategic:  'Run a team kickoff that connects the work to a larger purpose. Give them a north star.',
+      logistical: 'Document the process, the standards, and the expectations in writing. Make the invisible visible.',
+      tactical:   'Identify three quick wins the team can execute in week one. Get them moving.',
+    },
+    watch: {
+      diplomatic: 'Being too relational too soon. Forming teams need certainty before warmth — reverse the order.',
+      strategic:  'Getting too visionary before the basics are clear. Ground the vision in immediate structure.',
+      logistical: 'Over-systematizing before the team has settled. Let people orient before adding process.',
+      tactical:   'Moving too fast before alignment is established. Forming needs clarity before velocity.',
+    },
+    axon: '"A new team does not need inspiration first. It needs to know what done looks like."',
+  },
+  storming: {
+    need: 'Directive clarity on non-negotiables combined with a real container for conflict. Name what is happening without smoothing it over.',
+    align: {
+      diplomatic: 'Your instinct is to smooth the conflict. Storming does not need smoothing — it needs naming. Say the thing nobody is saying.',
+      strategic:  'You can hold the long view through the noise of conflict. This is where strategic orientation matters most.',
+      logistical: 'Adding more process in response to conflict reads as control, not support. Address the people before the system.',
+      tactical:   'The drive to execute can bypass the conflict that needs resolution. Stop. Address the team before the task.',
+    },
+    week: {
+      diplomatic: 'Name the tension in your next meeting without blame. Hold one non-negotiable firm and let the team respond.',
+      strategic:  'Reconnect the team to the larger purpose. Conflict often rises when people lose sight of why the work matters.',
+      logistical: 'Clarify what is negotiable and what is not. Teams in Storming need to know the rules of the conflict.',
+      tactical:   'Stop adding tasks. Create one structured conversation about what is not working. Make it safe to say it.',
+    },
+    watch: {
+      diplomatic: 'Premature harmony. Resolving the surface without addressing the root makes Storming last significantly longer.',
+      strategic:  'Getting too abstract when the team needs something concrete to hold onto.',
+      logistical: 'Using more structure as a substitute for having the hard conversation.',
+      tactical:   'Pushing through the conflict with pace and execution pressure. It does not resolve — it just goes underground.',
+    },
+    axon: '"The conflict is the information. Do not manage it away before you understand it."',
+  },
+  norming: {
+    need: 'Step back and affirm. The team is developing its own identity. Enable rather than direct — this stage is about emergent norms.',
+    align: {
+      diplomatic: 'Your WHO connection is exactly what Norming needs. Natural affirmation and connection accelerate this stage. This is your home.',
+      strategic:  "Keep introducing new challenges that extend the team's growth. Norming teams need a horizon to move toward.",
+      logistical: 'Watch the urge to maintain control of the norms. The team needs to develop its own — not inherit yours.',
+      tactical:   'Delivery focus can crowd out team autonomy. Delegate more than feels comfortable and hold back.',
+    },
+    week: {
+      diplomatic: 'Let the team solve three problems before they reach you. Name what you see working out loud. Run 1:1s without an agenda.',
+      strategic:  'Introduce a stretch challenge that requires the team to collaborate at a new level. Give them something to grow into.',
+      logistical: 'Hand off one process you have been holding. Document it, transfer it, and step back.',
+      tactical:   'Identify two decisions you\'ve been making that the team could make instead. Transfer them explicitly.',
+    },
+    watch: {
+      diplomatic: 'Over-involvement. Your instinct to connect can crowd the autonomy the team needs to develop.',
+      strategic:  'Introducing too much change before Norming is consolidated. Let the identity set before stretching it.',
+      logistical: 'Creating systems around the emerging norms rather than letting them emerge organically.',
+      tactical:   'Maintaining too much execution involvement. The team needs to own delivery — not just contribute to it.',
+    },
+    axon: '"Your Map tells you which leader you naturally are. Their stage tells you which leader they currently need."',
+  },
+  performing: {
+    need: 'Strategic vision and obstacle removal. The team does not need direction — it needs to know where it is going.',
+    align: {
+      diplomatic: 'Relational maintenance keeps Performing teams cohesive. Stay connected without over-directing.',
+      strategic:  'Vision and obstacle removal is exactly what Performing teams need. This is your stage.',
+      logistical: "Process orientation can disrupt a self-organizing team. Get out of the way and run interference with the organization.",
+      tactical:   'Execution excellence maintains Performing but may not sustain it. Introduce strategic stretch and a longer horizon.',
+    },
+    week: {
+      diplomatic: 'Ask each person individually what would make their best work better. Listen without problem-solving.',
+      strategic:  'Articulate the next horizon clearly. Performing teams need to know what they are building toward.',
+      logistical: 'Identify the one organizational obstacle most limiting the team\'s output. Remove it.',
+      tactical:   'Set one ambitious outcome for the quarter and give the team full ownership of how to reach it.',
+    },
+    watch: {
+      diplomatic: 'Adding check-ins or connection rituals the team does not need. Performing teams can slide back when leaders over-manage.',
+      strategic:  'Getting too future-focused while neglecting the present execution environment.',
+      logistical: 'Introducing new process or audit mechanisms the team experiences as surveillance.',
+      tactical:   'Continuing to direct execution for a team that is capable of self-organizing. Trust the system you built.',
+    },
+    axon: '"A Performing team does not need a manager. It needs someone to clear the road."',
+  },
+  adjourning: {
+    need: 'Acknowledge and honor. Name what was accomplished. Give people permission to feel whatever they feel about it ending.',
+    align: {
+      diplomatic: 'You are built for this stage. Honoring endings is a WHO superpower. This is where you create irreplaceable value.',
+      strategic:  "Connect the team's work to a lasting legacy and larger meaning. Give it significance beyond the project.",
+      logistical: 'You can support the structure of closure. Invest deliberately in the relational dimension too.',
+      tactical:   'Your instinct is to move to the next task. Resist it. The team needs you to mark the ending.',
+    },
+    week: {
+      diplomatic: 'Name what the team accomplished in your next meeting. Thank each person specifically for what only they contributed.',
+      strategic:  'Write a brief legacy document: what did this team accomplish and why does it matter beyond the deliverable?',
+      logistical: 'Create a structured handoff that documents what was built. Then create a moment of closure alongside it.',
+      tactical:   'Block time in your calendar for a closing conversation before the team disbands. Put it in writing.',
+    },
+    watch: {
+      diplomatic: 'Moving on emotionally before the team has had the space to close. They need you present for the ending.',
+      strategic:  'Making the ending too abstract or meaning-focused without specific personal acknowledgment.',
+      logistical: 'Treating the handoff as the closure. The documentation is not the ending — the acknowledgment is.',
+      tactical:   'Skipping the ending entirely because the next thing is already running. The team will remember what you did not do.',
+    },
+    axon: '"Most leaders skip the ending. It is the thing the team remembers longest."',
+  },
 }
 
 function saveResult({ teamName, teamType, stage, confidence, leaderStyle }) {
@@ -192,8 +205,7 @@ function SetupScreen({ onStart }) {
           onClick={() => onStart({ teamName: teamName.trim() || 'My team', teamType })}
           className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2"
         >
-          Start mapping
-          <span>→</span>
+          Start mapping <span>→</span>
         </button>
       </div>
     </motion.div>
@@ -208,7 +220,7 @@ function QuestionsScreen({ onComplete }) {
   const [animating, setAnimating] = useState(false)
 
   const q = QUESTIONS[current]
-  const progress = ((current) / QUESTIONS.length) * 100
+  const progress = (current / QUESTIONS.length) * 100
 
   function handleSelect(option) {
     if (animating) return
@@ -233,7 +245,6 @@ function QuestionsScreen({ onComplete }) {
       exit={{ opacity: 0 }}
       className="max-w-xl"
     >
-      {/* Progress */}
       <div className="flex items-center gap-3 mb-8">
         <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
           <motion.div
@@ -287,15 +298,19 @@ function QuestionsScreen({ onComplete }) {
 }
 
 // ── Screen 3: Results ────────────────────────────────────────────────
-function ResultsScreen({ teamName, teamType, answers, leaderStyle, onReset }) {
+function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onReset }) {
   const result = scoreResponses(answers)
-  const { stageData, alignment } = deriveInsights(result.stage, leaderStyle)
-  const fitConfig = FIT_CONFIG[alignment?.fit] || FIT_CONFIG.moderate
-  const thisWeek = THIS_WEEK[leaderStyle]?.[result.stage] || []
+  const [selectedStage, setSelectedStage] = useState(result.stage)
 
   useEffect(() => {
     saveResult({ teamName, teamType, stage: result.stage, confidence: result.confidence, leaderStyle })
   }, [])
+
+  const stageColor = STAGE_COLORS[selectedStage]
+  const stageInfo = STAGE_DATA[selectedStage]
+  const insights = STAGE_INSIGHTS[selectedStage]
+  const { alignment } = deriveInsights(selectedStage, leaderStyle)
+  const fitConfig = FIT_CONFIG[alignment?.fit] || FIT_CONFIG.moderate
 
   const confidenceLabel = {
     high: 'High confidence',
@@ -304,124 +319,160 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, onReset }) {
   }[result.confidence]
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl space-y-5"
-    >
-      {/* Section A: Stage identified */}
-      <div
-        className="rounded-2xl border p-6"
-        style={{ borderColor: `${stageData.color}30`, background: `${stageData.color}06` }}
-      >
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">Stage identified</div>
-            <h3 className="font-display text-2xl font-bold" style={{ color: stageData.color }}>
-              {teamName} is in {stageData.label}.
-            </h3>
-          </div>
-          <span
-            className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest shrink-0"
-            style={{ background: `${stageData.color}15`, color: stageData.color }}
-          >
-            {confidenceLabel}
-          </span>
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#00C8FF', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>
+          Team Signal Map — {teamName}
         </div>
-        <p className="text-sm text-text-primary leading-relaxed mb-3">{stageData.description}</p>
-        <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-1">What you are seeing</div>
-        <p className="text-sm text-text-muted leading-relaxed">{stageData.teamSigns}</p>
-
-        {result.secondaryStage && (
-          <div className="mt-3 pt-3 border-t border-white/[0.04]">
-            <p className="text-xs text-text-muted">
-              Also showing signs of{' '}
-              <span className="text-white font-medium">{STAGES[result.secondaryStage]?.label}</span>
-              {' '}— the team may be transitioning.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Section B: What this stage needs */}
-      <div className="rounded-2xl border border-white/[0.06] bg-bg-surface/60 p-6">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-2">
-          What {stageData.label} needs from a leader
-        </div>
-        <p className="text-sm text-text-primary leading-relaxed">{stageData.leaderNeeds}</p>
-      </div>
-
-      {/* Section C: Map alignment */}
-      {alignment && (
-        <div className="rounded-2xl border border-white/[0.06] bg-bg-surface/60 p-6">
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest"
-              style={{ background: `${fitConfig.color}15`, color: fitConfig.color }}
-            >
-              {fitConfig.label}
+        <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 22, color: '#fff', marginBottom: 4 }}>
+          {teamName} is in{' '}
+          <span style={{ color: STAGE_COLORS[result.stage] }}>{STAGES[result.stage]?.label}</span>.
+          {result.confidence === 'transitional' && result.secondaryStage && (
+            <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>
+              {' '}Transitioning toward {STAGES[result.secondaryStage]?.label}
             </span>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
-              {alignment.fit === 'gap' ? 'Where your Map works against you' : 'Where your Map fits'}
+          )}
+        </h2>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
+          {confidenceLabel} · Select a stage below to explore the full alignment map.
+        </div>
+      </div>
+
+      {/* Stage selector pills */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+        {Object.entries(STAGES).map(([key, val]) => {
+          const c = STAGE_COLORS[key]
+          const isActive = selectedStage === key
+          const isResult = key === result.stage
+          return (
+            <button key={key} onClick={() => setSelectedStage(key)} style={{
+              padding: '6px 14px', borderRadius: 20,
+              fontSize: 11, fontWeight: 700, cursor: 'pointer',
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              border: `1px solid ${isActive ? c : `${c}35`}`,
+              background: isActive ? `${c}22` : `${c}10`,
+              color: c,
+              boxShadow: isActive ? `0 0 0 1px ${c}` : 'none',
+              fontFamily: 'DM Sans, sans-serif',
+              transition: 'all 0.2s',
+            }}>
+              {val.label}{isResult ? ' ●' : ''}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Spider chart */}
+      <SpiderMap stage={selectedStage} profile={profile} />
+
+      {/* Legend */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, margin: '8px 0 12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 20, height: 2, borderTop: '2px dashed #B88AFF', borderRadius: 1 }} />
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Stage needs</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 20, height: 2, background: '#00C8FF', borderRadius: 1 }} />
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Your Map</span>
+        </div>
+      </div>
+
+      {/* Score strip */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, margin: '4px 0 20px', flexWrap: 'wrap' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Alignment</div>
+          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#00C8FF' }}>
+            {stageInfo.score}
+          </div>
+        </div>
+        <div style={{ padding: '7px 16px', borderRadius: 6, background: fitConfig.bg, border: `1px solid ${fitConfig.border}`, color: fitConfig.color, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>
+          {fitConfig.label}
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Gap axes</div>
+          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#FF6B6B' }}>
+            {stageInfo.gaps}
+          </div>
+        </div>
+      </div>
+
+      {/* 4 insight cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 10, marginBottom: 14 }}>
+        {[
+          { label: 'What this stage needs', color: '#B88AFF', text: insights?.need },
+          { label: 'Your alignment',        color: '#00C8FF', text: insights?.align?.[leaderStyle] },
+          { label: 'This week',             color: '#FFB340', text: insights?.week?.[leaderStyle] },
+          { label: 'Watch for',             color: '#FF6B6B', text: insights?.watch?.[leaderStyle] },
+        ].map(({ label, color, text }) => (
+          <div key={label} style={{
+            background: '#0D1426', borderRadius: 10, padding: '13px 15px',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginBottom: 6 }}>
+              {label}
+            </div>
+            <div style={{ fontSize: 12, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)' }}>
+              {text}
             </div>
           </div>
-          <p className="text-sm text-text-primary leading-relaxed">{alignment.note}</p>
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Section D: This week */}
-      {thisWeek.length > 0 && (
-        <div className="rounded-2xl border border-white/[0.06] bg-bg-surface/60 p-6">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-text-muted mb-4">
-            This week
-          </div>
-          <div className="space-y-3">
-            {thisWeek.map((action, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.08 }}
-                className="flex items-start gap-3"
-              >
-                <div
-                  className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold mt-0.5"
-                  style={{ background: `${stageData.color}20`, color: stageData.color }}
-                >
-                  {i + 1}
-                </div>
-                <p className="text-sm text-text-primary leading-relaxed">{action}</p>
-              </motion.div>
-            ))}
-          </div>
+      {/* Axon line */}
+      <div style={{
+        background: 'rgba(255,179,64,0.07)', border: '1px solid rgba(255,179,64,0.2)',
+        borderRadius: 10, padding: '13px 16px', marginBottom: 16,
+        display: 'flex', alignItems: 'flex-start', gap: 12,
+      }}>
+        <img
+          src={AXON_IMG}
+          alt="Axon"
+          style={{ width: 40, height: 'auto', flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 12px rgba(0,200,255,0.2))' }}
+        />
+        <div style={{ fontSize: 13, fontStyle: 'italic', color: '#FFB340', lineHeight: 1.6 }}>
+          {insights?.axon}
         </div>
-      )}
+      </div>
 
+      {/* Remap */}
       <button
         onClick={onReset}
-        className="text-sm text-text-muted hover:text-white transition-colors"
+        style={{
+          background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
+          borderRadius: 8, padding: '10px 20px',
+          color: 'rgba(255,255,255,0.5)', fontSize: 13,
+          cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
+        }}
       >
-        ← Map another team
+        Map a different team →
       </button>
     </motion.div>
   )
 }
 
 // ── Main component ───────────────────────────────────────────────────
-export default function TeamSignalMap() {
+export default function TeamSignalMap({ profile }) {
   const [screen, setScreen] = useState('setup')
   const [setup, setSetup] = useState(null)
   const [answers, setAnswers] = useState([])
   const [leaderStyle, setLeaderStyle] = useState('diplomatic')
 
   useEffect(() => {
+    // Use prop profile first, fall back to localStorage
+    const styleFromProp = profile?.dominantStyle || profile?.style
+    if (styleFromProp) {
+      setLeaderStyle(styleFromProp)
+      return
+    }
     const stored = localStorage.getItem('neuroleader_profile')
     if (stored) {
       const p = JSON.parse(stored)
-      const style = p.dominantStyle || p.quadrant?.style
+      const style = p.dominantStyle || p.style || p.quadrant?.style
       if (style) setLeaderStyle(style)
     }
-  }, [])
+  }, [profile])
 
   function handleStart(setupData) {
     setSetup(setupData)
@@ -468,6 +519,7 @@ export default function TeamSignalMap() {
               teamType={setup.teamType}
               answers={answers}
               leaderStyle={leaderStyle}
+              profile={profile}
               onReset={handleReset}
             />
           </motion.div>

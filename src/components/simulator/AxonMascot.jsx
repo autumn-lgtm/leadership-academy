@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { AxonAvatar3D } from '../ui/AxonAvatar'
+
+const mascotImg = `${import.meta.env.BASE_URL}axon-final.webp`
 
 // ── Axon-isms: signature catchphrases ─────────────────────
 const AXON_ISMS = [
@@ -209,8 +210,24 @@ export default function AxonMascot({
           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* 3D model — transparent canvas, no background box */}
-        <AxonAvatar3D size={size} mood={mood} />
+        {/* The mascot — mix-blend-mode: screen kills the black bg */}
+        <motion.div
+          animate={moodVariants[mood] || moodVariants.idle}
+        >
+          <img
+            src={mascotImg}
+            alt="Axon — your NeuroLeader guide"
+            width={size}
+            height={size}
+            className="relative select-none pointer-events-none axon-img"
+            style={{
+              objectFit: 'contain',
+              mixBlendMode: 'screen',
+              filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
+              animation: 'axon-float 4s ease-in-out infinite',
+            }}
+          />
+        </motion.div>
       </motion.div>
     </div>
   )
