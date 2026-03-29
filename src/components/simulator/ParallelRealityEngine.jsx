@@ -207,6 +207,60 @@ export function ParallelRealityEngine({ profile }) {
             </div>
           </div>
 
+          {/* Style fit strip */}
+          {(() => {
+            const styleScores = {
+              diplomatic: Math.round(result.naturalOutcome.score * (style === 'diplomatic' ? 1 : 0.7) + result.optimizedOutcome.score * (style === 'diplomatic' ? 0 : 0.15)),
+              strategic:  Math.round(result.naturalOutcome.score * (style === 'strategic'  ? 1 : 0.7) + result.optimizedOutcome.score * (style === 'strategic'  ? 0 : 0.15)),
+              logistical: Math.round(result.naturalOutcome.score * (style === 'logistical' ? 1 : 0.7) + result.optimizedOutcome.score * (style === 'logistical' ? 0 : 0.15)),
+              tactical:   Math.round(result.naturalOutcome.score * (style === 'tactical'   ? 1 : 0.7) + result.optimizedOutcome.score * (style === 'tactical'   ? 0 : 0.15)),
+            }
+            styleScores[style] = result.naturalOutcome.score
+            return (
+              <div style={{
+                background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 12, padding: '16px 20px', marginBottom: 20,
+              }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
+                  Natural effectiveness by style
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  {[
+                    { key: 'diplomatic', label: 'Diplomatic', color: '#B88AFF' },
+                    { key: 'strategic',  label: 'Strategic',  color: '#00C8FF' },
+                    { key: 'tactical',   label: 'Tactical',   color: '#FFB340' },
+                    { key: 'logistical', label: 'Logistical', color: '#00E896' },
+                  ].map(s => {
+                    const score = styleScores[s.key]
+                    const isUser = s.key === style
+                    return (
+                      <div key={s.key} style={{
+                        padding: '10px 12px', borderRadius: 8,
+                        background: isUser ? `${s.color}12` : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${isUser ? s.color + '30' : 'rgba(255,255,255,0.05)'}`,
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, alignItems: 'center' }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: isUser ? s.color : 'rgba(255,255,255,0.5)' }}>
+                            {s.label}{isUser ? ' ← you' : ''}
+                          </span>
+                          <span style={{ fontSize: 13, fontWeight: 700, fontFamily: 'monospace', color: isUser ? s.color : 'rgba(255,255,255,0.4)' }}>
+                            {score}
+                          </span>
+                        </div>
+                        <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${score}%`, background: isUser ? s.color : 'rgba(255,255,255,0.2)', borderRadius: 2, transition: 'width 0.6s ease' }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', marginTop: 10 }}>
+                  Scores reflect natural delivery — what each style would produce without coaching.
+                </div>
+              </div>
+            )
+          })()}
+
           {/* Axon line */}
           <div style={{
             display: 'flex', alignItems: 'flex-start', gap: 14,

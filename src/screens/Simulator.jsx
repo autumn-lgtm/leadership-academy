@@ -348,6 +348,12 @@ function MessageTranslator() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [expandedVersion, setExpandedVersion] = useState(null)
+  const [userProfile, setUserProfile] = useState(null)
+
+  useEffect(() => {
+    const stored = localStorage.getItem('neuroleader_profile')
+    if (stored) setUserProfile(JSON.parse(stored))
+  }, [])
 
   useEffect(() => {
     const decoded = localStorage.getItem('neuroleader_decoded_target')
@@ -470,6 +476,37 @@ function MessageTranslator() {
               <div className="text-xs text-purple uppercase tracking-wider font-semibold mb-1">Translation Principle</div>
               <p className="text-sm text-text-primary">{result.principle}</p>
             </div>
+
+            {/* Communication gap */}
+            {userProfile?.axisScores && (
+              <div className="p-4 bg-bg-surface border border-white/8 rounded-xl">
+                <div className="text-xs text-text-muted uppercase tracking-wider font-semibold mb-3">Communication gap</div>
+                <div className="space-y-2.5">
+                  {[
+                    { key: 'who', label: 'WHO', color: '#B88AFF' },
+                    { key: 'why', label: 'WHY', color: '#00C8FF' },
+                    { key: 'what', label: 'WHAT', color: '#00E896' },
+                    { key: 'how', label: 'HOW', color: '#FFB340' },
+                  ].map(axis => {
+                    const userVal = userProfile.axisScores[axis.key] || 50
+                    const targetVal = STYLES[targetStyle].axes[axis.key] === 'high' ? 80 : 25
+                    const gap = Math.abs(userVal - targetVal)
+                    const gapColor = gap < 20 ? '#00E896' : gap < 45 ? '#FFB340' : '#FF6B6B'
+                    return (
+                      <div key={axis.key} className="flex items-center gap-3">
+                        <span className="text-[10px] font-bold w-8 shrink-0" style={{ color: axis.color }}>{axis.label}</span>
+                        <div className="flex items-center gap-1 flex-1">
+                          <div className="h-1.5 rounded-full shrink-0" style={{ width: `${userVal * 0.45}%`, background: axis.color, opacity: 0.6 }} />
+                          {gap > 5 && <div className="h-1.5 rounded-l-none rounded-r-full shrink-0" style={{ width: `${gap * 0.45}%`, background: gapColor, opacity: 0.8 }} />}
+                        </div>
+                        <span className="text-[10px] font-bold w-6 shrink-0" style={{ color: gapColor }}>{gap}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="mt-2 text-[10px] text-text-muted">Gap per axis between your emphasis and theirs. Lower = easier to land.</div>
+              </div>
+            )}
 
             {/* All versions */}
             {result.versions && (

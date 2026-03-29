@@ -420,6 +420,14 @@ function NeuroLinkCard({ link, index, color }) {
 function ProgramCard({ program, styleKey, isExpanded, onToggle }) {
   const styleInsight = program.styleInsight?.[styleKey]
 
+  const axisCoverage = { who: 0, why: 0, what: 0, how: 0 }
+  if (program.neurolinksData) {
+    program.neurolinksData.forEach(link => {
+      (link.axes || []).forEach(a => { if (a in axisCoverage) axisCoverage[a]++ })
+    })
+  }
+  const maxCoverage = Math.max(...Object.values(axisCoverage), 1)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -487,6 +495,41 @@ function ProgramCard({ program, styleKey, isExpanded, onToggle }) {
                     For Your Style
                   </div>
                   <p className="text-xs text-text-muted leading-relaxed">{styleInsight}</p>
+                </div>
+              )}
+
+              {/* Axis coverage */}
+              {program.neurolinksData && (
+                <div className="p-4 rounded-xl border border-white/[0.04]" style={{ background: `${program.color}05` }}>
+                  <div className="text-[9px] font-bold uppercase tracking-widest mb-3" style={{ color: program.color }}>
+                    What this builds
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { key: 'who', label: 'WHO — People', color: '#B88AFF' },
+                      { key: 'why', label: 'WHY — Purpose', color: '#00C8FF' },
+                      { key: 'what', label: 'WHAT — Systems', color: '#00E896' },
+                      { key: 'how', label: 'HOW — Execution', color: '#FFB340' },
+                    ].map(axis => {
+                      const count = axisCoverage[axis.key]
+                      if (count === 0) return null
+                      return (
+                        <div key={axis.key} className="flex items-center gap-2">
+                          <span className="text-[9px] font-bold w-20 shrink-0" style={{ color: axis.color }}>{axis.label}</span>
+                          <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full rounded-full"
+                              style={{ background: axis.color, opacity: 0.7 }}
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(count / maxCoverage) * 100}%` }}
+                              transition={{ duration: 0.6 }}
+                            />
+                          </div>
+                          <span className="text-[9px] text-text-muted w-8 shrink-0">{count} links</span>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
               )}
 
