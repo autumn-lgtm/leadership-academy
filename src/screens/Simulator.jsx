@@ -746,7 +746,7 @@ function MessageTranslator() {
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-3">Message Translator</p>
         <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-3">
           Speak<br />
-          <span className="bg-gradient-to-r from-cyan to-emerald bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">
             Their Language
           </span>
         </h1>

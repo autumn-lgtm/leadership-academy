@@ -103,22 +103,41 @@ function TrustBar({ score, numId }) {
   )
 }
 
-function SliderRow({ label, value, onChange, colorClass, colorHex }) {
-  const pct = (value / 10) * 100
+const FREQ_OPTIONS = [
+  { label: 'Never',     val: 0  },
+  { label: 'Rarely',    val: 2  },
+  { label: 'Sometimes', val: 5  },
+  { label: 'Often',     val: 8  },
+  { label: 'Always',    val: 10 },
+]
+
+function FrequencyRow({ label, value, onChange, colorHex }) {
   return (
-    <div className="flex items-center gap-3 mb-2.5">
-      <p className="text-xs flex-1 leading-snug" style={{ color: 'rgba(255,255,255,0.8)' }}>{label}</p>
-      <div className="w-24 shrink-0">
-        <input
-          type="range" min="0" max="10" step="1" value={value}
-          onChange={e => onChange(Number(e.target.value))}
-          className="w-full h-[3px] rounded-sm cursor-pointer outline-none appearance-none"
-          style={{
-            background: `linear-gradient(to right, ${colorHex} ${pct}%, rgba(255,255,255,0.06) ${pct}%)`,
-          }}
-        />
+    <div className="mb-4">
+      <p className="text-xs leading-snug mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>{label}</p>
+      <div className="flex gap-1.5">
+        {FREQ_OPTIONS.map(opt => {
+          const active = value === opt.val
+          return (
+            <button
+              key={opt.val}
+              onClick={() => onChange(opt.val)}
+              className="flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all"
+              style={active ? {
+                background: `${colorHex}20`,
+                border: `1px solid ${colorHex}60`,
+                color: colorHex,
+              } : {
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                color: 'rgba(255,255,255,0.3)',
+              }}
+            >
+              {opt.label}
+            </button>
+          )
+        })}
       </div>
-      <span className="text-[11px] font-bold w-4 text-right tabular-nums" style={{ color: colorHex }}>{value}</span>
     </div>
   )
 }
@@ -209,7 +228,7 @@ function SelfReport() {
           </div>
 
           {dim.questions.map((q, i) => (
-            <SliderRow
+            <FrequencyRow
               key={i} label={q}
               value={dim.vals[i]}
               onChange={v => { const next = [...dim.vals]; next[i] = v; dim.setVals(next) }}
@@ -527,7 +546,7 @@ export default function TrustPulse() {
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-3">Trust Pulse</p>
         <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-3">
           How Much Do<br />
-          <span className="bg-gradient-to-r from-cyan to-emerald bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">
             They Trust You?
           </span>
         </h1>
