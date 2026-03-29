@@ -7,6 +7,56 @@ import { getProfileQuotes, getRandomQuote } from '../data/quotes'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
+import ActivationCard from '../components/profile/ActivationCard'
+import NuggetCard from '../components/nuggets/NuggetCard'
+import { getNuggetForPlacement } from '../data/nuggets'
+
+const RAINBOW_STYLE = {
+  background: 'linear-gradient(90deg, #B88AFF 0%, #00C8FF 35%, #00E896 65%, #FFB340 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  display: 'inline',
+  fontWeight: 700,
+}
+
+function StyleName({ name }) {
+  return (
+    <span style={RAINBOW_STYLE}>
+      {name.charAt(0).toUpperCase() + name.slice(1)}
+    </span>
+  )
+}
+
+function ProfileHero({ style }) {
+  const highAxes = Object.entries(style.axes)
+    .filter(([, v]) => v === 'high')
+    .map(([k]) => k.toUpperCase())
+  return (
+    <div className="mb-10 pb-10 border-b border-white/[0.04]">
+      <p className="text-[10px] text-text-muted uppercase tracking-[6px] mb-4">Your Leadership Identity</p>
+      <h1 className="font-display text-6xl md:text-7xl font-black leading-none mb-3">
+        <StyleName name={style.name} />
+      </h1>
+      <p className="text-lg text-text-muted font-medium mb-4">{style.short}</p>
+      <div className="flex flex-wrap items-center gap-3">
+        {highAxes.map(axis => (
+          <span key={axis} className="text-xs px-3 py-1 rounded-full border border-white/10 text-white/60 font-mono tracking-widest">
+            {axis}
+          </span>
+        ))}
+        <span className="text-sm text-text-muted">{style.orientation}</span>
+      </div>
+    </div>
+  )
+}
+
+function scoreLabel(score) {
+  if (score >= 80) return { text: 'Dominant', color: '#00E896' }
+  if (score >= 56) return { text: 'High',     color: '#00C8FF' }
+  if (score >= 31) return { text: 'Moderate', color: '#FFB340' }
+  return              { text: 'Low',      color: '#B88AFF' }
+}
 
 function ProfileWelcome({ style, onDismiss }) {
   const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
@@ -31,7 +81,7 @@ function ProfileWelcome({ style, onDismiss }) {
         </div>
         <div>
           <h3 className="font-display text-lg font-bold text-white mb-1">
-            Welcome, <span style={{ color: style.color }}>{style.name}</span> leader.
+            Welcome, <StyleName name={style.name} /> leader.
           </h3>
           <p className="text-sm text-text-muted leading-relaxed mb-3">
             Your profile is ready. Explore your style, see how you compare, and find your growth path.
@@ -61,13 +111,13 @@ function Nav({ activeTab, setActiveTab }) {
             <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
             <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
             <Link
               to="/assessment"
               className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
             >
-              Retake
+              Remap
             </Link>
           </div>
         </div>
@@ -91,14 +141,13 @@ function Nav({ activeTab, setActiveTab }) {
   )
 }
 
-function HeroStats({ style, axisScores }) {
+function HeroStats({ style }) {
   const stats = [
-    { label: 'Leadership Style', value: style.name, sub: style.short, color: style.color },
     { label: 'Orientation', value: style.orientation, sub: style.orientDesc.split('.')[0], color: '#00C8FF' },
     { label: 'Best Environment', value: style.env.split(',')[0], sub: style.envDesc.split('.')[0], color: '#00E896' },
   ]
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
       {stats.map((s, i) => (
         <motion.div
           key={i}
@@ -149,7 +198,13 @@ function SignalBars({ axisScores, attrScores, style }) {
               <span className="font-display text-xs font-bold tracking-wider" style={{ color: a.color }}>{a.label}</span>
               <span className="text-[10px] text-text-muted">{a.sub}</span>
             </div>
-            <span className="text-xs font-bold" style={{ color: a.color }}>{axisScores[a.key] || 0}</span>
+            <div className="flex items-center gap-2">
+              {(() => { const sl = scoreLabel(axisScores[a.key] || 0); return (
+                <span className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded"
+                  style={{ color: sl.color, background: `${sl.color}18` }}>{sl.text}</span>
+              )})()}
+              <span className="text-xs font-bold" style={{ color: a.color }}>{axisScores[a.key] || 0}</span>
+            </div>
           </div>
           <div className="relative h-2 bg-white/[0.04] rounded-full overflow-hidden">
             <motion.div
@@ -200,7 +255,7 @@ function StyleTab({ style, axisScores }) {
               <span className="font-display text-2xl font-bold" style={{ color: style.color }}>{style.name[0]}</span>
             </div>
             <div>
-              <h3 className="font-display text-3xl font-bold" style={{ color: style.color }}>{style.name}</h3>
+              <h3 className="font-display text-3xl font-bold"><StyleName name={style.name} /></h3>
               <p className="text-sm text-text-muted">{style.short}</p>
             </div>
           </div>
@@ -248,7 +303,7 @@ function ApplyItTab({ style }) {
   const [expanded, setExpanded] = useState(null)
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for {style.name} Leaders</h2>
+      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for <StyleName name={style.name} /> Leaders</h2>
       <p className="text-sm text-text-muted mb-8">Practice applying your style to real situations.</p>
       <div className="space-y-3">
         {style.scenarios.map((s, i) => (
@@ -461,7 +516,7 @@ function GrowthPathTab({ style }) {
     <div>
       <h2 className="font-display text-2xl font-bold text-white mb-2">Growth Path</h2>
       <p className="text-sm text-text-muted mb-2">
-        Your <span style={{ color: style.color }}>{style.name}</span> style shapes how you move through these programs.
+        Your <StyleName name={style.name} /> style shapes how you move through these programs.
       </p>
       <p className="text-xs text-text-muted mb-8 leading-relaxed max-w-lg">
         Neurolinks are your units of progress. Each one builds a specific leadership skill through practice, not theory. Your style shapes how you'll move through the work.
@@ -481,7 +536,7 @@ function GrowthPathTab({ style }) {
 
       {/* How it connects */}
       <div className="mt-8">
-        <AxonQuote text={`The assessment maps who you are as a leader. The Growth Path develops what you can become. Your ${style.name} style isn't a box — it's a starting point.`} />
+        <AxonQuote text={`The Map shows who you are as a leader. The Growth Path develops what you can become. Your ${style.name} style isn't a box — it's a starting point.`} />
       </div>
 
       {/* Total stats */}
@@ -501,6 +556,31 @@ function GrowthPathTab({ style }) {
   )
 }
 
+function ActivationTeaser({ style, onOpen }) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      onClick={onOpen}
+      className="mt-8 w-full text-left p-5 rounded-2xl border border-white/[0.06] bg-bg-surface/40 hover:border-white/10 hover:bg-bg-surface/60 transition-all group"
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-[4px] text-text-muted mb-1.5">Communication Gap</div>
+          <p className="text-sm text-white font-semibold mb-1">
+            How a <StyleName name={style.name} /> message lands on a different style.
+          </p>
+          <p className="text-xs text-text-muted">See where communication breaks down — and how to close it.</p>
+        </div>
+        <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/20 transition-all shrink-0 ml-4 text-text-muted group-hover:text-white text-sm">
+          →
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
 export default function Profile() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(0)
@@ -508,6 +588,7 @@ export default function Profile() {
   const [showWelcome, setShowWelcome] = useState(() =>
     !localStorage.getItem('neuroleader_welcome_dismissed')
   )
+  const [showActivation, setShowActivation] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem('neuroleader_profile')
@@ -528,10 +609,10 @@ export default function Profile() {
             No Profile <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Yet</span>
           </h2>
           <p className="text-text-muted mb-8 max-w-sm mx-auto">
-            Take the assessment and Axon will break down your leadership style — who you are, how you lead, and where you can grow.
+            Take the Map and Axon will break down your leadership style — who you are, how you lead, and where you can grow.
           </p>
           <button onClick={() => navigate('/assessment')} className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all inline-flex items-center gap-2">
-            Take Assessment
+            Take the Map
             <span className="transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>
@@ -545,10 +626,14 @@ export default function Profile() {
   const axisScores = profile.axisScores || profile.quadrant || {}
   const attrScores = profile.attrScores || profile.attributes || {}
 
+  const nugget = getNuggetForPlacement('profile', { style: styleName })
+
+
   return (
     <div className="min-h-screen bg-bg-primary">
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
+      <ActivationCard styleName={styleName} open={showActivation} onClose={() => setShowActivation(false)} />
       <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
@@ -560,12 +645,13 @@ export default function Profile() {
           >
             {activeTab === 0 && (
               <div>
+                <ProfileHero style={style} />
                 <AnimatePresence>
                   {showWelcome && style && (
                     <ProfileWelcome style={style} onDismiss={dismissWelcome} />
                   )}
                 </AnimatePresence>
-                <HeroStats style={style} axisScores={axisScores} />
+                <HeroStats style={style} />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <SignalBars axisScores={axisScores} attrScores={attrScores} style={style} />
                   <div className="flex flex-col items-center">
@@ -577,6 +663,12 @@ export default function Profile() {
                     <AxonCallout text={style.neuro} />
                   </div>
                 </div>
+                <ActivationTeaser style={style} onOpen={() => setShowActivation(true)} />
+                {nugget && (
+                  <div className="mt-8">
+                    <NuggetCard nugget={nugget} />
+                  </div>
+                )}
               </div>
             )}
             {activeTab === 1 && <StyleTab style={style} axisScores={axisScores} />}

@@ -68,6 +68,19 @@ input[type="range"]::-moz-range-thumb {
   filter: brightness(1.15) contrast(1.05);
 }
 
+@keyframes axon-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Portal entrance ring */
 .axon-portal-ring {
   background: conic-gradient(
@@ -128,4 +141,46 @@ input[type="range"]::-moz-range-thumb {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ── Animations ────────────────────────────────────────── */
+
+/* Rainbow text gradient animation */
+@keyframes rainbow-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.rainbow-text-animated {
+  background: linear-gradient(90deg, #B88AFF, #00C8FF, #00E896, #FFB340, #FF6B6B, #B88AFF);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-shift 4s ease infinite;
+}
+
+/* Brain orbit rotation */
+@keyframes orbit-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Node pulse */
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 1.0; transform: scale(1.15); }
+}
+
+/* Computed style reveal */
+@keyframes style-reveal {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Score count up — apply via JS, this is the container animation */
+@keyframes score-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

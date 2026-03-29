@@ -40,7 +40,6 @@ export const QUOTES = [
   { id: 'P-D1', text: 'You lead with people at the center. That\'s not softness. It\'s one of the rarest forms of intelligence an organization can have.', attribution: 'NeuroLeader', theme: 'who', zone: ['profile'], styleMatch: 'diplomatic' },
   { id: 'P-D2', text: 'The best leaders don\'t create followers. They create more leaders.', attribution: 'Tom Peters', theme: 'who', zone: ['profile'], styleMatch: 'diplomatic' },
   { id: 'P-D3', text: 'Empathy is not a soft skill. It is the hardest skill there is.', attribution: 'NeuroLeader', theme: 'empathy', zone: ['profile'], styleMatch: 'diplomatic' },
-  { id: 'P-D4', text: 'Diplomacy is the art of letting someone else have your way.', attribution: 'Daniele Vare', theme: 'influence', zone: ['profile'], styleMatch: 'diplomatic' },
 
   // Strategic
   { id: 'P-S1', text: 'You think further ahead than most people around you. That gap is both your greatest contribution and your most common frustration.', attribution: 'NeuroLeader', theme: 'why', zone: ['profile'], styleMatch: 'strategic' },

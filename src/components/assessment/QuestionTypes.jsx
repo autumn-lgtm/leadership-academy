@@ -40,7 +40,7 @@ export function Onboarding({ onStart }) {
     >
       <AxonMascot size={140} mood="idle" showQuip={false} entrance="portal" />
       <h1 className="font-display text-4xl md:text-5xl font-bold text-white mt-6 mb-4">
-        Your Leadership Assessment
+        Your Leadership Map
       </h1>
       <p className="text-base text-text-muted max-w-md leading-relaxed mb-3">
         52 questions. 6 sections. About 18 minutes.
@@ -57,7 +57,7 @@ export function Onboarding({ onStart }) {
         onClick={onStart}
         className="group px-10 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all flex items-center gap-2"
       >
-        Begin Assessment
+        Begin the Map
         <span className="transition-transform group-hover:translate-x-1">→</span>
       </motion.button>
     </motion.div>
