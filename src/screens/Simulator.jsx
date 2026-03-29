@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
@@ -610,7 +610,7 @@ function BrainBehavior() {
           to="/assessment"
           className="group inline-flex items-center gap-2 mt-6 px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all"
         >
-          Take the Assessment
+          Take the Map
           <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </motion.div>
@@ -620,6 +620,13 @@ function BrainBehavior() {
 
 export default function Simulator() {
   const [activeTab, setActiveTab] = useState(0)
+  const location = useLocation()
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const tab = params.get('tab')
+    if (tab !== null) setActiveTab(Number(tab))
+  }, [location.search])
 
   return (
     <div className="min-h-screen bg-bg-primary">
@@ -634,7 +641,7 @@ export default function Simulator() {
               <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
             </Link>
             <div className="flex items-center gap-6">
-              <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+              <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
               <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
               <Link
                 to="/profile"

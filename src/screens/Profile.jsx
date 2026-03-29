@@ -7,6 +7,7 @@ import { getProfileQuotes, getRandomQuote } from '../data/quotes'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
+import ActivationCard from '../components/profile/ActivationCard'
 
 function ProfileWelcome({ style, onDismiss }) {
   const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
@@ -61,13 +62,13 @@ function Nav({ activeTab, setActiveTab }) {
             <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
             <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
             <Link
               to="/assessment"
               className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
             >
-              Retake
+              Remap
             </Link>
           </div>
         </div>
@@ -481,7 +482,7 @@ function GrowthPathTab({ style }) {
 
       {/* How it connects */}
       <div className="mt-8">
-        <AxonQuote text={`The assessment maps who you are as a leader. The Growth Path develops what you can become. Your ${style.name} style isn't a box — it's a starting point.`} />
+        <AxonQuote text={`The Map shows who you are as a leader. The Growth Path develops what you can become. Your ${style.name} style isn't a box — it's a starting point.`} />
       </div>
 
       {/* Total stats */}
@@ -520,10 +521,10 @@ export default function Profile() {
             No Profile <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">Yet</span>
           </h2>
           <p className="text-text-muted mb-8 max-w-sm mx-auto">
-            Take the assessment and Axon will break down your leadership style — who you are, how you lead, and where you can grow.
+            Take the Map and Axon will break down your leadership style — who you are, how you lead, and where you can grow.
           </p>
           <button onClick={() => navigate('/assessment')} className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all inline-flex items-center gap-2">
-            Take Assessment
+            Take the Map
             <span className="transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>
@@ -550,6 +551,7 @@ export default function Profile() {
     <div className="min-h-screen bg-bg-primary">
       <Nav activeTab={activeTab} setActiveTab={setActiveTab} />
 
+      <ActivationCard styleName={styleName} />
       <main className="max-w-6xl mx-auto px-8 pt-32 pb-16">
         <AnimatePresence mode="wait">
           <motion.div

@@ -6,11 +6,11 @@ import { SectionHeader, RainbowDivider, NeuralSection, GlowCard, AxonQuote } fro
 
 const features = [
   {
-    title: 'Leadership Assessment',
+    title: 'Leadership Map',
     desc: 'Answer real scenarios, map your signals, and discover which of four leadership styles fits you best.',
     color: '#00C8FF',
     link: '/assessment',
-    cta: 'Take Assessment',
+    cta: 'Take the Map',
     icon: '01',
   },
   {
@@ -51,7 +51,7 @@ export default function Home() {
             <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Assessment</Link>
+            <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
             <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
             <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
             <Link
@@ -119,7 +119,7 @@ export default function Home() {
               to="/assessment"
               className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2.5"
             >
-              Start Assessment
+              Take the Map
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </Link>
             <Link
@@ -348,7 +348,7 @@ export default function Home() {
             <div>
               <h4 className="font-display text-xs font-bold text-text-muted uppercase tracking-[4px] mb-5">Explore</h4>
               <div className="flex flex-col gap-3">
-                <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors">Leadership Assessment</Link>
+                <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors">Leadership Map</Link>
                 <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors">Profile Lab</Link>
                 <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors">Communication Simulator</Link>
               </div>
