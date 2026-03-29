@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { signInWithMagicLink } from '../../lib/auth';
+import AxonMascot from '../simulator/AxonMascot';
 
 // Neural network background
 function NeuralCanvas() {
@@ -232,17 +233,8 @@ export default function SignIn() {
           <div className="axon-wrap" style={{
             ...fadeStyle(900),
             position: 'absolute', bottom: '-12%', left: '8%',
-            mixBlendMode: 'screen',
           }}>
-            <img
-              src="/NeuroLeader/axon-final.webp"
-              alt="Axon"
-              style={{
-                width: 220, height: 'auto',
-                filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
-                animation: 'axon-float 4s ease-in-out infinite',
-              }}
-            />
+            <AxonMascot size={220} mood="idle" showQuip={false} entrance="none" />
           </div>
 
           {/* Axonism near Axon */}
@@ -367,7 +359,9 @@ export default function SignIn() {
                   display: 'flex', alignItems: 'flex-start', gap: 14,
                   textAlign: 'left',
                 }}>
-                  <img src="/NeuroLeader/axon-final.webp" alt="Axon" style={{ width: 44, height: 'auto', flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))', animation: 'axon-float 4s ease-in-out infinite' }} />
+                  <div style={{ width: 64, flexShrink: 0 }}>
+                  <AxonMascot size={64} mood="wave" showQuip={false} entrance="none" />
+                </div>
                   <p style={{ fontSize: 13, color: '#FFB340', fontStyle: 'italic', lineHeight: 1.6 }}>
                     "That took honesty. Most people answer assessments the way they want to be seen."
                   </p>
