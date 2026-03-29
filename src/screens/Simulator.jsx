@@ -6,9 +6,10 @@ import { computeStyle } from '../data/scoring'
 import { translateMessage } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
+import TeamSignalMap from '../components/simulator/TeamSignalMap'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
-const TABS = ['Your Style', 'Read the Room', 'Say It Their Way']
+const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map']
 
 const SIGNAL_WORDS = {
   who: [
@@ -682,6 +683,7 @@ export default function Simulator() {
             {activeTab === 0 && <MapYourStyle />}
             {activeTab === 1 && <StyleDecoder />}
             {activeTab === 2 && <MessageTranslator />}
+            {activeTab === 3 && <TeamSignalMap />}
           </motion.div>
         </AnimatePresence>
       </main>
