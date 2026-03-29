@@ -1,6 +1,6 @@
 import { Suspense, useState, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { useGLTF, Float, useAnimations } from '@react-three/drei'
+import { Canvas, useThree } from '@react-three/fiber'
+import { useGLTF, useAnimations } from '@react-three/drei'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const GLB_URL = `${import.meta.env.BASE_URL}axon-final.glb`
@@ -8,54 +8,43 @@ const GLB_URL = `${import.meta.env.BASE_URL}axon-final.glb`
 // Preload once for the whole app
 useGLTF.preload(GLB_URL)
 
-// Float params per mood
-const MOOD_FLOAT = {
-  idle:     { speed: 1.5, rotationIntensity: 0.2, floatIntensity: 0.8 },
-  excited:  { speed: 3.5, rotationIntensity: 0.6, floatIntensity: 2.0 },
-  thinking: { speed: 0.8, rotationIntensity: 0.4, floatIntensity: 0.4 },
-  wave:     { speed: 2.2, rotationIntensity: 0.8, floatIntensity: 1.2 },
-}
-
-// Inner model — loads GLB, plays first animation clip if present
-function Model() {
+// ── Inner model — loads GLB, plays first clip, forces one render ──────
+function AxonModel() {
   const { scene, animations } = useGLTF(GLB_URL)
   const { actions, names } = useAnimations(animations, scene)
+  const { invalidate } = useThree()
 
   useEffect(() => {
+    // Force the canvas to redraw once the model is ready
+    invalidate()
     if (names.length > 0) {
       const action = actions[names[0]]
       action?.reset().fadeIn(0.3).play()
       return () => { action?.fadeOut(0.3) }
     }
-  }, [actions, names])
+  }, [actions, names, invalidate])
 
   return <primitive object={scene} />
 }
 
-// ── COMPONENT 1: AxonAvatar3D ────────────────────────────────────────
+// ── COMPONENT 1: AxonAvatar3D ─────────────────────────────────────────
 // Pure 3D renderer. Transparent background, no speech bubble, no entrance.
-// Drop-in anywhere a mascot image was used.
+// frameloop="demand" prevents continuous re-renders that conflict with React 19.
+// Lights are inside the Canvas (required for R3F).
 export function AxonAvatar3D({ size = 140, mood = 'idle', style = {} }) {
-  const fp = MOOD_FLOAT[mood] || MOOD_FLOAT.idle
-
   return (
     <div style={{ width: size, height: size, flexShrink: 0, ...style }}>
       <Canvas
-        gl={{ alpha: true, antialias: true }}
+        camera={{ position: [0, 0.5, 3.5], fov: 40 }}
         style={{ background: 'transparent', width: '100%', height: '100%' }}
-        camera={{ position: [0, 0.5, 3], fov: 42 }}
+        gl={{ alpha: true, antialias: true }}
+        frameloop="demand"
       >
-        <ambientLight intensity={0.7} />
-        <hemisphereLight args={['#00C8FF', '#B88AFF', 0.6]} />
-        <directionalLight position={[2, 4, 3]} intensity={1.4} />
         <Suspense fallback={null}>
-          <Float
-            speed={fp.speed}
-            rotationIntensity={fp.rotationIntensity}
-            floatIntensity={fp.floatIntensity}
-          >
-            <Model />
-          </Float>
+          <ambientLight intensity={0.7} />
+          <directionalLight position={[2, 4, 2]} intensity={1.2} />
+          <pointLight position={[-2, 2, 2]} color="#00C8FF" intensity={0.5} />
+          <AxonModel />
         </Suspense>
       </Canvas>
     </div>
@@ -81,7 +70,7 @@ export const AXON_ISMS = [
   "The leader your team sees is shaped by your habits, not your intentions. Habits are changeable.",
 ]
 
-// ── COMPONENT 2: AxonAvatar ──────────────────────────────────────────
+// ── COMPONENT 2: AxonAvatar ───────────────────────────────────────────
 // Full drop-in replacement for AxonMascot. Same props interface.
 // Uses AxonAvatar3D for the model with portal entrance, particles, glow,
 // and optional cycling quip bubble.
