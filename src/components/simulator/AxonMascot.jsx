@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import mascotImg from '../../assets/einstein-mascot.png'
+
+const mascotImg = `${import.meta.env.BASE_URL}axon-final.webp`
 
 // ── Axon-isms: signature catchphrases ─────────────────────
 const AXON_ISMS = [
@@ -221,7 +222,6 @@ export default function AxonMascot({
             className="relative select-none pointer-events-none axon-img"
             style={{
               objectFit: 'contain',
-              mixBlendMode: 'screen',
             }}
           />
         </motion.div>
