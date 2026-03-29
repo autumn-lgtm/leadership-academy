@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import AxonMascot from '../components/simulator/AxonMascot'
 import { motion } from 'framer-motion'
 import BrainOrbit from '../components/BrainOrbit'
 import { SectionHeader, RainbowDivider, NeuralSection, GlowCard, AxonQuote } from '../components/DesignSystem'
@@ -236,6 +237,14 @@ export default function Home() {
         <RainbowDivider className="absolute top-0" />
         <div className="max-w-6xl mx-auto px-8 relative">
           <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="shrink-0"
+            >
+              <AxonMascot size={220} mood="wave" showQuip={false} entrance="portal" />
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
