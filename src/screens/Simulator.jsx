@@ -8,9 +8,10 @@ import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import TeamSignalMap from '../components/simulator/TeamSignalMap'
 import { ParallelRealityEngine } from '../components/simulator/ParallelRealityEngine'
+import TrustPulse from '../components/simulator/TrustPulse'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 
-const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map', 'Parallel Reality']
+const TABS = ['Your Style', 'Read the Room', 'Say It Their Way', 'Team Signal Map', 'Parallel Reality', 'Trust Pulse']
 
 const SIGNAL_WORDS = {
   who: [
@@ -1069,6 +1070,7 @@ export default function Simulator() {
             {activeTab === 2 && <MessageTranslator />}
             {activeTab === 3 && <TeamSignalMap profile={profile} />}
             {activeTab === 4 && <ParallelRealityEngine />}
+            {activeTab === 5 && <TrustPulse />}
           </motion.div>
         </AnimatePresence>
       </main>
