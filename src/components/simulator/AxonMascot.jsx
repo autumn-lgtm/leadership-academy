@@ -61,13 +61,24 @@ function AxonScene({ scene, mood }) {
   )
 }
 
+function isWebGLAvailable() {
+  try {
+    const c = document.createElement('canvas')
+    return !!(window.WebGLRenderingContext &&
+      (c.getContext('webgl') || c.getContext('experimental-webgl')))
+  } catch { return false }
+}
+
 // Wrapper that loads the GLB imperatively and passes scene down
 function Axon3D({ size, mood, onError }) {
   const [scene, setScene] = useState(null)
 
   useEffect(() => {
+    if (!isWebGLAvailable()) { onError(); return }
+
     const draco = new DRACOLoader()
     draco.setDecoderPath(`${import.meta.env.BASE_URL}draco/`)
+    draco.setDecoderConfig({ type: 'js' }) // JS-only, avoids WASM MIME issues
     const loader = new GLTFLoader()
     loader.setDRACOLoader(draco)
     loader.load(
