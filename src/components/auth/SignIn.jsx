@@ -229,23 +229,65 @@ export default function SignIn() {
             </div>
           </div>
 
-          {/* Axon emerging from bottom */}
+          {/* Axon + neuron burst */}
           <div className="axon-wrap" style={{
             ...fadeStyle(900),
-            position: 'absolute', bottom: '-12%', left: '8%',
+            position: 'absolute', bottom: '-22%', left: '4%',
           }}>
-            <AxonMascot size={220} mood="idle" showQuip={false} entrance="none" />
+            {/* Neuron particles behind Axon */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+              {[
+                { color: '#00C8FF', x: '60%',  y: '15%', size: 7,  delay: '0s',    dur: '2.8s' },
+                { color: '#B88AFF', x: '75%',  y: '35%', size: 5,  delay: '0.4s',  dur: '3.2s' },
+                { color: '#00E896', x: '80%',  y: '55%', size: 6,  delay: '0.8s',  dur: '2.5s' },
+                { color: '#FFB340', x: '70%',  y: '72%', size: 4,  delay: '1.1s',  dur: '3.6s' },
+                { color: '#FF6B6B', x: '20%',  y: '18%', size: 5,  delay: '0.2s',  dur: '3.0s' },
+                { color: '#00C8FF', x: '10%',  y: '42%', size: 4,  delay: '0.6s',  dur: '2.6s' },
+                { color: '#B88AFF', x: '15%',  y: '65%', size: 7,  delay: '1.4s',  dur: '3.4s' },
+                { color: '#00E896', x: '50%',  y: '8%',  size: 5,  delay: '0.9s',  dur: '2.9s' },
+                { color: '#FFB340', x: '85%',  y: '20%', size: 4,  delay: '0.3s',  dur: '3.1s' },
+                { color: '#FF6B6B', x: '30%',  y: '80%', size: 6,  delay: '1.6s',  dur: '2.7s' },
+                { color: '#00C8FF', x: '88%',  y: '70%', size: 5,  delay: '0.7s',  dur: '3.3s' },
+                { color: '#B88AFF', x: '40%',  y: '90%', size: 4,  delay: '1.2s',  dur: '2.4s' },
+              ].map((p, i) => (
+                <div key={i} style={{
+                  position: 'absolute',
+                  left: p.x, top: p.y,
+                  width: p.size, height: p.size,
+                  borderRadius: '50%',
+                  background: p.color,
+                  boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
+                  animation: `neuron-pulse ${p.dur} ${p.delay} ease-in-out infinite`,
+                }} />
+              ))}
+              {/* Synapse lines */}
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.25 }}>
+                <line x1="60%" y1="15%" x2="75%" y2="35%" stroke="#00C8FF" strokeWidth="0.8" />
+                <line x1="75%" y1="35%" x2="80%" y2="55%" stroke="#B88AFF" strokeWidth="0.8" />
+                <line x1="20%" y1="18%" x2="10%" y2="42%" stroke="#FF6B6B" strokeWidth="0.8" />
+                <line x1="10%" y1="42%" x2="15%" y2="65%" stroke="#B88AFF" strokeWidth="0.8" />
+                <line x1="50%" y1="8%"  x2="60%" y2="15%" stroke="#00E896" strokeWidth="0.8" />
+                <line x1="85%" y1="20%" x2="75%" y2="35%" stroke="#FFB340" strokeWidth="0.8" />
+              </svg>
+            </div>
+            <AxonMascot size={240} mood="wave" showQuip={false} entrance="fade" />
           </div>
 
           {/* Axonism near Axon */}
           <div style={{
             ...fadeStyle(1000),
-            position: 'absolute', bottom: '8%', left: '38%',
+            position: 'absolute', bottom: '10%', left: '38%',
             fontSize: 12, fontStyle: 'italic',
             color: '#FFB340', maxWidth: 200, lineHeight: 1.5,
           }}>
             "The expertise that made you excellent is now the thing you have to lead through, not with."
           </div>
+          <style>{`
+            @keyframes neuron-pulse {
+              0%, 100% { opacity: 0.3; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.6); }
+            }
+          `}</style>
         </div>
 
         {/* ── RIGHT PANEL ── */}
