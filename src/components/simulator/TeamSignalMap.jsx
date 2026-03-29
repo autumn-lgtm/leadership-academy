@@ -221,7 +221,7 @@ function SetupScreen({ onStart }) {
       </div>
 
       {/* Right: teaser spider chart */}
-      <div className="relative rounded-2xl border border-white/[0.06] bg-bg-surface/40 overflow-hidden">
+      <div className="relative rounded-2xl border border-white/[0.06] bg-bg-surface/40 overflow-hidden min-h-[300px]">
         <div className="p-4 pb-0">
           <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.14em] mb-1">
             Your alignment map

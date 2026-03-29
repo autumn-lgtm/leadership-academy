@@ -79,8 +79,10 @@ export function SpiderMap({ stage, profile }) {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
+
+    const startLoop = () => {
     const DPR = window.devicePixelRatio || 1
-    const SIZE = canvas.offsetWidth
+    const SIZE = canvas.offsetWidth || canvas.parentElement?.offsetWidth || 400
     canvas.width = SIZE * DPR
     canvas.height = SIZE * 0.72 * DPR
     const ctx = canvas.getContext('2d')
@@ -209,6 +211,11 @@ export function SpiderMap({ stage, profile }) {
 
     draw()
     return () => cancelAnimationFrame(rafId)
+    } // end startLoop
+
+    // Defer one frame so grid layout resolves before reading offsetWidth
+    const frameId = requestAnimationFrame(startLoop)
+    return () => cancelAnimationFrame(frameId)
   }, []) // only mount/unmount — stage changes trigger morph via the first useEffect
 
   return (
