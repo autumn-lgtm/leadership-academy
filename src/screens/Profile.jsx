@@ -8,6 +8,8 @@ import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 import ActivationCard from '../components/profile/ActivationCard'
+import { ProfileNarrative } from '../components/profile/ProfileNarrative'
+import { StressDeltaCard } from '../components/profile/StressDeltaCard'
 import NuggetCard from '../components/nuggets/NuggetCard'
 import { getNuggetForPlacement } from '../data/nuggets'
 
@@ -780,6 +782,10 @@ export default function Profile() {
                     </div>
                     <AxonCallout text={style.neuro} />
                   </div>
+                </div>
+                <div className="mt-8 space-y-4">
+                  <ProfileNarrative profile={profile} />
+                  <StressDeltaCard profile={profile} />
                 </div>
                 <ActivationTeaser style={style} onOpen={() => setShowActivation(true)} />
                 {nugget && (

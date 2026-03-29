@@ -421,9 +421,15 @@ export function computeFullProfile(allAnswers = {}) {
     confirmationBias: fcAnswers[6] === 0, // Q15 option A
   };
 
+  // Response patterns derived from axis scores
+  const responsePatterns = detectPatternsFromAxes(axisScores);
+
   return {
     // Layer 1: Communication Quadrant
     quadrant: { ...axisScores, style },
+    // Convenience aliases used by Profile screen
+    axisScores,
+    dominantStyle: style,
     // Layer 2: Attribute Signal Map
     attributes: attrScores,
     // Layer 3: Stress Delta
@@ -432,6 +438,8 @@ export function computeFullProfile(allAnswers = {}) {
     trust: trustIndex,
     // Layer 5: EQ
     eq: eqScore,
+    // Response patterns
+    responsePatterns,
     // Metadata
     metadata,
     // Raw slider data for debugging/re-scoring
@@ -484,4 +492,73 @@ export function computeScores(scenarioAnswers = [], sliderAnswers = [], attrAnsw
   const dominantStyle = computeStyle(axisScores.who, axisScores.why, axisScores.what, axisScores.how);
 
   return { axisScores, attrScores, dominantStyle };
+}
+
+// ── Response pattern detection ──────────────────────────────────
+
+export function computeSectionWeights(responses) {
+  // responses: array of { sectionId, axisWeights, value }
+  // axisWeights: { who: 0-1, why: 0-1, what: 0-1, how: 0-1 }
+  const weights = { who: {}, why: {}, what: {}, how: {} };
+
+  (responses || []).forEach(r => {
+    Object.entries(r.axisWeights || {}).forEach(([axis, weight]) => {
+      if (weights[axis] === undefined) return;
+      if (!weights[axis][r.sectionId]) weights[axis][r.sectionId] = 0;
+      weights[axis][r.sectionId] += weight * (r.value || 0);
+    });
+  });
+
+  const topSections = {};
+  Object.entries(weights).forEach(([axis, sectionScores]) => {
+    topSections[axis] = Object.entries(sectionScores)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 2)
+      .map(([sectionId]) => sectionId);
+  });
+
+  return topSections;
+}
+
+export function detectResponsePattern(sectionWeights) {
+  const patterns = [];
+  const w = sectionWeights || {};
+
+  if (w.who?.includes('communication') && w.who?.includes('feedback')) {
+    patterns.push('relational_safety_first');
+  }
+  if (w.what?.includes('direction') && w.how?.includes('accountability')) {
+    patterns.push('systems_before_people');
+  }
+  if (w.who?.includes('conflict')) {
+    patterns.push('conflict_as_relational_risk');
+  }
+  if (w.how?.includes('delegation') && w.how?.includes('accountability')) {
+    patterns.push('execution_first');
+  }
+  if (w.why?.includes('direction') && !w.what?.includes('direction')) {
+    patterns.push('vision_without_systems');
+  }
+
+  return patterns.slice(0, 2);
+}
+
+// Derive response patterns from axis scores when section-level data is unavailable
+export function detectPatternsFromAxes(axisScores) {
+  const { who = 50, why = 50, what = 50, how = 50 } = axisScores;
+  const patterns = [];
+
+  if (who >= 60 && why >= 55 && who > what && who > how) {
+    patterns.push('relational_safety_first');
+  } else if (who >= 60 && how >= 55 && how > why && how > what) {
+    patterns.push('execution_first');
+  } else if (what >= 60 && how >= 55 && what > who && how > who) {
+    patterns.push('systems_before_people');
+  } else if (why >= 60 && what < 50 && why > how) {
+    patterns.push('vision_without_systems');
+  } else if (who >= 55 && who > why && who > how) {
+    patterns.push('conflict_as_relational_risk');
+  }
+
+  return patterns.slice(0, 2);
 }
