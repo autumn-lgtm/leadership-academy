@@ -214,6 +214,7 @@ export default function SignIn() {
                 { label: 'Behavioral Map', color: '#00C8FF' },
                 { label: 'Signal Detection', color: '#B88AFF' },
                 { label: 'Style Translation', color: '#FFB340' },
+                { label: 'Scenario Simulation', color: '#00E896' },
               ].map(({ label, color }) => (
                 <div key={label} style={{
                   display: 'flex', alignItems: 'center', gap: 7,
@@ -237,7 +238,7 @@ export default function SignIn() {
             marginLeft: -16,
           }}>
             {/* Axon with neuron particles */}
-            <div className="axon-wrap" style={{ ...fadeStyle(900), position: 'relative', flexShrink: 0 }}>
+            <div className="axon-wrap" style={{ position: 'relative', flexShrink: 0 }}>
               {/* Neuron particles */}
               <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 {[
