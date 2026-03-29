@@ -126,7 +126,7 @@ export default function AxonMascot({
   const entranceVariant = entrance === 'portal' ? portalVariants : fadeVariants
 
   return (
-    <div className={`flex flex-col items-center gap-3 ${className}`}>
+    <div className={`flex flex-col items-center gap-3 ${className}`} style={{ mixBlendMode: 'screen' }}>
       {/* Speech bubble */}
       {showQuip && hasEntered && (
         <AnimatePresence mode="wait">
@@ -151,7 +151,6 @@ export default function AxonMascot({
       {/* Axon — with entrance animation */}
       <motion.div
         className="relative axon-mascot"
-        style={{ mixBlendMode: 'screen' }}
         variants={entrance !== 'none' ? entranceVariant : undefined}
         initial={entrance !== 'none' ? 'hidden' : undefined}
         animate={entrance !== 'none' ? 'visible' : undefined}
