@@ -147,66 +147,107 @@ function saveResult({ teamName, teamType, stage, confidence, leaderStyle }) {
 }
 
 // ── Screen 1: Setup ──────────────────────────────────────────────────
+const STAGE_CYCLE = ['forming', 'storming', 'norming', 'performing', 'adjourning']
+
 function SetupScreen({ onStart }) {
   const [teamName, setTeamName] = useState('')
   const [teamType, setTeamType] = useState('direct')
+  const [teaserStage, setTeaserStage] = useState(0)
+
+  useEffect(() => {
+    const t = setInterval(() => setTeaserStage(s => (s + 1) % STAGE_CYCLE.length), 2800)
+    return () => clearInterval(t)
+  }, [])
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
-      className="max-w-lg"
+      className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start"
     >
-      <h2 className="font-display text-2xl font-bold text-white mb-2">
-        Map your team's stage
-      </h2>
-      <p className="text-sm text-text-muted mb-8 leading-relaxed">
-        Answer 8 observations about how your team is operating right now.
-        Your Map result shapes the interpretation.
-      </p>
+      {/* Left: form */}
+      <div>
+        <h2 className="font-display text-2xl font-bold text-white mb-2">
+          Map your team's stage
+        </h2>
+        <p className="text-sm text-text-muted mb-8 leading-relaxed">
+          Answer 8 observations about how your team is operating right now.
+          Your Map result shapes the interpretation.
+        </p>
 
-      <div className="space-y-6">
-        <div>
-          <label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
-            What do you call this team?
-          </label>
-          <input
-            type="text"
-            value={teamName}
-            onChange={e => setTeamName(e.target.value)}
-            placeholder="My direct reports"
-            className="w-full px-4 py-3 rounded-xl bg-bg-surface border border-white/10 text-white placeholder-text-muted focus:outline-none focus:border-cyan/30 transition-colors text-sm"
-          />
+        <div className="space-y-6">
+          <div>
+            <label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-2">
+              What do you call this team?
+            </label>
+            <input
+              type="text"
+              value={teamName}
+              onChange={e => setTeamName(e.target.value)}
+              placeholder="My direct reports"
+              className="w-full px-4 py-3 rounded-xl bg-bg-surface border border-white/10 text-white placeholder-text-muted focus:outline-none focus:border-cyan/30 transition-colors text-sm"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
+              Team type
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {TEAM_TYPES.map(t => (
+                <button
+                  key={t.value}
+                  onClick={() => setTeamType(t.value)}
+                  className={`px-4 py-3 rounded-xl border text-sm font-medium text-left transition-all ${
+                    teamType === t.value
+                      ? 'border-cyan/40 bg-cyan/8 text-cyan'
+                      : 'border-white/[0.06] text-text-muted hover:border-white/10 hover:text-white'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={() => onStart({ teamName: teamName.trim() || 'My team', teamType })}
+            className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2"
+          >
+            Start mapping <span>→</span>
+          </button>
         </div>
+      </div>
 
-        <div>
-          <label className="block text-xs font-bold text-text-muted uppercase tracking-widest mb-3">
-            Team type
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {TEAM_TYPES.map(t => (
-              <button
-                key={t.value}
-                onClick={() => setTeamType(t.value)}
-                className={`px-4 py-3 rounded-xl border text-sm font-medium text-left transition-all ${
-                  teamType === t.value
-                    ? 'border-cyan/40 bg-cyan/8 text-cyan'
-                    : 'border-white/[0.06] text-text-muted hover:border-white/10 hover:text-white'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
+      {/* Right: teaser spider chart */}
+      <div className="relative rounded-2xl border border-white/[0.06] bg-bg-surface/40 overflow-hidden">
+        <div className="p-4 pb-0">
+          <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.14em] mb-1">
+            Your alignment map
+          </div>
+          <div className="text-xs text-text-muted">
+            <span style={{ color: STAGE_COLORS[STAGE_CYCLE[teaserStage]] }}>
+              {STAGES[STAGE_CYCLE[teaserStage]]?.label}
+            </span>
+            {' '}stage needs vs. your leadership Map
           </div>
         </div>
 
-        <button
-          onClick={() => onStart({ teamName: teamName.trim() || 'My team', teamType })}
-          className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2"
-        >
-          Start mapping <span>→</span>
-        </button>
+        <SpiderMap stage={STAGE_CYCLE[teaserStage]} profile={null} />
+
+        {/* Lock overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center"
+          style={{ background: 'linear-gradient(to bottom, transparent 30%, rgba(10,10,15,0.85) 100%)' }}>
+          <div className="absolute bottom-0 left-0 right-0 p-5 text-center">
+            <div className="text-xs font-bold text-white/50 mb-1 uppercase tracking-widest">
+              Revealed after 8 observations
+            </div>
+            <div className="text-[11px] text-white/30">
+              Your profile vs. what each stage actually needs
+            </div>
+          </div>
+        </div>
       </div>
     </motion.div>
   )
