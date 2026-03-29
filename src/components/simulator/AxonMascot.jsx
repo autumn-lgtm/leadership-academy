@@ -99,7 +99,7 @@ function Axon3D({ size, mood, onError }) {
   return (
     <Canvas
       style={{ width: size, height: size, background: 'transparent' }}
-      camera={{ position: [0, 0, 3], fov: 40 }}
+      camera={{ position: [0, 0.5, 6], fov: 32 }}
       gl={{ alpha: true, antialias: true }}
       onCreated={({ gl, scene: threeScene }) => {
         gl.setClearColor(0x000000, 0)
