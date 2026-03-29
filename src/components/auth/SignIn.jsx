@@ -107,11 +107,11 @@ export default function SignIn() {
         input:focus { outline: none; border-color: #00C8FF !important; box-shadow: 0 0 0 3px rgba(0,200,255,0.12); }
         @media (max-width: 768px) {
           .split-layout { flex-direction: column !important; }
-          .left-panel { width: 100% !important; min-height: 90vh !important; padding: 40px 24px 160px !important; overflow: visible !important; }
+          .left-panel { width: 100% !important; padding: 36px 24px 0 !important; overflow: visible !important; }
           .right-panel { width: 100% !important; padding: 40px 24px !important; }
-          .axon-wrap { bottom: -120px !important; left: 50% !important; transform: translateX(-50%) !important; }
-          .hero-h1 { font-size: 36px !important; }
-          .hero-h2 { font-size: 28px !important; }
+          .axon-wrap { width: 180px !important; }
+          .hero-h1 { font-size: 34px !important; }
+          .hero-h2 { font-size: 24px !important; }
         }
       `}</style>
 
@@ -128,14 +128,14 @@ export default function SignIn() {
         {/* ── LEFT PANEL ── */}
         <div className="left-panel" style={{
           width: '55%', minHeight: '100vh',
-          padding: '48px 56px 200px',
+          padding: '48px 56px 0',
           display: 'flex', flexDirection: 'column',
           position: 'relative', overflow: 'visible',
           borderRight: '1px solid rgba(255,255,255,0.04)',
         }}>
 
           {/* Wordmark */}
-          <div style={{ ...fadeStyle(0), display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ ...fadeStyle(0), display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <div style={{
               width: 36, height: 36, borderRadius: 8,
               background: 'linear-gradient(135deg, #00C8FF, #B88AFF)',
@@ -149,8 +149,8 @@ export default function SignIn() {
             }}>NeuroLeader</span>
           </div>
 
-          {/* Main content */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: 40 }}>
+          {/* ── Section 1: Hero headline ── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: 40, paddingBottom: 40 }}>
 
             {/* Eyebrow */}
             <div style={{
@@ -192,15 +192,24 @@ export default function SignIn() {
                 are not the skills that<br />make you a great leader.
               </h2>
             </div>
+          </div>
 
-            {/* Divider */}
-            <div style={{
-              ...fadeStyle(500),
-              height: 1, background: 'rgba(0,200,255,0.2)', marginBottom: 28,
-            }} />
-
-            {/* Proof badges */}
-            <div style={{ ...fadeStyle(700), display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {/* ── Section 2: Closes the gap + badges ── */}
+          <div style={{
+            ...fadeStyle(500),
+            flexShrink: 0,
+            borderTop: '1px solid rgba(0,200,255,0.15)',
+            paddingTop: 28, paddingBottom: 32,
+          }}>
+            <p style={{
+              fontFamily: "'Syne', sans-serif", fontWeight: 700,
+              fontSize: 13, color: 'rgba(255,255,255,0.5)',
+              letterSpacing: '0.14em', textTransform: 'uppercase',
+              marginBottom: 18,
+            }}>
+              NeuroLeader closes that gap.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               {[
                 { label: 'Behavioral Map', color: '#00C8FF' },
                 { label: 'Signal Detection', color: '#B88AFF' },
@@ -220,85 +229,66 @@ export default function SignIn() {
             </div>
           </div>
 
-          {/* ── Axon zone ── */}
-
-          {/* "Closes the gap" label — sits above Axon */}
+          {/* ── Section 3: Axon portal + thought ── */}
           <div style={{
-            ...fadeStyle(1600),
-            position: 'absolute', bottom: '5%', left: '6%',
-            fontFamily: "'Syne', sans-serif", fontWeight: 700,
-            fontSize: 13, color: 'rgba(255,255,255,0.35)',
-            letterSpacing: '0.12em', textTransform: 'uppercase',
+            flexShrink: 0,
+            display: 'flex', alignItems: 'flex-end', gap: 16,
+            overflow: 'visible',
+            marginLeft: -16,
           }}>
-            NeuroLeader closes that gap.
-          </div>
+            {/* Axon with neuron particles */}
+            <div className="axon-wrap" style={{ ...fadeStyle(900), position: 'relative', flexShrink: 0 }}>
+              {/* Neuron particles */}
+              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                {[
+                  { color: '#00C8FF', x: '65%', y: '10%', size: 7, delay: '0s',   dur: '2.8s' },
+                  { color: '#B88AFF', x: '80%', y: '28%', size: 5, delay: '0.4s', dur: '3.2s' },
+                  { color: '#00E896', x: '84%', y: '50%', size: 6, delay: '0.8s', dur: '2.5s' },
+                  { color: '#FF6B6B', x: '16%', y: '14%', size: 5, delay: '0.2s', dur: '3.0s' },
+                  { color: '#00C8FF', x: '6%',  y: '38%', size: 4, delay: '0.6s', dur: '2.6s' },
+                  { color: '#FFB340', x: '46%', y: '5%',  size: 5, delay: '0.9s', dur: '2.9s' },
+                ].map((p, i) => (
+                  <div key={i} style={{
+                    position: 'absolute', left: p.x, top: p.y,
+                    width: p.size, height: p.size, borderRadius: '50%',
+                    background: p.color, boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
+                    animation: `neuron-pulse ${p.dur} ${p.delay} ease-in-out infinite`,
+                  }} />
+                ))}
+                <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.2 }}>
+                  <line x1="65%" y1="10%" x2="80%" y2="28%" stroke="#00C8FF" strokeWidth="0.8" />
+                  <line x1="80%" y1="28%" x2="84%" y2="50%" stroke="#B88AFF" strokeWidth="0.8" />
+                  <line x1="16%" y1="14%" x2="6%"  y2="38%" stroke="#FF6B6B" strokeWidth="0.8" />
+                  <line x1="46%" y1="5%"  x2="65%" y2="10%" stroke="#00E896" strokeWidth="0.8" />
+                </svg>
+              </div>
+              <AxonMascot size={240} mood="wave" showQuip={false} entrance="portal" />
+            </div>
 
-          {/* Speech bubble quote — floats right of Axon */}
-          <div style={{
-            ...fadeStyle(2000),
-            position: 'absolute', bottom: '10%', left: '46%',
-            maxWidth: 210,
-          }}>
-            <div style={{
-              background: 'rgba(255,179,64,0.08)',
-              border: '1px solid rgba(255,179,64,0.2)',
-              borderRadius: 12,
-              borderBottomLeftRadius: 4,
-              padding: '10px 14px',
-            }}>
-              <p style={{
-                margin: 0, fontSize: 12, fontStyle: 'italic',
-                color: '#FFB340', lineHeight: 1.6,
+            {/* Quote bubble */}
+            <div style={{ ...fadeStyle(2000), paddingBottom: 48, flex: 1, minWidth: 0 }}>
+              <div style={{
+                background: 'rgba(255,179,64,0.08)',
+                border: '1px solid rgba(255,179,64,0.2)',
+                borderRadius: 12, borderBottomLeftRadius: 4,
+                padding: '12px 16px',
               }}>
-                "The expertise that made you excellent is now the thing you have to lead through, not with."
-              </p>
+                <p style={{
+                  margin: 0, fontSize: 12, fontStyle: 'italic',
+                  color: '#FFB340', lineHeight: 1.7,
+                }}>
+                  "The expertise that made you excellent is now the thing you have to lead through, not with."
+                </p>
+              </div>
+              <div style={{
+                width: 8, height: 8,
+                background: 'rgba(255,179,64,0.08)',
+                border: '1px solid rgba(255,179,64,0.2)',
+                borderTop: 'none', borderRight: 'none',
+                transform: 'rotate(-45deg)',
+                marginTop: -5, marginLeft: 10,
+              }} />
             </div>
-            {/* Tail pointing left toward Axon */}
-            <div style={{
-              width: 8, height: 8,
-              background: 'rgba(255,179,64,0.08)',
-              border: '1px solid rgba(255,179,64,0.2)',
-              borderTop: 'none', borderRight: 'none',
-              transform: 'rotate(-45deg)',
-              marginTop: -5, marginLeft: 10,
-            }} />
-          </div>
-
-          {/* Axon + neuron burst */}
-          <div className="axon-wrap" style={{
-            ...fadeStyle(900),
-            position: 'absolute', bottom: '-42%', left: '-2%',
-          }}>
-            {/* Neuron particles */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-              {[
-                { color: '#00C8FF', x: '62%', y: '12%', size: 7, delay: '0s',   dur: '2.8s' },
-                { color: '#B88AFF', x: '78%', y: '30%', size: 5, delay: '0.4s', dur: '3.2s' },
-                { color: '#00E896', x: '82%', y: '52%', size: 6, delay: '0.8s', dur: '2.5s' },
-                { color: '#FFB340', x: '72%', y: '70%', size: 4, delay: '1.1s', dur: '3.6s' },
-                { color: '#FF6B6B', x: '18%', y: '16%', size: 5, delay: '0.2s', dur: '3.0s' },
-                { color: '#00C8FF', x: '8%',  y: '40%', size: 4, delay: '0.6s', dur: '2.6s' },
-                { color: '#B88AFF', x: '12%', y: '62%', size: 7, delay: '1.4s', dur: '3.4s' },
-                { color: '#00E896', x: '48%', y: '6%',  size: 5, delay: '0.9s', dur: '2.9s' },
-                { color: '#FFB340', x: '88%', y: '18%', size: 4, delay: '0.3s', dur: '3.1s' },
-                { color: '#FF6B6B', x: '28%', y: '78%', size: 6, delay: '1.6s', dur: '2.7s' },
-              ].map((p, i) => (
-                <div key={i} style={{
-                  position: 'absolute', left: p.x, top: p.y,
-                  width: p.size, height: p.size, borderRadius: '50%',
-                  background: p.color, boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
-                  animation: `neuron-pulse ${p.dur} ${p.delay} ease-in-out infinite`,
-                }} />
-              ))}
-              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.2 }}>
-                <line x1="62%" y1="12%" x2="78%" y2="30%" stroke="#00C8FF" strokeWidth="0.8" />
-                <line x1="78%" y1="30%" x2="82%" y2="52%" stroke="#B88AFF" strokeWidth="0.8" />
-                <line x1="18%" y1="16%" x2="8%"  y2="40%" stroke="#FF6B6B" strokeWidth="0.8" />
-                <line x1="8%"  y1="40%" x2="12%" y2="62%" stroke="#B88AFF" strokeWidth="0.8" />
-                <line x1="48%" y1="6%"  x2="62%" y2="12%" stroke="#00E896" strokeWidth="0.8" />
-              </svg>
-            </div>
-            <AxonMascot size={260} mood="wave" showQuip={false} entrance="portal" />
           </div>
 
           <style>{`
