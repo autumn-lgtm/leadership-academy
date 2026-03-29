@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { useGLTF, Environment, ContactShadows } from '@react-three/drei'
 
-const mascotImg = `${import.meta.env.BASE_URL}axon-final.webp`
+const MODEL_URL = `${import.meta.env.BASE_URL}axon-final.glb`
 
 // ── Axon-isms: signature catchphrases ─────────────────────
 const AXON_ISMS = [
@@ -22,18 +24,53 @@ const AXON_ISMS = [
   "The leader your team sees is shaped by your habits, not your intentions. Habits are changeable.",
 ]
 
+const MOOD_ANIM = {
+  idle:     { bobAmp: 0.06, bobSpeed: 1.2, tiltAmp: 0.04, tiltSpeed: 0.6, scaleAmp: 0 },
+  excited:  { bobAmp: 0.14, bobSpeed: 3.0, tiltAmp: 0.12, tiltSpeed: 2.5, scaleAmp: 0.06 },
+  thinking: { bobAmp: 0.03, bobSpeed: 0.7, tiltAmp: 0.08, tiltSpeed: 0.5, scaleAmp: 0 },
+  wave:     { bobAmp: 0.09, bobSpeed: 1.8, tiltAmp: 0.10, tiltSpeed: 1.4, scaleAmp: 0.03 },
+}
+
+function AxonModel({ mood = 'idle' }) {
+  const { scene } = useGLTF(MODEL_URL)
+  const groupRef = useRef()
+  const t = useRef(0)
+  const { bobAmp, bobSpeed, tiltAmp, tiltSpeed, scaleAmp } = MOOD_ANIM[mood] || MOOD_ANIM.idle
+
+  useFrame((_, delta) => {
+    t.current += delta
+    if (!groupRef.current) return
+    const s = t.current
+    groupRef.current.position.y = Math.sin(s * bobSpeed) * bobAmp
+    groupRef.current.rotation.z = Math.sin(s * tiltSpeed) * tiltAmp
+    groupRef.current.rotation.y = Math.sin(s * tiltSpeed * 0.7) * tiltAmp * 0.5
+    if (scaleAmp > 0) {
+      const sc = 1 + Math.sin(s * bobSpeed) * scaleAmp
+      groupRef.current.scale.setScalar(sc)
+    }
+  })
+
+  return (
+    <group ref={groupRef}>
+      <primitive object={scene} />
+    </group>
+  )
+}
+
+// Preload so it doesn't stall on first render
+useGLTF.preload(MODEL_URL)
+
 export default function AxonMascot({
   size = 140,
   mood = 'idle',
   showQuip = true,
-  entrance = 'portal',  // 'portal' | 'fade' | 'none'
+  entrance = 'portal',
   className = '',
 }) {
   const [quipIndex, setQuipIndex] = useState(() => Math.floor(Math.random() * AXON_ISMS.length))
   const [quipVisible, setQuipVisible] = useState(true)
   const [hasEntered, setHasEntered] = useState(entrance === 'none')
 
-  // Cycle quips
   useEffect(() => {
     if (!showQuip) return
     const interval = setInterval(() => {
@@ -46,87 +83,27 @@ export default function AxonMascot({
     return () => clearInterval(interval)
   }, [showQuip])
 
-  // Entrance delay
   useEffect(() => {
     if (entrance === 'none') return
     const timer = setTimeout(() => setHasEntered(true), 100)
     return () => clearTimeout(timer)
   }, [entrance])
 
-  const moodVariants = {
-    idle: {
-      y: [0, -8, 0],
-      rotate: [0, 2, 0, -2, 0],
-      transition: {
-        y: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-        rotate: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-      },
-    },
-    excited: {
-      y: [0, -16, 0],
-      rotate: [0, 5, -5, 0],
-      scale: [1, 1.08, 1],
-      transition: {
-        y: { duration: 0.4, repeat: Infinity, ease: 'easeInOut' },
-        rotate: { duration: 0.5, repeat: Infinity, ease: 'easeInOut' },
-        scale: { duration: 0.4, repeat: Infinity, ease: 'easeInOut' },
-      },
-    },
-    thinking: {
-      y: [0, -4, 0],
-      rotate: [0, -6, 0],
-      transition: {
-        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-        rotate: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-      },
-    },
-    wave: {
-      y: [0, -10, 0],
-      rotate: [0, 8, -4, 0],
-      scale: [1, 1.04, 1],
-      transition: {
-        y: { duration: 1.5, repeat: Infinity, ease: 'easeInOut' },
-        rotate: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
-        scale: { duration: 1.5, repeat: Infinity, ease: 'easeInOut' },
-      },
-    },
-  }
-
-  // Portal entrance animation
   const portalVariants = {
-    hidden: {
-      scale: 0,
-      rotate: -180,
-      opacity: 0,
-      filter: 'blur(20px)',
-    },
+    hidden: { scale: 0, rotate: -180, opacity: 0, filter: 'blur(20px)' },
     visible: {
-      scale: 1,
-      rotate: 0,
-      opacity: 1,
-      filter: 'blur(0px)',
-      transition: {
-        type: 'spring',
-        stiffness: 120,
-        damping: 14,
-        duration: 0.8,
-      },
+      scale: 1, rotate: 0, opacity: 1, filter: 'blur(0px)',
+      transition: { type: 'spring', stiffness: 120, damping: 14 },
     },
   }
-
   const fadeVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
   }
-
   const entranceVariant = entrance === 'portal' ? portalVariants : fadeVariants
 
   return (
-    <div className={`flex flex-col items-center gap-3 ${className}`} style={{ mixBlendMode: 'screen' }}>
+    <div className={`flex flex-col items-center gap-3 ${className}`}>
       {/* Speech bubble */}
       {showQuip && hasEntered && (
         <AnimatePresence mode="wait">
@@ -148,9 +125,10 @@ export default function AxonMascot({
         </AnimatePresence>
       )}
 
-      {/* Axon — with entrance animation */}
+      {/* 3D Axon */}
       <motion.div
-        className="relative axon-mascot"
+        className="relative"
+        style={{ width: size, height: size }}
         variants={entrance !== 'none' ? entranceVariant : undefined}
         initial={entrance !== 'none' ? 'hidden' : undefined}
         animate={entrance !== 'none' ? 'visible' : undefined}
@@ -168,7 +146,7 @@ export default function AxonMascot({
           </motion.div>
         )}
 
-        {/* Particle burst on entrance */}
+        {/* Particle burst */}
         {entrance === 'portal' && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -182,15 +160,13 @@ export default function AxonMascot({
                 className="absolute w-1.5 h-1.5 rounded-full"
                 style={{
                   background: ['#00C8FF', '#B88AFF', '#00E896', '#FFB340', '#FF6B6B'][i % 5],
-                  left: '50%',
-                  top: '50%',
+                  left: '50%', top: '50%',
                 }}
                 initial={{ x: 0, y: 0, scale: 1 }}
                 animate={{
                   x: Math.cos((i / 8) * Math.PI * 2) * 60,
                   y: Math.sin((i / 8) * Math.PI * 2) * 60,
-                  scale: 0,
-                  opacity: 0,
+                  scale: 0, opacity: 0,
                 }}
                 transition={{ duration: 0.8, delay: 0.2 + i * 0.04, ease: 'easeOut' }}
               />
@@ -198,38 +174,34 @@ export default function AxonMascot({
           </motion.div>
         )}
 
-        {/* Ambient glow */}
-        <motion.div
+        {/* Ambient glow behind the canvas */}
+        <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(0,200,255,0.12) 0%, rgba(184,138,255,0.06) 40%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(0,200,255,0.15) 0%, rgba(184,138,255,0.08) 40%, transparent 70%)',
             filter: 'blur(24px)',
             transform: 'scale(1.8)',
           }}
-          animate={{ opacity: [0.5, 0.8, 0.5] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        {/* The mascot — mix-blend-mode: screen kills the black bg */}
-        <motion.div
-          animate={moodVariants[mood] || moodVariants.idle}
+        {/* Three.js canvas */}
+        <Canvas
+          style={{ width: size, height: size }}
+          camera={{ position: [0, 0, 2.8], fov: 38 }}
+          gl={{ alpha: true, antialias: true }}
         >
-          <img
-            src={mascotImg}
-            alt="Axon — your NeuroLeader guide"
-            width={size}
-            height={size}
-            className="relative select-none pointer-events-none axon-img"
-            style={{
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
-            }}
-          />
-        </motion.div>
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[2, 4, 3]} intensity={1.2} color="#ffffff" />
+          <directionalLight position={[-2, 1, -2]} intensity={0.4} color="#B88AFF" />
+          <pointLight position={[0, 2, 2]} intensity={0.8} color="#00C8FF" />
+          <Suspense fallback={null}>
+            <AxonModel mood={mood} />
+            <Environment preset="city" />
+          </Suspense>
+        </Canvas>
       </motion.div>
     </div>
   )
 }
 
-// Re-export the quips so other components can use Axon-isms
 export { AXON_ISMS }
