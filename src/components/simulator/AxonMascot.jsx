@@ -146,10 +146,10 @@ export default function AxonMascot({
   }, [entrance])
 
   const portalVariants = {
-    hidden: { scale: 0, rotate: -180, opacity: 0, filter: 'blur(20px)' },
+    hidden: { scale: 0, rotate: -360, opacity: 0, filter: 'blur(40px)' },
     visible: {
       scale: 1, rotate: 0, opacity: 1, filter: 'blur(0px)',
-      transition: { type: 'spring', stiffness: 120, damping: 14 },
+      transition: { type: 'spring', stiffness: 90, damping: 12, duration: 1.2 },
     },
   }
   const fadeVariants = {

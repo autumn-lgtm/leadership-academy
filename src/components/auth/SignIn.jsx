@@ -223,7 +223,7 @@ export default function SignIn() {
 
           {/* "Closes the gap" label — sits just above Axon */}
           <div style={{
-            ...fadeStyle(800),
+            ...fadeStyle(1600),
             position: 'absolute', bottom: '18%', left: '6%',
             fontFamily: "'Syne', sans-serif", fontWeight: 700,
             fontSize: 13, color: 'rgba(255,255,255,0.35)',
@@ -234,7 +234,7 @@ export default function SignIn() {
 
           {/* Speech bubble quote — floats right of Axon */}
           <div style={{
-            ...fadeStyle(1000),
+            ...fadeStyle(2000),
             position: 'absolute', bottom: '22%', left: '44%',
             maxWidth: 200,
           }}>
@@ -297,7 +297,7 @@ export default function SignIn() {
                 <line x1="48%" y1="6%"  x2="62%" y2="12%" stroke="#00E896" strokeWidth="0.8" />
               </svg>
             </div>
-            <AxonMascot size={260} mood="wave" showQuip={false} entrance="fade" />
+            <AxonMascot size={260} mood="wave" showQuip={false} entrance="portal" />
           </div>
 
           <style>{`
