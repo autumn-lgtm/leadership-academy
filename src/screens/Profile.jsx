@@ -8,6 +8,8 @@ import QuadrantPlot from '../components/QuadrantPlot'
 import AxonMascot from '../components/simulator/AxonMascot'
 import { RainbowDivider, PageFooter, AxonQuote, NeuralSection } from '../components/DesignSystem'
 import ActivationCard from '../components/profile/ActivationCard'
+import NuggetCard from '../components/nuggets/NuggetCard'
+import { getNuggetForPlacement } from '../data/nuggets'
 
 function ProfileWelcome({ style, onDismiss }) {
   const quote = getRandomQuote(getProfileQuotes(style.name.toLowerCase()))
@@ -538,6 +540,8 @@ export default function Profile() {
   const axisScores = profile.axisScores || profile.quadrant || {}
   const attrScores = profile.attrScores || profile.attributes || {}
 
+  const nugget = getNuggetForPlacement('profile', { style: styleName })
+
   const [showWelcome, setShowWelcome] = useState(() => {
     return !localStorage.getItem('neuroleader_welcome_dismissed')
   })
@@ -580,6 +584,11 @@ export default function Profile() {
                     <AxonCallout text={style.neuro} />
                   </div>
                 </div>
+                {nugget && (
+                  <div className="mt-8">
+                    <NuggetCard nugget={nugget} />
+                  </div>
+                )}
               </div>
             )}
             {activeTab === 1 && <StyleTab style={style} axisScores={axisScores} />}
