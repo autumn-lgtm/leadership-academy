@@ -1,303 +1,317 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { SECTIONS } from '../data/questions'
-import { computeScores, computeStyle } from '../data/scoring'
-import { STYLES } from '../data/styles'
-import QuadrantPlot from '../components/QuadrantPlot'
-import AxonMascot from '../components/simulator/AxonMascot'
-import { RainbowDivider, PageFooter, AxonQuote } from '../components/DesignSystem'
+import { SECTION_A, SECTION_INTROS, SECTION_B_INSTRUCTION, RECOVERY_BEATS } from '../data/questions'
+import { SLIDER_ITEMS } from '../utils/sliderTransforms'
+import { SECTION_C } from '../data/sectionC'
+import { SECTION_D } from '../data/sectionD'
+import { SECTION_E } from '../data/sectionE'
+import { EQ_ITEMS } from '../data/eqItems'
+import { WORD_BANKS } from '../data/wordBanks'
+import { computeFullProfile } from '../data/scoring'
+import { PageFooter } from '../components/DesignSystem'
+import {
+  Onboarding, RecoveryScreen, GapPromptScreen,
+  ScenarioQuestion, ForcedChoiceQuestion, SliderQuestion,
+  WordBankQuestion, SectionHeader, EncouragementToast,
+} from '../components/assessment/QuestionTypes'
 
-const ENCOURAGE = [
-  'Great choice.',
-  'Interesting pattern emerging...',
-  'Your style is taking shape.',
-  'That says a lot about how you lead.',
-  'The picture is getting clearer.',
-  'Almost there — powerful insights ahead.',
+// ── Flow: Onboard → A → R1 → B → Gap → C → R2 → D → R3 → E → F → EQ → R5 → Profile
+const STEPS = [
+  'onboarding', 'section-A', 'recovery-1', 'section-B', 'gap-prompt',
+  'section-C', 'recovery-2', 'section-D', 'recovery-3',
+  'section-E', 'section-F', 'section-EQ', 'recovery-5',
 ]
 
-const AXON_SECTION_TIPS = [
-  'Be honest, not aspirational. Pick the response that feels most like you — not the one that sounds best.',
-  'Almost there. Slide toward your real default, not your "I just read a leadership book" self.',
-  'Last stretch. Rate yourself honestly — this calibrates everything.',
-]
-
-const SECTION_INTROS = [
-  { title: 'Scenario Responses', sub: 'How would you handle each situation? Pick the response that feels most natural — not the "right" answer.', icon: '01' },
-  { title: 'Leadership Signals', sub: 'Where do you fall on each spectrum? Slide toward your honest default, not your aspirational self.', icon: '02' },
-  { title: 'Leadership Attributes', sub: 'Rate yourself on each dimension. This calibrates the nuance of your profile.', icon: '03' },
-]
-
-function CelebrationBurst({ color = '#00C8FF' }) {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    angle: (i / 20) * Math.PI * 2,
-    distance: 40 + Math.random() * 60,
-    size: 3 + Math.random() * 4,
-    delay: Math.random() * 0.2,
-  }))
-
-  return (
-    <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-      {particles.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: p.size,
-            height: p.size,
-            background: color,
-          }}
-          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-          animate={{
-            x: Math.cos(p.angle) * p.distance,
-            y: Math.sin(p.angle) * p.distance,
-            opacity: 0,
-            scale: 0,
-          }}
-          transition={{ duration: 0.8, delay: p.delay, ease: 'easeOut' }}
-        />
-      ))}
-    </div>
-  )
+const STEP_SECTION_MAP = {
+  'section-A': { label: 'A', total: SECTION_A.length },
+  'section-B': { label: 'B', total: SLIDER_ITEMS.length },
+  'section-C': { label: 'C', total: SECTION_C.length },
+  'section-D': { label: 'D', total: SECTION_D.length },
+  'section-E': { label: 'E', total: SECTION_E.length },
+  'section-F': { label: 'F', total: WORD_BANKS.length },
+  'section-EQ': { label: 'EQ', total: EQ_ITEMS.length },
 }
 
-function LiveInsight({ answers }) {
-  const partialWho = answers.scenarios.reduce((s, idx, qi) => {
-    if (idx === null) return s
-    const opt = SECTIONS[0].questions[qi]?.options[idx]
-    return s + (opt?.axes.who || 0)
-  }, 0)
-  const partialWhy = answers.scenarios.reduce((s, idx, qi) => {
-    if (idx === null) return s
-    const opt = SECTIONS[0].questions[qi]?.options[idx]
-    return s + (opt?.axes.why || 0)
-  }, 0)
-  const partialWhat = answers.scenarios.reduce((s, idx, qi) => {
-    if (idx === null) return s
-    const opt = SECTIONS[0].questions[qi]?.options[idx]
-    return s + (opt?.axes.what || 0)
-  }, 0)
-  const partialHow = answers.scenarios.reduce((s, idx, qi) => {
-    if (idx === null) return s
-    const opt = SECTIONS[0].questions[qi]?.options[idx]
-    return s + (opt?.axes.how || 0)
-  }, 0)
-
-  const answered = answers.scenarios.filter(a => a !== null).length
-  if (answered < 2) return null
-
-  const max = Math.max(partialWho, partialWhy, partialWhat, partialHow, 1)
-  const norm = { who: (partialWho / max) * 80 + 10, why: (partialWhy / max) * 80 + 10, what: (partialWhat / max) * 80 + 10, how: (partialHow / max) * 80 + 10 }
-  const style = computeStyle(norm.who, norm.why, norm.what, norm.how)
-  const styleData = STYLES[style]
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex items-center gap-5 p-5 rounded-2xl bg-bg-surface/80 border border-white/[0.06]"
-    >
-      <div className="shrink-0">
-        <QuadrantPlot {...norm} size={120} />
-      </div>
-      <div className="min-w-0">
-        <div className="text-xs text-text-muted uppercase tracking-widest mb-1">Emerging pattern</div>
-        <div className="font-display text-base font-bold" style={{ color: styleData.color }}>
-          {styleData.name} — {styleData.short}
-        </div>
-        <div className="mt-1 text-xs text-text-muted">
-          {answered} of {SECTIONS[0].questions.length} scenarios mapped
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-const SECTION_REWARDS = [
-  { msg: 'Your instincts are revealing a pattern.', sub: 'Scenarios show how you naturally respond under pressure.' },
-  { msg: 'Signal calibration locked in.', sub: 'Your leadership signals shape how others experience you.' },
-  { msg: 'Full neural map complete.', sub: 'Your unique leadership fingerprint is ready to explore.' },
-]
-
-function SectionComplete({ sectionIndex, onContinue }) {
-  const section = SECTION_INTROS[sectionIndex]
-  const next = SECTION_INTROS[sectionIndex + 1]
-  const colors = ['#00C8FF', '#B88AFF', '#00E896']
-  const reward = SECTION_REWARDS[sectionIndex]
-  const pct = Math.round(((sectionIndex + 1) / 3) * 100)
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 1.05 }}
-      className="flex flex-col items-center justify-center min-h-[60vh] text-center relative"
-    >
-      <CelebrationBurst color={colors[sectionIndex]} />
-
-      <div className="mb-4">
-        <AxonMascot size={120} mood="excited" showQuip={false} entrance="portal" />
-      </div>
-
-      <motion.h2
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="font-display text-3xl md:text-4xl font-bold text-white mb-3"
-      >
-        {section.title} complete
-      </motion.h2>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.55 }}
-        className="text-base text-white/80 font-medium mb-1"
-      >
-        {reward.msg}
-      </motion.p>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="text-sm text-text-muted mb-6 max-w-sm"
-      >
-        {reward.sub}
-      </motion.p>
-
-      {/* Progress anchoring — shows commitment */}
-      <motion.div
-        initial={{ opacity: 0, width: 0 }}
-        animate={{ opacity: 1, width: 200 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="mb-8"
-      >
-        <div className="flex justify-between text-xs text-text-muted mb-1.5">
-          <span>Progress</span>
-          <span className="font-bold" style={{ color: colors[sectionIndex] }}>{pct}%</span>
-        </div>
-        <div className="w-[200px] h-1.5 bg-bg-surface2 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: colors[sectionIndex] }}
-            initial={{ width: 0 }}
-            animate={{ width: `${pct}%` }}
-            transition={{ delay: 1, duration: 0.8, ease: 'easeOut' }}
-          />
-        </div>
-      </motion.div>
-
-      <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1 }}
-        onClick={onContinue}
-        className="group px-10 py-4 rounded-2xl bg-white text-bg-primary font-bold text-base hover:bg-white/90 transition-all flex items-center gap-2"
-      >
-        {sectionIndex < 2 ? `Continue to ${next.title}` : 'See My Profile'}
-        <span className="transition-transform group-hover:translate-x-1">→</span>
-      </motion.button>
-
-      {sectionIndex < 2 && (
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="mt-4 text-xs text-text-muted/60"
-        >
-          {3 - sectionIndex - 1} section{sectionIndex === 1 ? '' : 's'} remaining
-        </motion.p>
-      )}
-    </motion.div>
-  )
+function getOverallProgress(step, qIndex) {
+  const sectionSteps = Object.keys(STEP_SECTION_MAP)
+  const totalQuestions = sectionSteps.reduce((s, k) => s + STEP_SECTION_MAP[k].total, 0)
+  let completed = 0
+  for (const k of sectionSteps) {
+    if (STEPS.indexOf(k) < STEPS.indexOf(step)) completed += STEP_SECTION_MAP[k].total
+    else if (k === step) completed += qIndex
+  }
+  return Math.min((completed / totalQuestions) * 100, 100)
 }
 
 export default function Assessment() {
   const navigate = useNavigate()
-  const [currentSection, setCurrentSection] = useState(0)
-  const [currentQ, setCurrentQ] = useState(0)
-  const [showSectionComplete, setShowSectionComplete] = useState(false)
+  const [step, setStep] = useState('onboarding')
+  const [qIndex, setQIndex] = useState(0)
   const [showEncourage, setShowEncourage] = useState(null)
+
   const [answers, setAnswers] = useState({
-    scenarios: Array(SECTIONS[0].questions.length).fill(null),
-    sliders: Array(SECTIONS[1].questions.length).fill(50),
-    attrs: Array(SECTIONS[2].questions.length).fill(50),
+    scenarioAnswers: Array(SECTION_A.length).fill(null),
+    sliderValues: Array(SLIDER_ITEMS.length).fill(50),
+    fcAnswers: Array(SECTION_C.length).fill(null),
+    pressureAnswers: Array(SECTION_D.length).fill(null),
+    trustAnswers: Array(SECTION_E.length).fill(null),
+    eqAnswers: Array(EQ_ITEMS.length).fill(null),
+    wbAnswers: {},
+    gapSelection: null,
   })
 
-  const section = SECTIONS[currentSection]
-  const totalAllQuestions = SECTIONS.reduce((s, sec) => s + sec.questions.length, 0)
-  const completedCount =
-    answers.scenarios.filter(a => a !== null).length +
-    (currentSection > 0 ? answers.sliders.length : 0) +
-    (currentSection > 1 ? answers.attrs.length : 0)
-  const progress = Math.min((completedCount / totalAllQuestions) * 100, 100)
+  const progress = getOverallProgress(step, qIndex)
+  const stepInfo = STEP_SECTION_MAP[step]
 
-  // For scenarios: one at a time
-  const scenarioQ = currentSection === 0 ? section.questions[currentQ] : null
-  const totalInSection = section.questions.length
-
-  function handleScenarioSelect(optIdx) {
-    const next = [...answers.scenarios]
-    next[currentQ] = optIdx
-    setAnswers({ ...answers, scenarios: next })
-
-    // Show encouragement
-    setShowEncourage(currentQ)
-    setTimeout(() => setShowEncourage(null), 1500)
-
-    // Auto-advance after a brief pause
-    setTimeout(() => {
-      if (currentQ < totalInSection - 1) {
-        setCurrentQ(currentQ + 1)
-      } else {
-        setShowSectionComplete(true)
-      }
-    }, 800)
-  }
-
-  function handleSliderChange(qIdx, value) {
-    const next = [...answers.sliders]
-    next[qIdx] = value
-    setAnswers({ ...answers, sliders: next })
-  }
-
-  function handleAttrChange(qIdx, value) {
-    const next = [...answers.attrs]
-    next[qIdx] = value
-    setAnswers({ ...answers, attrs: next })
-  }
-
-  function handleSectionContinue() {
-    if (currentSection < SECTIONS.length - 1) {
-      setCurrentSection(currentSection + 1)
-      setCurrentQ(0)
-      setShowSectionComplete(false)
+  function advanceStep() {
+    const idx = STEPS.indexOf(step)
+    if (idx < STEPS.length - 1) {
+      setStep(STEPS[idx + 1])
+      setQIndex(0)
       window.scrollTo(0, 0)
     } else {
       handleSubmit()
     }
   }
 
-  function handleSlidersSubmit() {
-    setShowSectionComplete(true)
+  const advanceStepCb = useCallback(advanceStep, [step])
+
+  function handleScenarioSelect(sectionKey, items, optIdx) {
+    const key = sectionKey === 'A' ? 'scenarioAnswers'
+      : sectionKey === 'D' ? 'pressureAnswers'
+      : sectionKey === 'E' ? 'trustAnswers' : 'eqAnswers'
+    const next = [...answers[key]]
+    next[qIndex] = optIdx
+    setAnswers(prev => ({ ...prev, [key]: next }))
+    setShowEncourage(qIndex)
+    setTimeout(() => setShowEncourage(null), 1500)
+    setTimeout(() => {
+      if (qIndex < items.length - 1) setQIndex(qIndex + 1)
+      else advanceStep()
+    }, 800)
+  }
+
+  function handleForcedChoiceSelect(sectionKey, items, optIdx) {
+    const key = sectionKey === 'C' ? 'fcAnswers'
+      : sectionKey === 'E' ? 'trustAnswers' : 'eqAnswers'
+    const next = [...answers[key]]
+    next[qIndex] = optIdx
+    setAnswers(prev => ({ ...prev, [key]: next }))
+    setTimeout(() => {
+      if (qIndex < items.length - 1) setQIndex(qIndex + 1)
+      else advanceStep()
+    }, 600)
+  }
+
+  function handleSliderChange(idx, value) {
+    const next = [...answers.sliderValues]
+    next[idx] = value
+    setAnswers(prev => ({ ...prev, sliderValues: next }))
+  }
+
+  function handleEQSliderChange(eqIdx, value) {
+    const next = [...answers.eqAnswers]
+    next[eqIdx] = value
+    setAnswers(prev => ({ ...prev, eqAnswers: next }))
+  }
+
+  function handleWordToggle(bankId, word) {
+    setAnswers(prev => {
+      const current = prev.wbAnswers[bankId] || []
+      const updated = current.includes(word)
+        ? current.filter(w => w !== word)
+        : [...current, word]
+      return { ...prev, wbAnswers: { ...prev.wbAnswers, [bankId]: updated } }
+    })
+  }
+
+  function handleGapSelect(position) {
+    setAnswers(prev => ({ ...prev, gapSelection: position }))
+    advanceStep()
   }
 
   function handleSubmit() {
-    const results = computeScores(answers.scenarios, answers.sliders, answers.attrs)
-    const profile = {
-      ...results,
-      answers,
-      completedAt: new Date().toISOString(),
-    }
-    localStorage.setItem('neuroleader_profile', JSON.stringify(profile))
+    const profile = computeFullProfile({ ...answers, mode: 'long' })
+    localStorage.setItem('neuroleader_profile', JSON.stringify({
+      ...profile, answers, completedAt: new Date().toISOString(),
+    }))
     navigate('/profile')
+  }
+
+  function renderStepContent() {
+    switch (step) {
+      case 'onboarding':
+        return <Onboarding onStart={advanceStep} />
+
+      case 'recovery-1':
+        return <RecoveryScreen beat={1} onContinue={advanceStepCb} />
+      case 'recovery-2':
+        return <RecoveryScreen beat={2} onContinue={advanceStepCb} />
+      case 'recovery-3':
+        return <RecoveryScreen beat={3} onContinue={advanceStepCb} />
+      case 'recovery-5':
+        return <RecoveryScreen beat={5} onContinue={() => setTimeout(handleSubmit, 2000)} />
+
+      case 'gap-prompt':
+        return <GapPromptScreen sliderItems={SLIDER_ITEMS} onSelect={handleGapSelect} />
+
+      case 'section-A':
+        return (
+          <div>
+            <SectionHeader section="A" intro={SECTION_INTROS.A} />
+            <ScenarioQuestion question={SECTION_A[qIndex]} questionIndex={qIndex}
+              totalQuestions={SECTION_A.length} selected={answers.scenarioAnswers[qIndex]}
+              onSelect={(optIdx) => handleScenarioSelect('A', SECTION_A, optIdx)} />
+            <EncouragementToast show={showEncourage !== null} index={qIndex} />
+            {qIndex > 0 && answers.scenarioAnswers[qIndex] === null && (
+              <button onClick={() => setQIndex(qIndex - 1)} className="mt-6 text-xs text-text-muted hover:text-white transition-colors">
+                ← Previous question
+              </button>
+            )}
+          </div>
+        )
+
+      case 'section-B':
+        return (
+          <div>
+            <SectionHeader section="B" intro={SECTION_INTROS.B} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              className="mb-6 p-5 rounded-xl bg-bg-surface/40 border border-white/[0.04]">
+              <p className="text-sm text-white font-medium">{SECTION_B_INSTRUCTION.line1}</p>
+              <p className="text-sm text-text-muted mt-1">{SECTION_B_INSTRUCTION.line2}</p>
+              <p className="text-xs text-cyan/70 mt-2 italic">{SECTION_B_INSTRUCTION.pause}</p>
+            </motion.div>
+            <div className="space-y-4">
+              {SLIDER_ITEMS.map((item, i) => (
+                <motion.div key={item.id} initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+                  <SliderQuestion item={item} value={answers.sliderValues[i]}
+                    onChange={(val) => handleSliderChange(i, val)} />
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <button onClick={advanceStep}
+                className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all">
+                Continue
+              </button>
+            </div>
+          </div>
+        )
+
+      case 'section-C':
+        return (
+          <div>
+            <SectionHeader section="C" intro={SECTION_INTROS.C} />
+            <ForcedChoiceQuestion question={SECTION_C[qIndex]} questionIndex={qIndex}
+              totalQuestions={SECTION_C.length} selected={answers.fcAnswers[qIndex]}
+              onSelect={(optIdx) => handleForcedChoiceSelect('C', SECTION_C, optIdx)} />
+          </div>
+        )
+
+      case 'section-D':
+        return (
+          <div>
+            <SectionHeader section="D" intro={SECTION_INTROS.D} />
+            <ScenarioQuestion question={SECTION_D[qIndex]} questionIndex={qIndex}
+              totalQuestions={SECTION_D.length} selected={answers.pressureAnswers[qIndex]}
+              onSelect={(optIdx) => handleScenarioSelect('D', SECTION_D, optIdx)} />
+            <EncouragementToast show={showEncourage !== null} index={qIndex} />
+          </div>
+        )
+
+      case 'section-E': {
+        const q = SECTION_E[qIndex]
+        return (
+          <div>
+            <SectionHeader section="E" intro={SECTION_INTROS.E} />
+            {q.type === 'forcedChoice' ? (
+              <ForcedChoiceQuestion question={q} questionIndex={qIndex}
+                totalQuestions={SECTION_E.length} selected={answers.trustAnswers[qIndex]}
+                onSelect={(optIdx) => handleForcedChoiceSelect('E', SECTION_E, optIdx)} />
+            ) : (
+              <ScenarioQuestion question={q} questionIndex={qIndex}
+                totalQuestions={SECTION_E.length} selected={answers.trustAnswers[qIndex]}
+                onSelect={(optIdx) => handleScenarioSelect('E', SECTION_E, optIdx)} />
+            )}
+          </div>
+        )
+      }
+
+      case 'section-F':
+        return (
+          <div>
+            <SectionHeader section="F" intro={SECTION_INTROS.F} />
+            <div className="space-y-8">
+              {WORD_BANKS.map((bank) => (
+                <motion.div key={bank.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
+                  <WordBankQuestion bank={bank} selected={answers.wbAnswers[bank.id] || []}
+                    onToggle={(word) => handleWordToggle(bank.id, word)} />
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <button onClick={advanceStep}
+                className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all">
+                Continue
+              </button>
+            </div>
+          </div>
+        )
+
+      case 'section-EQ': {
+        const eq = EQ_ITEMS[qIndex]
+        const eqIntro = "Almost there. This measures how you handle emotions \u2014 yours and others'."
+        if (eq.type === 'slider') {
+          return (
+            <div>
+              <SectionHeader section="EQ" intro={eqIntro} />
+              <div className="flex items-center gap-2 mb-6">
+                {Array.from({ length: EQ_ITEMS.length }, (_, i) => (
+                  <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
+                    style={{ background: i < qIndex ? '#FFB340' : i === qIndex ? 'rgba(255,179,64,0.4)' : 'rgba(255,255,255,0.06)' }} />
+                ))}
+              </div>
+              <SliderQuestion item={eq} value={answers.eqAnswers[qIndex] ?? 50}
+                onChange={(val) => handleEQSliderChange(qIndex, val)} />
+              <div className="mt-6 text-center">
+                <button onClick={() => { if (qIndex < EQ_ITEMS.length - 1) setQIndex(qIndex + 1); else advanceStep() }}
+                  className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all">
+                  Continue
+                </button>
+              </div>
+            </div>
+          )
+        }
+        if (eq.type === 'forcedChoice') {
+          return (
+            <div>
+              <SectionHeader section="EQ" intro={eqIntro} />
+              <ForcedChoiceQuestion question={eq} questionIndex={qIndex}
+                totalQuestions={EQ_ITEMS.length} selected={answers.eqAnswers[qIndex]}
+                onSelect={(optIdx) => handleForcedChoiceSelect('EQ', EQ_ITEMS, optIdx)} />
+            </div>
+          )
+        }
+        return (
+          <div>
+            <SectionHeader section="EQ" intro={eqIntro} />
+            <ScenarioQuestion question={eq} questionIndex={qIndex}
+              totalQuestions={EQ_ITEMS.length} selected={answers.eqAnswers[qIndex]}
+              onSelect={(optIdx) => handleScenarioSelect('EQ', EQ_ITEMS, optIdx)} />
+            <EncouragementToast show={showEncourage !== null} index={qIndex} />
+          </div>
+        )
+      }
+
+      default:
+        return null
+    }
   }
 
   return (
     <div className="min-h-screen bg-bg-primary">
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-8 py-4">
           <div className="flex items-center justify-between mb-3">
@@ -310,232 +324,29 @@ export default function Assessment() {
             <div className="flex items-center gap-6">
               <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
               <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
-              <div className="flex items-center gap-3 pl-4 border-l border-white/[0.06]">
-                <span className="text-xs text-text-muted">
-                  {SECTION_INTROS[currentSection].icon} / 03
-                </span>
-                <span className="text-xs font-semibold text-cyan">{Math.round(progress)}%</span>
-              </div>
+              {stepInfo && (
+                <div className="flex items-center gap-3 pl-4 border-l border-white/[0.06]">
+                  <span className="text-xs text-text-muted">Section {stepInfo.label}</span>
+                  <span className="text-xs font-semibold text-cyan">{Math.round(progress)}%</span>
+                </div>
+              )}
             </div>
           </div>
-          {/* Progress bar */}
           <div className="w-full h-1 bg-bg-surface2 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full rounded-full"
+            <motion.div className="h-full rounded-full"
               style={{ background: 'linear-gradient(90deg, #00C8FF, #B88AFF, #00E896)' }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-            />
+              animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} />
           </div>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-8 pt-28 pb-32">
         <AnimatePresence mode="wait">
-          {showSectionComplete ? (
-            <SectionComplete
-              key={`complete-${currentSection}`}
-              sectionIndex={currentSection}
-              onContinue={handleSectionContinue}
-            />
-          ) : (
-            <motion.div
-              key={`section-${currentSection}-${currentQ}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.35 }}
-            >
-              {/* Section header */}
-              <div className="mb-10">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse" />
-                  <span className="text-xs text-text-muted font-medium tracking-widest uppercase">
-                    Section {SECTION_INTROS[currentSection].icon} of 03
-                  </span>
-                </div>
-                <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-3">
-                  {SECTION_INTROS[currentSection].title}
-                </h1>
-                <p className="text-base text-text-muted leading-relaxed max-w-lg">
-                  {SECTION_INTROS[currentSection].sub}
-                </p>
-                {/* Axon tip */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="mt-6"
-                >
-                  <AxonQuote text={AXON_SECTION_TIPS[currentSection]} color="#00C8FF" />
-                </motion.div>
-              </div>
-
-              {/* === SCENARIOS: one at a time === */}
-              {currentSection === 0 && scenarioQ && (
-                <div>
-                  {/* Question counter */}
-                  <div className="flex items-center gap-2 mb-6">
-                    {section.questions.map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-1 flex-1 rounded-full transition-all duration-300"
-                        style={{
-                          background: i < currentQ ? '#00C8FF'
-                            : i === currentQ ? 'rgba(0,200,255,0.4)'
-                            : 'rgba(255,255,255,0.06)'
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-8 leading-snug">
-                    {scenarioQ.text}
-                  </h3>
-
-                  <div className="space-y-3">
-                    {scenarioQ.options.map((option, optIdx) => (
-                      <motion.button
-                        key={optIdx}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: optIdx * 0.08 }}
-                        onClick={() => handleScenarioSelect(optIdx)}
-                        disabled={answers.scenarios[currentQ] !== null}
-                        className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 ${
-                          answers.scenarios[currentQ] === optIdx
-                            ? 'border-cyan bg-cyan/10 shadow-[0_0_30px_rgba(0,200,255,0.12)] scale-[1.01]'
-                            : answers.scenarios[currentQ] !== null
-                            ? 'border-white/[0.04] bg-bg-surface/40 opacity-40'
-                            : 'border-white/[0.06] bg-bg-surface/60 hover:border-white/10 hover:bg-bg-surface hover:scale-[1.01]'
-                        }`}
-                      >
-                        <span className={`text-base leading-relaxed ${
-                          answers.scenarios[currentQ] === optIdx ? 'text-cyan font-medium' : 'text-text-primary'
-                        }`}>
-                          {option.label}
-                        </span>
-                      </motion.button>
-                    ))}
-                  </div>
-
-                  {/* Encouragement toast */}
-                  <AnimatePresence>
-                    {showEncourage !== null && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="mt-6 text-center"
-                      >
-                        <span className="text-base text-cyan font-medium">{ENCOURAGE[currentQ] || ENCOURAGE[0]}</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Live insight after 2+ answers */}
-                  {answers.scenarios.filter(a => a !== null).length >= 2 && (
-                    <div className="mt-8">
-                      <LiveInsight answers={answers} />
-                    </div>
-                  )}
-
-                  {/* Back button for scenarios */}
-                  {currentQ > 0 && answers.scenarios[currentQ] === null && (
-                    <button
-                      onClick={() => setCurrentQ(currentQ - 1)}
-                      className="mt-6 text-xs text-text-muted hover:text-white transition-colors"
-                    >
-                      ← Previous question
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* === SLIDERS === */}
-              {currentSection === 1 && (
-                <div>
-                  <div className="space-y-4">
-                    {section.questions.map((q, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.04 }}
-                        className="p-5 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
-                      >
-                        <label className="block text-base font-medium text-white mb-4">{q.label}</label>
-                        <div className="flex items-center gap-4">
-                          <span className="text-xs text-text-muted w-16 text-right shrink-0">Disagree</span>
-                          <input
-                            type="range" min="0" max="100"
-                            value={answers.sliders[i]}
-                            onChange={e => handleSliderChange(i, Number(e.target.value))}
-                            className="flex-1"
-                            style={{ background: `linear-gradient(to right, ${q.color} ${answers.sliders[i]}%, rgba(255,255,255,0.06) ${answers.sliders[i]}%)` }}
-                          />
-                          <span className="text-xs text-text-muted w-16 shrink-0">Agree</span>
-                        </div>
-                        <div className="text-center mt-2">
-                          <span className="text-sm font-bold" style={{ color: q.color }}>{answers.sliders[i]}</span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div className="mt-8 text-center">
-                    <button
-                      onClick={handleSlidersSubmit}
-                      className="px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all"
-                    >
-                      Continue
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* === ATTRIBUTES === */}
-              {currentSection === 2 && (
-                <div>
-                  <div className="space-y-4">
-                    {section.questions.map((q, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.04 }}
-                        className="p-5 rounded-2xl bg-bg-surface/60 border border-white/[0.06]"
-                      >
-                        <label className="block text-base font-medium text-white mb-4">{q.label}</label>
-                        <div className="flex items-center gap-4">
-                          <span className="text-xs text-text-muted w-24 text-right shrink-0">{q.lo}</span>
-                          <input
-                            type="range" min="0" max="100"
-                            value={answers.attrs[i]}
-                            onChange={e => handleAttrChange(i, Number(e.target.value))}
-                            className="flex-1"
-                            style={{ background: `linear-gradient(to right, ${q.color} ${answers.attrs[i]}%, rgba(255,255,255,0.06) ${answers.attrs[i]}%)` }}
-                          />
-                          <span className="text-xs text-text-muted w-24 shrink-0">{q.hi}</span>
-                        </div>
-                        <div className="text-center mt-2">
-                          <span className="text-sm font-bold" style={{ color: q.color }}>{answers.attrs[i]}</span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div className="mt-8 text-center">
-                    <button
-                      onClick={() => setShowSectionComplete(true)}
-                      className="group px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all flex items-center gap-2 mx-auto"
-                    >
-                      See My Profile
-                      <span className="transition-transform group-hover:translate-x-1">→</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
+          <motion.div key={`${step}-${qIndex}`}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.35 }}>
+            {renderStepContent()}
+          </motion.div>
         </AnimatePresence>
       </main>
       <PageFooter />
