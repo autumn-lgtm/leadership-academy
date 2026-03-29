@@ -169,7 +169,7 @@ export default function SignIn() {
                 color: '#ffffff', marginBottom: 4,
                 letterSpacing: '-0.03em',
               }}>
-                The skills that made you
+                The technical skills
               </h1>
               <h1 className="hero-h1" style={{
                 ...fadeStyle(300),
@@ -180,7 +180,7 @@ export default function SignIn() {
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text', display: 'inline-block', marginBottom: 16,
               }}>
-                excellent at your job
+                that got you promoted
               </h1>
               <h2 className="hero-h2" style={{
                 ...fadeStyle(400),
@@ -188,7 +188,7 @@ export default function SignIn() {
                 fontSize: 34, lineHeight: 1.15,
                 color: 'rgba(255,255,255,0.4)', letterSpacing: '-0.02em',
               }}>
-                are not the skills that make you<br />an excellent leader.
+                are not the skills that<br />make you a great leader.
               </h2>
             </div>
 
@@ -244,7 +244,7 @@ export default function SignIn() {
             fontSize: 12, fontStyle: 'italic',
             color: '#FFB340', maxWidth: 200, lineHeight: 1.5,
           }}>
-            "The pattern is running. You just have not looked at it yet."
+            "The expertise that made you excellent is now the thing you have to lead through, not with."
           </div>
         </div>
 
