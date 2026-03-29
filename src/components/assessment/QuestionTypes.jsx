@@ -4,6 +4,7 @@ import { RECOVERY_BEATS } from '../../data/questions'
 import { GAP_PROMPT } from '../../utils/sliderTransforms'
 import { getRecoveryQuote } from '../../data/quotes'
 import AxonMascot from '../simulator/AxonMascot'
+import QuadrantPlot from '../QuadrantPlot'
 
 // ── Celebration particles ──────────────────────────────────────────
 export function CelebrationBurst({ color = '#00C8FF' }) {
@@ -64,10 +65,51 @@ export function Onboarding({ onStart }) {
   )
 }
 
+// ── Partial axis derivation from available answers ─────────────────
+function getPartialAxes(partialAnswers) {
+  if (!partialAnswers) return null
+
+  // Section B sliders are the most direct axis signal
+  // sliderValues is an array of 0-100 values (10 items)
+  const sv = partialAnswers.sliderValues
+  if (!sv || sv.every(v => v === 50)) return null  // all defaults, no signal yet
+
+  // Count scenario answers to determine there's enough signal
+  const answered = (partialAnswers.scenarioAnswers || []).filter(a => a !== null).length
+  if (answered < 5) return null  // not enough signal
+
+  // Use actual axis mapping from SLIDER_ITEMS:
+  // SB-1 (index 0): who, forward
+  // SB-2 (index 1): why, forward
+  // SB-3 (index 2): independence, reversed — skip
+  // SB-4 (index 3): how, forward
+  // SB-5 (index 4): trap — skip
+  // SB-6 (index 5): who, reversed (100 - value)
+  // indices 6-9: non-axis attributes — skip
+  const whoRaw = (sv[0] + (100 - sv[5])) / 2
+  const whyRaw = sv[1]
+  const howRaw = sv[3]
+  // what has no direct slider; derive from answered scenario proportion as a mild proxy
+  const whatRaw = 40 + (answered / 8) * 20  // 40–60 range based on completion
+
+  // Normalize relative to each other
+  const vals = [whoRaw, whyRaw, whatRaw, howRaw]
+  const maxVal = Math.max(...vals, 1)
+  const normalize = v => Math.round(Math.max(0, Math.min(100, (v / maxVal) * 100)))
+
+  return {
+    who: normalize(whoRaw),
+    why: normalize(whyRaw),
+    what: normalize(whatRaw),
+    how: normalize(howRaw),
+  }
+}
+
 // ── Recovery Screen ────────────────────────────────────────────────
-export function RecoveryScreen({ beat, onContinue }) {
+export function RecoveryScreen({ beat, onContinue, partialAnswers }) {
   const data = RECOVERY_BEATS.find(r => r.beat === beat)
   const quote = getRecoveryQuote(beat)
+  const partialAxes = getPartialAxes(partialAnswers)
 
   useEffect(() => {
     if (data?.autoAdvance) {
@@ -87,6 +129,24 @@ export function RecoveryScreen({ beat, onContinue }) {
       <div className="mb-6">
         <AxonMascot size={100} mood="thinking" showQuip={false} entrance="portal" />
       </div>
+      {partialAxes && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mb-6 text-center"
+        >
+          <div className="text-[10px] text-text-muted uppercase tracking-widest mb-3">
+            Your profile is taking shape
+          </div>
+          <div className="flex justify-center" style={{ filter: 'blur(1.5px)', opacity: 0.7 }}>
+            <QuadrantPlot {...partialAxes} size={160} />
+          </div>
+          <div className="text-[11px] text-text-muted mt-2 italic">
+            Getting clearer with each answer
+          </div>
+        </motion.div>
+      )}
       {quote && (
         <blockquote className="max-w-lg">
           <p className="font-display text-2xl md:text-3xl font-bold text-white leading-snug mb-3">

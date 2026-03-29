@@ -154,13 +154,13 @@ export default function Assessment() {
         return <Onboarding onStart={advanceStep} />
 
       case 'recovery-1':
-        return <RecoveryScreen beat={1} onContinue={advanceStepCb} />
+        return <RecoveryScreen beat={1} onContinue={advanceStepCb} partialAnswers={answers} />
       case 'recovery-2':
-        return <RecoveryScreen beat={2} onContinue={advanceStepCb} />
+        return <RecoveryScreen beat={2} onContinue={advanceStepCb} partialAnswers={answers} />
       case 'recovery-3':
-        return <RecoveryScreen beat={3} onContinue={advanceStepCb} />
+        return <RecoveryScreen beat={3} onContinue={advanceStepCb} partialAnswers={answers} />
       case 'recovery-5':
-        return <RecoveryScreen beat={5} onContinue={handleSubmit} />
+        return <RecoveryScreen beat={5} onContinue={handleSubmit} partialAnswers={answers} />
 
       case 'gap-prompt':
         return <GapPromptScreen sliderItems={SLIDER_ITEMS} onSelect={handleGapSelect} />
