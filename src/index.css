@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cyan: #00C8FF;
+  --color-green: #00E896;
+  --color-purple: #B88AFF;
+  --color-amber: #FFB340;
+  --color-coral: #FF6B6B;
+  --color-bg-primary: #060A0E;
+  --color-bg-surface: #0F1822;
+  --color-bg-surface2: #131E2C;
+  --color-text-primary: #B8D4F0;
+  --color-text-muted: #567A96;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Syne', sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-bg-surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  background: #1a2a3a;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-cyan);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-cyan);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 200, 255, 0.4);
+}
+
+/* ── Axon ──────────────────────────────────────────────── */
+
+.axon-mascot {
+  will-change: transform;
+}
+
+.axon-img {
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* Portal entrance ring */
+.axon-portal-ring {
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 200, 255, 0.6),
+    rgba(184, 138, 255, 0.6),
+    rgba(0, 232, 150, 0.6),
+    rgba(255, 179, 64, 0.6),
+    rgba(255, 107, 107, 0.6),
+    rgba(0, 200, 255, 0.6)
+  );
+  mask: radial-gradient(circle, transparent 40%, black 42%, black 48%, transparent 50%);
+  -webkit-mask: radial-gradient(circle, transparent 40%, black 42%, black 48%, transparent 50%);
+}
+
+/* ── Design Elements ──────────────────────────────────── */
+
+/* Rainbow gradient line */
+.rainbow-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 107, 0.4),
+    rgba(255, 179, 64, 0.4),
+    rgba(0, 232, 150, 0.4),
+    rgba(0, 200, 255, 0.4),
+    rgba(184, 138, 255, 0.4),
+    transparent
+  );
+}
+
+/* Subtle neural grid background */
+.neural-grid {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0, 200, 255, 0.03) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Section glow */
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 200, 255, 0.3), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .axon-mascot,
+  .axon-mascot * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
