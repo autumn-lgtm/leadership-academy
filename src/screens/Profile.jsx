@@ -323,25 +323,60 @@ function ApplyItTab({ style }) {
   const [expanded, setExpanded] = useState(null)
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Scenarios for <StyleName name={style.name} color={style.color} /> Leaders</h2>
-      <p className="text-sm text-text-muted mb-8">Practice applying your style to real situations.</p>
+      <div className="flex items-center gap-6 mb-10">
+        <div>
+          <div className="font-display text-5xl font-black text-white">{style.scenarios.length}</div>
+          <div className="text-[10px] text-text-muted uppercase tracking-widest mt-0.5">Practice scenarios</div>
+        </div>
+        <div className="w-px h-12 bg-white/[0.06]" />
+        <div>
+          <div className="font-display text-5xl font-black" style={{ color: style.color }}>
+            {style.name}
+          </div>
+          <div className="text-[10px] text-text-muted uppercase tracking-widest mt-0.5">Style in action</div>
+        </div>
+      </div>
       <div className="space-y-3">
         {style.scenarios.map((s, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-            className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl overflow-hidden">
-            <button onClick={() => setExpanded(expanded === i ? null : i)} className="w-full text-left p-5 flex items-start justify-between gap-4">
-              <div>
-                <div className="font-display text-base font-bold text-white">{s.title}</div>
-                <div className="text-sm text-text-muted mt-1">{s.body}</div>
+            className="group relative bg-bg-surface/60 border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-all"
+            style={{ '--glow': style.color }}
+          >
+            {/* Number watermark */}
+            <div className="absolute right-6 top-4 font-display text-[80px] font-black leading-none select-none pointer-events-none"
+              style={{ color: `${style.color}08` }}>
+              {String(i + 1).padStart(2, '0')}
+            </div>
+
+            <button onClick={() => setExpanded(expanded === i ? null : i)} className="w-full text-left p-6 relative">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 pr-16">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="font-display text-[11px] font-bold tracking-[0.14em] uppercase px-2.5 py-1 rounded-full"
+                      style={{ color: style.color, background: `${style.color}15`, border: `1px solid ${style.color}25` }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <div className="font-display text-lg font-bold text-white leading-snug mb-2">{s.title}</div>
+                  <div className="text-sm text-text-muted leading-relaxed">{s.body}</div>
+                </div>
+                <motion.span
+                  animate={{ rotate: expanded === i ? 180 : 0 }}
+                  className="text-text-muted text-sm shrink-0 mt-1"
+                >▾</motion.span>
               </div>
-              <span className={`text-text-muted text-sm shrink-0 transition-transform ${expanded === i ? 'rotate-180' : ''}`}>▾</span>
             </button>
+
             <AnimatePresence>
               {expanded === i && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                  <div className="px-5 pb-5 border-t border-white/[0.04]">
-                    <div className="text-[10px] text-cyan uppercase tracking-widest font-bold mt-4 mb-2">Your Action</div>
-                    <p className="text-sm text-text-primary leading-relaxed">{s.action}</p>
+                  <div className="px-6 pb-6">
+                    <div className="p-4 rounded-xl" style={{ background: `${style.color}08`, border: `1px solid ${style.color}20` }}>
+                      <div className="text-[10px] font-bold uppercase tracking-[0.14em] mb-2" style={{ color: style.color }}>
+                        Your move as a {style.name} leader
+                      </div>
+                      <p className="text-sm text-text-primary leading-relaxed">{s.action}</p>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -357,30 +392,50 @@ function GoDeeperTab({ style }) {
   const [expanded, setExpanded] = useState(null)
   return (
     <div>
-      <h2 className="font-display text-2xl font-bold text-white mb-2">Reflection Prompts</h2>
-      <p className="text-sm text-text-muted mb-8">The questions that sharpen self-awareness.</p>
+      <div className="mb-10">
+        <div className="text-[10px] font-bold text-text-muted uppercase tracking-[0.18em] mb-4">Go Deeper</div>
+        <h2 className="font-display text-4xl font-black text-white mb-3">
+          Questions that<br />
+          <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">change the way you see.</span>
+        </h2>
+        <p className="text-sm text-text-muted max-w-lg leading-relaxed">
+          These are not rhetorical. They are designed to surface blind spots specific to how {style.name} leaders operate under pressure.
+        </p>
+      </div>
       <div className="space-y-3 mb-8">
         {style.reflects.map((r, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-            className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-5 cursor-pointer hover:border-white/10 transition-all"
-            onClick={() => setExpanded(expanded === i ? null : i)}>
-            <div className="text-sm text-white leading-relaxed">{r}</div>
-            <AnimatePresence>
-              {expanded === i && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                  <p className="text-xs text-text-muted mt-3 pt-3 border-t border-white/[0.04]">
-                    Journal your response. There's no right answer — only honest exploration of your leadership patterns.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            className="group relative bg-bg-surface/60 border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/10 transition-all cursor-pointer"
+            onClick={() => setExpanded(expanded === i ? null : i)}
+          >
+            <div className="p-5 flex items-start gap-5">
+              <div className="shrink-0 font-display text-3xl font-black leading-none mt-0.5"
+                style={{ color: 'rgba(255,255,255,0.06)' }}>
+                {String(i + 1).padStart(2, '0')}
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold text-white leading-relaxed">{r}</div>
+                <AnimatePresence>
+                  {expanded === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+                      <p className="text-xs text-text-muted mt-3 pt-3 border-t border-white/[0.04] leading-relaxed">
+                        Journal your response — writing forces your brain to process differently. Name a specific recent moment this question applies to, not a hypothetical.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <motion.span animate={{ rotate: expanded === i ? 180 : 0 }} className="text-text-muted text-sm shrink-0 mt-1">▾</motion.span>
+            </div>
           </motion.div>
         ))}
       </div>
       <AxonCallout text="Writing things down forces your brain to process differently than just thinking about them. That's why journaling works — it activates the same networks responsible for self-awareness and creative insight. You're not just reflecting. You're literally rewiring." />
       <div className="mt-8 text-center">
-        <Link to="/simulator" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-white text-bg-primary font-bold text-sm hover:bg-white/90 transition-all">
-          Communication Simulator →
+        <Link to="/simulator" className="group inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border text-sm font-semibold transition-all hover:bg-white/5"
+          style={{ borderColor: `${style.color}30`, color: style.color }}>
+          Practice in the Simulator
+          <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </div>
     </div>
