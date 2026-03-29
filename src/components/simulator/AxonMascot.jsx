@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef, Suspense, Component } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { Center } from '@react-three/drei'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 const MODEL_URL = `${import.meta.env.BASE_URL}axon-final.glb`
 const FALLBACK_IMG = `${import.meta.env.BASE_URL}axon-final.webp`
 
-// ── Axon-isms: signature catchphrases ─────────────────────
 const AXON_ISMS = [
   "Your brain rewires every time you try something new. No pressure.",
   "Fun fact: your team can literally feel your stress. Mirror neurons are snitches.",
@@ -32,11 +32,12 @@ const MOOD_ANIM = {
   wave:     { bobAmp: 0.09, bobSpeed: 1.8, tiltAmp: 0.10, tiltSpeed: 1.4, scaleAmp: 0.03 },
 }
 
-function AxonModel({ mood = 'idle' }) {
-  const { scene } = useGLTF(MODEL_URL)
+// Inner scene — receives already-loaded scene object
+function AxonScene({ scene, mood }) {
   const groupRef = useRef()
   const t = useRef(0)
   const { bobAmp, bobSpeed, tiltAmp, tiltSpeed, scaleAmp } = MOOD_ANIM[mood] || MOOD_ANIM.idle
+  const cloned = useMemo(() => scene.clone(true), [scene])
 
   useFrame((_, delta) => {
     t.current += delta
@@ -46,44 +47,53 @@ function AxonModel({ mood = 'idle' }) {
     groupRef.current.rotation.z = Math.sin(s * tiltSpeed) * tiltAmp
     groupRef.current.rotation.y = Math.sin(s * tiltSpeed * 0.7) * tiltAmp * 0.5
     if (scaleAmp > 0) {
-      const sc = 1 + Math.sin(s * bobSpeed) * scaleAmp
-      groupRef.current.scale.setScalar(sc)
+      groupRef.current.scale.setScalar(1 + Math.sin(s * bobSpeed) * scaleAmp)
     }
   })
 
   return (
     <group ref={groupRef}>
-      <primitive object={scene} />
+      <Center>
+        <primitive object={cloned} />
+      </Center>
     </group>
   )
 }
 
-// Preload so it doesn't stall on first render
-useGLTF.preload(MODEL_URL)
+// Wrapper that loads the GLB imperatively and passes scene down
+function Axon3D({ size, mood, onError }) {
+  const [scene, setScene] = useState(null)
 
-// Error boundary — falls back to flat webp if WebGL/GLB fails
-class GLBErrorBoundary extends Component {
-  constructor(props) { super(props); this.state = { failed: false } }
-  static getDerivedStateFromError() { return { failed: true } }
-  render() {
-    if (this.state.failed) {
-      const { size, mood } = this.props
-      return (
-        <motion.img
-          src={FALLBACK_IMG}
-          alt="Axon"
-          width={size}
-          height={size}
-          animate={MOOD_ANIM[mood] ? {
-            y: [0, -8, 0],
-            transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
-          } : undefined}
-          style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))', mixBlendMode: 'screen' }}
-        />
-      )
-    }
-    return this.props.children
-  }
+  useEffect(() => {
+    const loader = new GLTFLoader()
+    loader.load(
+      MODEL_URL,
+      (gltf) => setScene(gltf.scene),
+      undefined,
+      (err) => {
+        console.error('[AxonMascot] GLB load failed:', err)
+        onError()
+      }
+    )
+  }, [])
+
+  return (
+    <Canvas
+      style={{ width: size, height: size, background: 'transparent' }}
+      camera={{ position: [0, 0, 3], fov: 40 }}
+      gl={{ alpha: true, antialias: true }}
+      onCreated={({ gl, scene: threeScene }) => {
+        gl.setClearColor(0x000000, 0)
+        threeScene.background = null
+      }}
+    >
+      <ambientLight intensity={1.0} />
+      <directionalLight position={[2, 4, 3]} intensity={1.4} color="#ffffff" />
+      <directionalLight position={[-2, 1, -2]} intensity={0.5} color="#B88AFF" />
+      <pointLight position={[0, 2, 2]} intensity={1.0} color="#00C8FF" />
+      {scene && <AxonScene scene={scene} mood={mood} />}
+    </Canvas>
+  )
 }
 
 export default function AxonMascot({
@@ -93,6 +103,7 @@ export default function AxonMascot({
   entrance = 'portal',
   className = '',
 }) {
+  const [glbFailed, setGlbFailed] = useState(false)
   const [quipIndex, setQuipIndex] = useState(() => Math.floor(Math.random() * AXON_ISMS.length))
   const [quipVisible, setQuipVisible] = useState(true)
   const [hasEntered, setHasEntered] = useState(entrance === 'none')
@@ -130,7 +141,6 @@ export default function AxonMascot({
 
   return (
     <div className={`flex flex-col items-center gap-3 ${className}`}>
-      {/* Speech bubble */}
       {showQuip && hasEntered && (
         <AnimatePresence mode="wait">
           {quipVisible && (
@@ -151,7 +161,6 @@ export default function AxonMascot({
         </AnimatePresence>
       )}
 
-      {/* 3D Axon */}
       <motion.div
         className="relative"
         style={{ width: size, height: size }}
@@ -159,7 +168,6 @@ export default function AxonMascot({
         initial={entrance !== 'none' ? 'hidden' : undefined}
         animate={entrance !== 'none' ? 'visible' : undefined}
       >
-        {/* Portal vortex ring */}
         {entrance === 'portal' && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -172,7 +180,6 @@ export default function AxonMascot({
           </motion.div>
         )}
 
-        {/* Particle burst */}
         {entrance === 'portal' && (
           <motion.div
             className="absolute inset-0 pointer-events-none"
@@ -200,7 +207,7 @@ export default function AxonMascot({
           </motion.div>
         )}
 
-        {/* Ambient glow behind the canvas */}
+        {/* Ambient glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -210,26 +217,21 @@ export default function AxonMascot({
           }}
         />
 
-        {/* Three.js canvas with fallback */}
-        <GLBErrorBoundary size={size} mood={mood}>
-          <Canvas
-            style={{ width: size, height: size, background: 'transparent' }}
-            camera={{ position: [0, 0, 2.8], fov: 38 }}
-            gl={{ alpha: true, antialias: true }}
-            onCreated={({ gl, scene }) => {
-              gl.setClearColor(0x000000, 0)
-              scene.background = null
+        {glbFailed ? (
+          <img
+            src={FALLBACK_IMG}
+            alt="Axon"
+            width={size}
+            height={size}
+            style={{
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 0 20px rgba(0,200,255,0.25))',
+              mixBlendMode: 'screen',
             }}
-          >
-            <ambientLight intensity={0.9} />
-            <directionalLight position={[2, 4, 3]} intensity={1.4} color="#ffffff" />
-            <directionalLight position={[-2, 1, -2]} intensity={0.5} color="#B88AFF" />
-            <pointLight position={[0, 2, 2]} intensity={1.0} color="#00C8FF" />
-            <Suspense fallback={null}>
-              <AxonModel mood={mood} />
-            </Suspense>
-          </Canvas>
-        </GLBErrorBoundary>
+          />
+        ) : (
+          <Axon3D size={size} mood={mood} onError={() => setGlbFailed(true)} />
+        )}
       </motion.div>
     </div>
   )
