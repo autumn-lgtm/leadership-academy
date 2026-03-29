@@ -39,7 +39,7 @@ export const RECOVERY_BEATS = [
   { beat: 2, after: 'C', quote: 'It is not the strongest who survive. It is the most adaptable.', attribution: 'Megginson paraphrasing Darwin, 1963', tap: true },
   { beat: 3, before: 'D', quote: 'Between the stimulus and response, the most important thing is what happens inside us.', attribution: 'Covey', tap: true },
   { beat: 4, after: 'D', quote: 'We are wounded in relationship. We are healed in relationship.', attribution: 'Hendrix', tap: true },
-  { beat: 5, before: 'profile', lines: ['You showed up honestly. That\'s the hardest part.'], loadingMs: 2000 },
+  { beat: 5, before: 'profile', lines: ['You showed up honestly. That\'s the hardest part.'], autoAdvance: 2000 },
 ];
 
 // ── SECTION A: Leadership Scenarios (Q1-Q8) — Short + Long ──────────────

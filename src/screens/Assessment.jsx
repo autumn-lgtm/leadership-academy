@@ -132,11 +132,20 @@ export default function Assessment() {
   }
 
   function handleSubmit() {
-    const profile = computeFullProfile({ ...answers, mode: 'long' })
-    localStorage.setItem('neuroleader_profile', JSON.stringify({
-      ...profile, answers, completedAt: new Date().toISOString(),
-    }))
-    navigate('/profile')
+    try {
+      const profile = computeFullProfile({ ...answers, mode: 'long' })
+      localStorage.setItem('neuroleader_profile', JSON.stringify({
+        ...profile, answers, completedAt: new Date().toISOString(),
+      }))
+    } catch (err) {
+      console.error('Scoring failed:', err)
+      // Persist whatever we have so the profile screen can still render
+      localStorage.setItem('neuroleader_profile', JSON.stringify({
+        answers, completedAt: new Date().toISOString(), _scoringError: true,
+      }))
+    } finally {
+      navigate('/profile')
+    }
   }
 
   function renderStepContent() {
@@ -151,7 +160,7 @@ export default function Assessment() {
       case 'recovery-3':
         return <RecoveryScreen beat={3} onContinue={advanceStepCb} />
       case 'recovery-5':
-        return <RecoveryScreen beat={5} onContinue={() => setTimeout(handleSubmit, 2000)} />
+        return <RecoveryScreen beat={5} onContinue={handleSubmit} />
 
       case 'gap-prompt':
         return <GapPromptScreen sliderItems={SLIDER_ITEMS} onSelect={handleGapSelect} />
