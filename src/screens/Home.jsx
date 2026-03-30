@@ -53,7 +53,7 @@ export default function Home() {
           <div className="flex items-center gap-6">
             <Link to="/assessment" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Map</Link>
             <Link to="/profile" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Profile</Link>
-            <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
+            <Link to="/simulator" className="text-sm font-semibold text-cyan hover:text-white transition-colors">Simulator</Link>
             <Link
               to="/assessment"
               className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"

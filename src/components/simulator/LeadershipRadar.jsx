@@ -71,7 +71,10 @@ export default function LeadershipRadar({ axes, size = 380 }) {
 
     const cx   = size / 2
     const cy   = size / 2
-    const maxR = size * 0.33
+    // Smaller maxR on compact canvases to leave room for labels
+    const maxR = size < 280 ? size * 0.28 : size * 0.33
+    // Label padding scales with size so labels never clip at canvas edge
+    const labelPad = size < 280 ? 16 : 26
 
     // Max possible polygon area (all axes at 100)
     const maxPts = AXES.map(ax => ({
@@ -179,7 +182,7 @@ export default function LeadershipRadar({ axes, size = 380 }) {
       AXES.forEach(ax => {
         const isDom  = ax === dominant
         const angle  = ANGLES[ax]
-        const labelR = maxR + 26
+        const labelR = maxR + labelPad
         const lx = cx + labelR * Math.cos(angle)
         const ly = cy + labelR * Math.sin(angle)
         const opacity = 0.3 + (cur[ax] / 100) * 0.7 // brightness encodes value
@@ -187,8 +190,9 @@ export default function LeadershipRadar({ axes, size = 380 }) {
         ctx.textAlign    = Math.abs(Math.cos(angle)) < 0.1 ? 'center' : Math.cos(angle) > 0 ? 'left' : 'right'
         ctx.textBaseline = Math.abs(Math.sin(angle)) < 0.1 ? 'middle' : Math.sin(angle) > 0 ? 'top' : 'bottom'
 
-        // Axis name
-        ctx.font      = `800 ${isDom ? 12 : 10}px 'DM Sans', ui-sans-serif, sans-serif`
+        // Axis name — smaller font at compact sizes
+        const fontSize = size < 280 ? (isDom ? 10 : 9) : (isDom ? 12 : 10)
+        ctx.font      = `800 ${fontSize}px 'DM Sans', ui-sans-serif, sans-serif`
         ctx.fillStyle = isDom ? domColor : `rgba(255,255,255,${opacity})`
         if (isDom) {
           ctx.shadowColor = domColor
@@ -197,8 +201,8 @@ export default function LeadershipRadar({ axes, size = 380 }) {
         ctx.fillText(LABELS[ax], lx, ly)
         ctx.shadowBlur = 0
 
-        // Sub-description for dominant
-        if (isDom) {
+        // Sub-description for dominant — only at larger sizes
+        if (isDom && size >= 280) {
           const subLx = lx
           const subLy = ly + (Math.sin(angle) >= 0 ? 14 : -14)
           ctx.font      = `500 8px 'DM Sans', sans-serif`

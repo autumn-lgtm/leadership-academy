@@ -641,7 +641,7 @@ function StyleDecoder() {
             <div className="text-[8px] font-bold uppercase tracking-[0.18em] text-text-muted/40 mb-2">
               Signal Profile
             </div>
-            <LeadershipRadar axes={liveRadarAxes} size={200} />
+            <LeadershipRadar axes={liveRadarAxes} size={240} />
           </div>
           {/* Signal metrics panel */}
           <div className="flex flex-col justify-center gap-3 min-w-0">
