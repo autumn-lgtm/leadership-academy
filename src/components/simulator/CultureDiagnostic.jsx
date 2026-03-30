@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const CDQ = [
   {ctx:"Information flow",text:"A project is behind schedule. What happens first?",scenario:null,axon:"Watch who moves first. That tells you everything about where the power sits.",options:[{text:"Someone on the team flags it before you have to ask.",scores:{signal:3}},{text:"It comes up in a status meeting, framed carefully.",scores:{armor:2,drift:1}},{text:"You find out from someone outside the team.",scores:{armor:3}},{text:"It surfaces when the deadline passes.",scores:{drift:3}}]},
@@ -68,6 +69,105 @@ function computeScores(answers) {
   return sc
 }
 
+// ── Culture Compass — proportional pie with composition bars ─────────────────
+const CD_ORDER = ['signal', 'armor', 'drift', 'siege']
+
+function CultureCompass({ scores }) {
+  const CX = 60, CY = 60, R = 50
+  const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1
+
+  // Build pie segments
+  let angle = -90
+  const segments = CD_ORDER.map(type => {
+    const pct = scores[type] / total
+    const sweep = pct * 360
+    const start = angle
+    angle += sweep
+    return { type, pct, start, end: angle }
+  })
+
+  function polar(deg, r) {
+    const rad = deg * (Math.PI / 180)
+    return [CX + r * Math.cos(rad), CY + r * Math.sin(rad)]
+  }
+
+  function piePath(start, end, r) {
+    const [x1, y1] = polar(start, r)
+    const [x2, y2] = polar(end, r)
+    const large = (end - start) > 180 ? 1 : 0
+    return `M ${CX} ${CY} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`
+  }
+
+  const dominant = CD_ORDER.reduce((best, t) => scores[t] > scores[best] ? t : best, CD_ORDER[0])
+
+  return (
+    <div className="rounded-2xl border p-5 bg-bg-surface border-white/[0.06]">
+      <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/40 mb-4">Culture Composition</div>
+      <div className="flex gap-5 items-center">
+        {/* Pie chart */}
+        <svg viewBox="0 0 120 120" className="w-32 h-32 shrink-0">
+          {/* Background */}
+          <circle cx={CX} cy={CY} r={R} fill="rgba(255,255,255,0.025)" />
+          {segments.map((seg, i) => (
+            <motion.path
+              key={seg.type}
+              d={piePath(seg.start, seg.end, R - 1)}
+              fill={CDCT[seg.type].color}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: seg.type === dominant ? 0.88 : 0.3, scale: 1 }}
+              transition={{ delay: i * 0.1, duration: 0.5, type: 'spring' }}
+              style={{
+                transformOrigin: `${CX}px ${CY}px`,
+                filter: seg.type === dominant ? `drop-shadow(0 0 8px ${CDCT[seg.type].color}80)` : 'none',
+              }}
+            />
+          ))}
+          {/* Center donut hole */}
+          <circle cx={CX} cy={CY} r={24} fill="#0a1220" />
+          {/* Dominant % label */}
+          <motion.text
+            x={CX} y={CY - 3} textAnchor="middle" fontSize="11" fontWeight="900"
+            fill={CDCT[dominant].color}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+          >
+            {Math.round((scores[dominant] / total) * 100)}%
+          </motion.text>
+          <motion.text
+            x={CX} y={CY + 9} textAnchor="middle" fontSize="4.5"
+            fill="rgba(255,255,255,0.3)"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          >
+            {CDCT[dominant].name.split(' ')[0]}
+          </motion.text>
+        </svg>
+        {/* Composition bars */}
+        <div className="flex-1 space-y-2.5">
+          {CD_ORDER.map((type, i) => {
+            const pct = Math.round((scores[type] / total) * 100)
+            const c = CDCT[type].color
+            return (
+              <div key={type} className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: c }} />
+                <span className="text-[10px] font-black w-10 shrink-0 capitalize" style={{ color: c }}>{type}</span>
+                <div className="flex-1 h-1 bg-white/[0.05] rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${pct}%` }}
+                    transition={{ duration: 0.8, delay: 0.15 + i * 0.07 }}
+                    style={{ background: c }}
+                  />
+                </div>
+                <span className="text-[10px] text-white/40 w-7 text-right tabular-nums">{pct}%</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Results({ answers, onRestart }) {
   const scores = computeScores(answers)
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1])
@@ -85,84 +185,136 @@ function Results({ answers, onRestart }) {
     .slice(0, 3)
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 140, damping: 20 }}
+    >
       <div className="mb-5">
         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-cyan mb-1">Culture Diagnostic</p>
         <p className="text-xs text-text-muted">Your team's behavioral fingerprint</p>
       </div>
 
-      {/* Primary culture hero */}
-      <div className="rounded-2xl p-5 mb-4 border" style={{ background: `${ct.color}08`, borderColor: `${ct.color}33` }}>
-        <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-1" style={{ color: ct.color }}>Primary Culture Type</p>
-        <h2 className="font-display text-3xl font-black mb-2" style={{ color: ct.color }}>{ct.name}</h2>
-        <p className="text-sm text-text-primary leading-relaxed mb-2">{ct.def}</p>
-        <p className="text-xs text-text-muted leading-relaxed italic">{ct.neuro}</p>
-      </div>
+      {/* Primary culture hero — cinematic reveal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: 'spring', stiffness: 120, damping: 18, delay: 0.08 }}
+        className="rounded-2xl p-6 mb-4 border relative overflow-hidden"
+        style={{ background: `${ct.color}08`, borderColor: `${ct.color}33` }}
+      >
+        {/* Background glow pulse */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.18, 0] }}
+          transition={{ duration: 2.5, delay: 0.3 }}
+          style={{ background: `radial-gradient(ellipse at 25% 40%, ${ct.color}40, transparent 65%)` }}
+        />
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-1 relative" style={{ color: ct.color }}>
+          Primary Culture Type
+        </p>
+        <motion.h2
+          className="font-display text-4xl font-black mb-3 relative"
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 22 }}
+          style={{ color: ct.color }}
+        >
+          {ct.name}
+        </motion.h2>
+        <motion.p
+          className="text-sm text-text-primary leading-relaxed mb-2 relative"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
+        >
+          {ct.def}
+        </motion.p>
+        <motion.p
+          className="text-xs text-text-muted leading-relaxed italic relative"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
+        >
+          {ct.neuro}
+        </motion.p>
+      </motion.div>
 
-      {/* Score grid */}
-      <div className="grid grid-cols-2 gap-2 mb-4">
-        {sorted.map(([type, score]) => {
-          const c = CDCT[type].color
-          const pct = Math.round((score / total) * 100)
-          return (
-            <div key={type} className="rounded-xl p-3 border border-white/[0.06] bg-bg-surface">
-              <div className="flex justify-between items-baseline mb-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-[0.09em]" style={{ color: c }}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </span>
-                <span className="font-display text-base font-black text-white">{pct}%</span>
-              </div>
-              <div className="h-[3px] rounded-full bg-white/[0.07] overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${pct}%`, background: c }} />
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {/* Culture Compass */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15, type: 'spring', stiffness: 140 }}
+        className="mb-4"
+      >
+        <CultureCompass scores={scores} />
+      </motion.div>
 
       {/* Secondary badge */}
-      <div className="mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-[0.08em]"
-          style={{ borderColor: `${CDCT[secondary].color}40`, color: CDCT[secondary].color, background: `${CDCT[secondary].color}0f` }}>
-          Secondary: {secondary.charAt(0).toUpperCase() + secondary.slice(1)} Culture
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+        className="mb-4"
+      >
+        <span
+          className="inline-flex items-center px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-[0.08em]"
+          style={{ borderColor: `${CDCT[secondary].color}40`, color: CDCT[secondary].color, background: `${CDCT[secondary].color}0f` }}
+        >
+          Secondary signal: {secondary.charAt(0).toUpperCase() + secondary.slice(1)} Culture
         </span>
-      </div>
+      </motion.div>
 
       {/* Axon quote */}
-      <div className="flex items-start gap-3 p-4 rounded-xl border mb-4"
-        style={{ background: 'rgba(255,180,64,0.04)', borderColor: 'rgba(255,180,64,0.15)' }}>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+        className="flex items-start gap-3 p-4 rounded-xl border mb-4"
+        style={{ background: 'rgba(255,180,64,0.04)', borderColor: 'rgba(255,180,64,0.15)' }}
+      >
         <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0"
           style={{ background: 'rgba(255,180,64,0.1)', border: '1px solid rgba(255,180,64,0.2)' }}>◎</div>
         <p className="text-sm text-amber-400 italic leading-relaxed">{ct.axon}</p>
-      </div>
+      </motion.div>
 
-      {/* Evidence */}
+      {/* Behavioral Evidence */}
       {evidence.length > 0 && (
-        <div className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+          className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-3"
+        >
           <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-muted mb-3">Behavioral Evidence</p>
-          {evidence.map((e, i) => (
-            <div key={i} className={`flex gap-2.5 items-start ${i < evidence.length - 1 ? 'mb-3 pb-3 border-b border-white/[0.06]' : ''}`}>
-              <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: ct.color }} />
-              <div>
-                <p className="text-xs text-text-primary leading-relaxed">{e.text}</p>
-                <p className="text-[10px] text-text-muted mt-0.5 italic">{e.ctx}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+          <div className="space-y-3">
+            {evidence.map((e, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.45 + i * 0.1 }}
+                className={`flex gap-2.5 items-start ${i < evidence.length - 1 ? 'pb-3 border-b border-white/[0.06]' : ''}`}
+              >
+                <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: ct.color }} />
+                <div>
+                  <p className="text-xs text-text-primary leading-relaxed">{e.text}</p>
+                  <p className="text-[10px] text-text-muted mt-0.5 italic">{e.ctx}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       )}
 
       {/* The Gap */}
-      <div className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-3">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+        className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-3"
+      >
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-muted mb-3">The Gap</p>
         <div className="rounded-lg p-3 border-l-[3px]" style={{ background: '#131e2c', borderColor: '#ffb340' }}>
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-amber-400 mb-1">What to watch for</p>
           <p className="text-xs text-text-primary leading-relaxed">{ct.gap}</p>
         </div>
-      </div>
+      </motion.div>
 
       {/* This Week */}
-      <div className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-4">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
+        className="rounded-2xl p-4 border border-white/[0.06] bg-bg-surface mb-4"
+      >
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-muted mb-3">This Week</p>
         <div className="flex gap-2.5 items-start rounded-lg p-3" style={{ background: '#131e2c' }}>
           <span className="text-cyan text-base shrink-0 mt-0.5">→</span>
@@ -171,7 +323,7 @@ function Results({ answers, onRestart }) {
             <p className="text-xs text-text-primary leading-relaxed">{ct.action}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <button
         onClick={onRestart}
@@ -180,7 +332,7 @@ function Results({ answers, onRestart }) {
       >
         Run it again →
       </button>
-    </div>
+    </motion.div>
   )
 }
 
@@ -188,9 +340,10 @@ export default function CultureDiagnostic() {
   const [cur, setCur] = useState(0)
   const [answers, setAnswers] = useState({})
   const [done, setDone] = useState(false)
+  const [direction, setDirection] = useState(1)
 
   const q = CDQ[cur]
-  const pct = Math.round((cur / CDQ.length) * 100)
+  const pct = Math.round(((cur + 1) / CDQ.length) * 100)
   const isLast = cur === CDQ.length - 1
   const picked = answers[cur]
 
@@ -198,13 +351,16 @@ export default function CultureDiagnostic() {
 
   const next = () => {
     if (picked === undefined) return
+    setDirection(1)
     if (!isLast) setCur(c => c + 1)
     else setDone(true)
   }
 
-  const back = () => { if (cur > 0) setCur(c => c - 1) }
+  const back = () => {
+    if (cur > 0) { setDirection(-1); setCur(c => c - 1) }
+  }
 
-  const restart = () => { setCur(0); setAnswers({}); setDone(false) }
+  const restart = () => { setCur(0); setAnswers({}); setDone(false); setDirection(1) }
 
   if (done) return <Results answers={answers} onRestart={restart} />
 
@@ -216,68 +372,102 @@ export default function CultureDiagnostic() {
         <p className="text-xs text-text-muted">What culture are you actually running?</p>
       </div>
 
-      {/* Axon nudge */}
-      <div className="flex items-center gap-2.5 p-3 rounded-xl border mb-5"
-        style={{ background: 'rgba(255,180,64,0.04)', borderColor: 'rgba(255,180,64,0.12)' }}>
-        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] shrink-0"
-          style={{ background: 'rgba(255,180,64,0.1)', border: '1px solid rgba(255,180,64,0.18)' }}>◎</div>
-        <p className="text-xs text-amber-400 italic leading-relaxed">{q.axon}</p>
-      </div>
-
       {/* Progress */}
       <div className="flex justify-between items-center mb-2">
         <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-muted">
-          Question {cur + 1} of {CDQ.length}
+          {cur + 1} / {CDQ.length}
         </span>
-        <span className="text-[10px] font-bold text-white/20">{pct}% complete</span>
+        <span className="text-[10px] font-bold text-white/20">{pct}%</span>
       </div>
-      <div className="h-[2px] rounded-full bg-white/[0.07] mb-5 overflow-hidden">
-        <div className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${pct}%`, background: 'linear-gradient(90deg,#00c8ff,#b88aff)' }} />
+      {/* Segmented progress dots */}
+      <div className="flex gap-1 mb-5">
+        {CDQ.map((_, i) => (
+          <motion.div
+            key={i}
+            className="h-0.5 flex-1 rounded-full"
+            animate={{
+              background: i < cur ? '#00C8FF' : i === cur ? '#B88AFF' : 'rgba(255,255,255,0.08)',
+              scaleY: i === cur ? 2 : 1,
+            }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
       </div>
 
-      {/* Question card */}
-      <div key={cur} className="rounded-2xl p-5 border border-white/[0.07] bg-bg-surface mb-4"
-        style={{ animation: 'cd-fadein 0.3s ease' }}>
-        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted mb-2">{q.ctx}</p>
-        <p className="font-display text-base font-bold text-white leading-snug mb-4">{q.text}</p>
-        {q.scenario && (
-          <p className="text-xs text-text-muted italic leading-relaxed mb-4 px-3 py-2.5 rounded-lg border-l-2 border-white/10"
-            style={{ background: '#131e2c' }}>{q.scenario}</p>
-        )}
-        <div className="flex flex-col gap-2">
-          {q.options.map((opt, i) => (
-            <button
-              key={i}
-              onClick={() => pick(i)}
-              className="flex items-start gap-3 text-left px-4 py-3 rounded-xl border transition-all"
-              style={{
-                background: picked === i ? 'rgba(0,200,255,0.05)' : '#131e2c',
-                borderColor: picked === i ? '#00c8ff' : 'rgba(100,180,255,0.07)',
-              }}
-            >
-              <span className="text-[11px] font-bold w-4 shrink-0 mt-0.5 transition-colors"
-                style={{ color: picked === i ? '#00c8ff' : 'rgba(255,255,255,0.3)' }}>
-                {LETTERS[i]}
-              </span>
-              <span className="text-xs text-text-primary leading-relaxed">{opt.text}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Axon nudge — animates with question */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`axon-${cur}`}
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="flex items-center gap-2.5 p-3 rounded-xl border mb-4"
+          style={{ background: 'rgba(255,180,64,0.04)', borderColor: 'rgba(255,180,64,0.12)' }}
+        >
+          <div className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] shrink-0"
+            style={{ background: 'rgba(255,180,64,0.1)', border: '1px solid rgba(255,180,64,0.18)' }}>◎</div>
+          <p className="text-xs text-amber-400 italic leading-relaxed">{q.axon}</p>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Question card — slide transition */}
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={cur}
+          custom={direction}
+          initial={d => ({ x: d * 28, opacity: 0 })}
+          animate={{ x: 0, opacity: 1 }}
+          exit={d => ({ x: d * -28, opacity: 0 })}
+          transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+          className="rounded-2xl p-5 border border-white/[0.07] bg-bg-surface mb-4"
+        >
+          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted mb-2">{q.ctx}</p>
+          <p className="font-display text-base font-bold text-white leading-snug mb-4">{q.text}</p>
+          {q.scenario && (
+            <p className="text-xs text-text-muted italic leading-relaxed mb-4 px-3 py-2.5 rounded-lg border-l-2 border-white/10"
+              style={{ background: '#131e2c' }}>{q.scenario}</p>
+          )}
+          <div className="flex flex-col gap-2">
+            {q.options.map((opt, i) => (
+              <motion.button
+                key={i}
+                onClick={() => pick(i)}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-start gap-3 text-left px-4 py-3 rounded-xl border transition-colors"
+                style={{
+                  background: picked === i ? 'rgba(0,200,255,0.05)' : '#131e2c',
+                  borderColor: picked === i ? '#00c8ff' : 'rgba(100,180,255,0.07)',
+                  boxShadow: picked === i ? '0 0 16px rgba(0,200,255,0.08)' : 'none',
+                }}
+              >
+                <span
+                  className="text-[11px] font-bold w-4 shrink-0 mt-0.5"
+                  style={{ color: picked === i ? '#00c8ff' : 'rgba(255,255,255,0.3)' }}
+                >
+                  {LETTERS[i]}
+                </span>
+                <span className="text-xs text-text-primary leading-relaxed">{opt.text}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Nav */}
       <div className="flex justify-between items-center">
-        <button
+        <motion.button
           onClick={back}
+          whileTap={{ scale: 0.96 }}
           className="px-5 py-2.5 rounded-xl border border-white/[0.07] text-[11px] font-bold uppercase tracking-[0.1em] text-text-muted hover:text-white transition-colors"
           style={{ visibility: cur === 0 ? 'hidden' : 'visible' }}
         >
           ← Back
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={next}
           disabled={picked === undefined}
+          whileTap={{ scale: picked !== undefined ? 0.96 : 1 }}
           className="px-5 py-2.5 rounded-xl text-[11px] font-bold uppercase tracking-[0.1em] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           style={isLast
             ? { background: '#00c8ff', color: '#060a0e', border: '1px solid #00c8ff' }
@@ -285,10 +475,8 @@ export default function CultureDiagnostic() {
           }
         >
           {isLast ? 'See Results →' : 'Next →'}
-        </button>
+        </motion.button>
       </div>
-
-      <style>{`@keyframes cd-fadein { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }`}</style>
     </div>
   )
 }
