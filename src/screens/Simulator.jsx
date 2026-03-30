@@ -975,11 +975,52 @@ function StyleDecoder() {
   )
 }
 
+// ── Translation DNA helpers ─────────────────────────────────────────────────
+const AXIS_KEYWORDS = {
+  who:  ['team', 'people', 'relationship', 'you', 'we', 'together', 'feel', 'understand', 'support', 'trust', 'everyone', 'person', 'connect', 'colleague'],
+  why:  ['vision', 'purpose', 'mission', 'meaning', 'why', 'because', 'value', 'impact', 'believe', 'matter', 'important', 'direction', 'principle'],
+  what: ['system', 'process', 'structure', 'deliverable', 'framework', 'plan', 'timeline', 'milestone', 'workflow', 'organize', 'checklist', 'step', 'phase'],
+  how:  ['action', 'result', 'execute', 'now', 'quickly', 'drive', 'achieve', 'deadline', 'ship', 'deliver', 'complete', 'finish', 'implement', 'move'],
+}
+
+function computeTranslateDNA(text) {
+  const lower = text.toLowerCase()
+  const scores = { who: 0, why: 0, what: 0, how: 0 }
+  Object.entries(AXIS_KEYWORDS).forEach(([axis, words]) => {
+    words.forEach(w => {
+      const m = lower.match(new RegExp(`\\b${w}\\b`, 'gi'))
+      if (m) scores[axis] += m.length
+    })
+  })
+  const total = Math.max(Object.values(scores).reduce((a, b) => a + b, 0), 1)
+  return { who: Math.round((scores.who / total) * 100), why: Math.round((scores.why / total) * 100), what: Math.round((scores.what / total) * 100), how: Math.round((scores.how / total) * 100) }
+}
+
+function tagSentences(text) {
+  const raw = text.match(/[^.!?]+[.!?]+/g) || [text]
+  return raw.map(s => {
+    const lower = s.toLowerCase()
+    const best = Object.entries(AXIS_KEYWORDS).reduce((b, [ax, words]) => {
+      const count = words.filter(w => lower.includes(w)).length
+      return count > b[1] ? [ax, count] : b
+    }, ['neutral', 0])
+    return { text: s.trim(), axis: best[1] > 0 ? best[0] : null }
+  })
+}
+
+const LOADING_PHASES = [
+  'Mapping neural wiring...',
+  'Reframing language patterns...',
+  'Optimizing for their axis...',
+  'Translating intent...',
+]
+
 function MessageTranslator() {
   const [message, setMessage] = useState('')
   const [targetStyle, setTargetStyle] = useState('diplomatic')
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [loadingPhase, setLoadingPhase] = useState(0)
   const [error, setError] = useState(null)
   const [expandedVersion, setExpandedVersion] = useState(null)
   const [userProfile, setUserProfile] = useState(null)
@@ -997,6 +1038,13 @@ function MessageTranslator() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!loading) return
+    setLoadingPhase(0)
+    const iv = setInterval(() => setLoadingPhase(p => (p + 1) % LOADING_PHASES.length), 900)
+    return () => clearInterval(iv)
+  }, [loading])
+
   async function handleTranslate() {
     if (!message.trim()) return
     setLoading(true)
@@ -1013,23 +1061,110 @@ function MessageTranslator() {
   }
 
   const styleOptions = Object.entries(STYLES).map(([key, s]) => ({ key, ...s }))
-
   const targetStyleData = STYLES[targetStyle]
+
+  const dna = result?.translated ? computeTranslateDNA(result.translated) : null
+  const sentences = result?.translated ? tagSentences(result.translated) : []
+
+  const bridgeDistance = userProfile?.axisScores
+    ? Math.round(['who', 'why', 'what', 'how'].reduce((sum, ax) => {
+        const userVal = userProfile.axisScores[ax] || 50
+        const targetVal = STYLES[targetStyle].axes[ax] === 'high' ? 80 : 25
+        return sum + Math.abs(userVal - targetVal)
+      }, 0) / 4)
+    : null
 
   return (
     <div>
       {/* Editorial header */}
       <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-3">Message Translator</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-3">Neural Translator</p>
         <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-3">
-          Speak<br />
+          Say It<br />
           <span className="bg-gradient-to-r from-cyan to-purple bg-clip-text text-transparent">
-            Their Language
+            Their Way
           </span>
         </h1>
         <p className="text-text-muted text-sm max-w-md leading-relaxed">
-          Type your message. Pick a style. Get a version that actually lands for them.
+          Type your message. Select their wiring. Watch your words transform into language that actually hits.
         </p>
+      </div>
+
+      {/* Target style selector — axis fingerprint grid */}
+      <div className="mb-6">
+        <label className="text-xs font-bold uppercase tracking-[0.15em] text-text-muted/60 block mb-3">Their Neural Wiring</label>
+        <div className="grid grid-cols-2 gap-2">
+          {styleOptions.map(s => {
+            const isSelected = targetStyle === s.key
+            return (
+              <motion.button
+                key={s.key}
+                onClick={() => setTargetStyle(s.key)}
+                whileTap={{ scale: 0.97 }}
+                className="relative overflow-hidden p-4 rounded-2xl border text-left transition-all"
+                style={isSelected ? {
+                  borderColor: `${s.color}50`,
+                  background: `linear-gradient(135deg, ${s.color}12 0%, ${s.color}05 100%)`,
+                  boxShadow: `0 0 24px ${s.color}20`,
+                } : {
+                  borderColor: 'rgba(255,255,255,0.06)',
+                }}
+              >
+                {isSelected && (
+                  <motion.div
+                    layoutId="style-selector-edge"
+                    className="absolute left-0 top-0 w-0.5 h-full rounded-full"
+                    style={{ background: `linear-gradient(to bottom, transparent, ${s.color}, transparent)` }}
+                  />
+                )}
+                {/* Axis fingerprint — vertical bars */}
+                <div className="flex items-end gap-1 mb-3">
+                  {['who', 'why', 'what', 'how'].map(ax => (
+                    <div key={ax} className="flex flex-col items-center gap-0.5">
+                      <div
+                        className="w-1.5 rounded-full transition-all duration-500"
+                        style={{
+                          height: s.axes[ax] === 'high' ? 20 : 8,
+                          background: s.axes[ax] === 'high' ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.08)',
+                          boxShadow: isSelected && s.axes[ax] === 'high' ? `0 0 6px ${AXIS_COLORS[ax]}` : 'none',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="font-display font-black text-sm leading-tight mb-0.5" style={{ color: isSelected ? s.color : 'rgba(255,255,255,0.75)' }}>
+                  {s.name}
+                </div>
+                <div className="text-[10px] text-text-muted/50">{s.short}</div>
+              </motion.button>
+            )
+          })}
+        </div>
+
+        {/* Selected style context strip */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={targetStyle}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.2 }}
+            className="mt-3 p-4 rounded-2xl border"
+            style={{ borderColor: `${targetStyleData.color}20`, background: `${targetStyleData.color}06` }}
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-0.5 min-h-[32px] rounded-full shrink-0 mt-0.5" style={{ background: targetStyleData.color }} />
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-1" style={{ color: targetStyleData.color }}>
+                  What lands for them
+                </div>
+                <p className="text-[11px] text-text-muted/70 leading-relaxed">
+                  {STYLES[targetStyle].translatePrinciple?.[targetStyle] || STYLES[targetStyle].short}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Message input */}
@@ -1046,86 +1181,50 @@ function MessageTranslator() {
         />
       </div>
 
-      {/* Target style selector */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-bold uppercase tracking-[0.15em] text-text-muted/60">Translate for</label>
-          {targetStyleData && (
-            <span className="text-xs font-bold" style={{ color: targetStyleData.color }}>
-              {targetStyleData.name}
-            </span>
-          )}
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {styleOptions.map(s => (
-            <button
-              key={s.key}
-              onClick={() => setTargetStyle(s.key)}
-              className="relative overflow-hidden p-4 rounded-2xl border text-left transition-all hover:scale-[1.02]"
-              style={targetStyle === s.key ? {
-                borderColor: `${s.color}50`,
-                background: `${s.color}10`,
-                boxShadow: `0 0 24px ${s.color}15`,
-              } : {
-                borderColor: 'rgba(255,255,255,0.06)',
-              }}
-            >
-              {/* Selected indicator */}
-              {targetStyle === s.key && (
-                <div
-                  className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full"
-                  style={{ background: s.color }}
-                />
-              )}
-              {/* Axis mini bars */}
-              <div className="flex gap-0.5 mb-2">
-                {['who', 'why', 'what', 'how'].map(axis => (
-                  <div
-                    key={axis}
-                    className="flex-1 h-0.5 rounded-full"
-                    style={{
-                      background: s.axes[axis] === 'high'
-                        ? { who: '#B88AFF', why: '#00C8FF', what: '#00E896', how: '#FFB340' }[axis]
-                        : 'rgba(255,255,255,0.08)',
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="text-xs font-display font-black leading-tight" style={{ color: targetStyle === s.key ? s.color : 'rgba(255,255,255,0.7)' }}>
-                {s.name}
-              </div>
-              <div className="text-[10px] text-text-muted/50 mt-0.5 leading-tight">{s.short}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <button
+      {/* Translate button — style-colored */}
+      <motion.button
         onClick={handleTranslate}
         disabled={loading || !message.trim()}
-        className={`px-8 py-3.5 rounded-xl font-bold text-sm transition-all ${
-          loading || !message.trim()
-            ? 'bg-bg-surface text-text-muted/40 cursor-not-allowed'
-            : 'bg-gradient-to-r from-cyan to-purple text-white shadow-[0_0_20px_rgba(0,200,255,0.3)] hover:shadow-[0_0_28px_rgba(0,200,255,0.4)]'
-        }`}
+        whileTap={{ scale: 0.97 }}
+        className="relative overflow-hidden px-8 py-4 rounded-xl font-bold text-sm transition-all"
+        style={!loading && message.trim() ? {
+          background: `linear-gradient(135deg, ${targetStyleData.color}CC 0%, ${targetStyleData.color}88 100%)`,
+          color: '#fff',
+          boxShadow: `0 0 24px ${targetStyleData.color}30`,
+        } : {
+          background: 'rgba(255,255,255,0.04)',
+          color: 'rgba(255,255,255,0.3)',
+          cursor: loading || !message.trim() ? 'not-allowed' : 'pointer',
+        }}
       >
-        {loading ? 'Translating...' : `Translate for ${targetStyleData?.name || ''} →`}
-      </button>
+        {!loading && message.trim() && (
+          <motion.div
+            className="absolute inset-0 rounded-xl"
+            animate={{ opacity: [0, 0.3, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{ background: `radial-gradient(ellipse at 30% 50%, ${targetStyleData.color}50, transparent 70%)` }}
+          />
+        )}
+        <span className="relative">
+          {loading ? LOADING_PHASES[loadingPhase] : `Translate for ${targetStyleData?.name || ''} →`}
+        </span>
+      </motion.button>
 
-      {/* Loading animation */}
+      {/* Loading — bar pulse */}
       {loading && (
-        <div className="mt-6 flex items-center gap-3">
-          <div className="flex gap-1">
-            {[0, 1, 2].map(i => (
+        <div className="mt-4 flex items-center gap-3">
+          <div className="flex items-end gap-0.5">
+            {[0, 1, 2, 3].map(i => (
               <motion.div
                 key={i}
-                className="w-2 h-2 rounded-full bg-cyan"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                className="w-1 rounded-full"
+                animate={{ height: ['6px', '16px', '6px'] }}
+                transition={{ duration: 0.7, repeat: Infinity, delay: i * 0.12 }}
+                style={{ background: targetStyleData.color }}
               />
             ))}
           </div>
-          <span className="text-sm text-text-muted">Analyzing communication patterns...</span>
+          <span className="text-[11px] text-text-muted/60">Neural pattern matching active</span>
         </div>
       )}
 
@@ -1136,92 +1235,178 @@ function MessageTranslator() {
         </div>
       )}
 
-      {/* Result */}
+      {/* ── RESULT ──────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {result && (
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 160, damping: 20 }}
-            className="mt-8 space-y-4"
+            className="mt-8 space-y-5"
           >
-            {/* Main translated message — big card */}
-            <div
-              className="relative overflow-hidden rounded-2xl border p-7"
-              style={{
-                borderColor: `${STYLES[targetStyle].color}35`,
-                background: `linear-gradient(135deg, ${STYLES[targetStyle].color}08 0%, transparent 60%)`,
-              }}
-            >
-              <div
-                className="absolute right-4 bottom-4 font-display font-black text-[80px] leading-none pointer-events-none select-none"
-                style={{ color: `${STYLES[targetStyle].color}06` }}
-              >
-                {STYLES[targetStyle].name.charAt(0)}
-              </div>
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-4">
-                  <div
-                    className="w-1 h-6 rounded-full"
-                    style={{ background: STYLES[targetStyle].color }}
-                  />
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: STYLES[targetStyle].color }}>
-                      {STYLES[targetStyle].name} Translation
-                    </div>
-                    <div className="text-[10px] text-text-muted/40">{STYLES[targetStyle].short}</div>
-                  </div>
-                </div>
-                <p className="text-base text-text-primary leading-relaxed">{result.translated}</p>
-              </div>
-            </div>
-
-            {/* Principle */}
-            <div className="rounded-2xl border border-purple/20 bg-purple/[0.04] p-5">
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-purple mb-2">Why This Works</div>
-              <p className="text-sm text-text-muted leading-relaxed italic">"{result.principle}"</p>
-            </div>
-
-            {/* Communication gap */}
-            {userProfile?.axisScores && (
+            {/* 1. Translation DNA bar */}
+            {dna && (
               <div className="bg-bg-surface border border-white/[0.06] rounded-2xl p-5">
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-4">Translation Gap</div>
-                <div className="space-y-3">
-                  {[
-                    { key: 'who', label: 'WHO', color: '#B88AFF' },
-                    { key: 'why', label: 'WHY', color: '#00C8FF' },
-                    { key: 'what', label: 'WHAT', color: '#00E896' },
-                    { key: 'how', label: 'HOW', color: '#FFB340' },
-                  ].map(axis => {
-                    const userVal = userProfile.axisScores[axis.key] || 50
-                    const targetVal = STYLES[targetStyle].axes[axis.key] === 'high' ? 80 : 25
-                    const gap = Math.abs(userVal - targetVal)
-                    const gapColor = gap < 20 ? '#00E896' : gap < 45 ? '#FFB340' : '#FF6B6B'
-                    return (
-                      <div key={axis.key} className="flex items-center gap-3">
-                        <span className="text-[10px] font-black w-8 shrink-0" style={{ color: axis.color }}>{axis.label}</span>
-                        <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden relative">
-                          <motion.div
-                            className="absolute left-0 top-0 h-full rounded-full"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${gap}%` }}
-                            transition={{ delay: 0.15, duration: 0.5 }}
-                            style={{ background: gapColor }}
-                          />
-                        </div>
-                        <span className="text-[10px] font-bold w-5 shrink-0 tabular-nums" style={{ color: gapColor }}>{gap}</span>
-                      </div>
-                    )
-                  })}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/50">Translation DNA</div>
+                  <div className="text-[10px] text-text-muted/30">Axis composition of translated message</div>
                 </div>
-                <p className="text-[9px] text-text-muted/40 mt-3">How far your natural emphasis is from theirs. Lower = message lands more naturally.</p>
+                {/* Segmented bar */}
+                <div className="flex h-4 rounded-full overflow-hidden gap-px mb-3">
+                  {['who', 'why', 'what', 'how'].map(ax => (
+                    <motion.div
+                      key={ax}
+                      initial={{ flex: 0 }}
+                      animate={{ flex: dna[ax] || 0.5 }}
+                      transition={{ duration: 0.9, delay: 0.1, type: 'spring', stiffness: 70 }}
+                      style={{ background: AXIS_COLORS[ax], minWidth: 2 }}
+                    />
+                  ))}
+                </div>
+                {/* Legend */}
+                <div className="flex gap-4 flex-wrap">
+                  {['who', 'why', 'what', 'how'].map(ax => (
+                    <div key={ax} className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full shrink-0" style={{ background: AXIS_COLORS[ax] }} />
+                      <span className="text-[10px] font-black" style={{ color: AXIS_COLORS[ax] }}>{AXIS_LABELS[ax]}</span>
+                      <span className="text-[10px] text-text-muted/40">{dna[ax]}%</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-            {/* All versions */}
+            {/* 2. Side-by-side diff — original vs translated */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* Original */}
+              <div className="bg-bg-surface border border-white/[0.06] rounded-2xl p-5">
+                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/40 mb-4">Your Original</div>
+                <p className="text-sm text-text-muted/55 leading-relaxed">{message}</p>
+              </div>
+
+              {/* Translated — sentence-level axis dots */}
+              <div
+                className="relative overflow-hidden rounded-2xl border p-5"
+                style={{ borderColor: `${targetStyleData.color}30`, background: `${targetStyleData.color}06` }}
+              >
+                <div
+                  className="absolute right-3 bottom-3 font-display font-black text-[60px] leading-none pointer-events-none select-none"
+                  style={{ color: `${targetStyleData.color}07` }}
+                >
+                  {targetStyleData.name.charAt(0)}
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-0.5 h-4 rounded-full" style={{ background: targetStyleData.color }} />
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: targetStyleData.color }}>
+                    {targetStyleData.name} Translation
+                  </div>
+                </div>
+                <div className="relative space-y-2">
+                  {sentences.map((s, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.13, duration: 0.35 }}
+                      className="flex items-start gap-2"
+                    >
+                      <div
+                        className="shrink-0 mt-[7px] w-1.5 h-1.5 rounded-full"
+                        style={{ background: s.axis ? AXIS_COLORS[s.axis] : 'rgba(255,255,255,0.12)' }}
+                      />
+                      <p className="text-sm leading-relaxed text-white/85">{s.text}</p>
+                    </motion.div>
+                  ))}
+                </div>
+                {/* Axis legend for sentence dots */}
+                <div className="flex gap-3 mt-4 pt-3 border-t border-white/[0.05] flex-wrap">
+                  {['who', 'why', 'what', 'how'].filter(ax => sentences.some(s => s.axis === ax)).map(ax => (
+                    <div key={ax} className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ background: AXIS_COLORS[ax] }} />
+                      <span className="text-[9px] font-black" style={{ color: AXIS_COLORS[ax] }}>{AXIS_LABELS[ax]}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Neural Bridge Analysis */}
+            <div className="bg-bg-surface border border-white/[0.06] rounded-2xl p-5">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/50 mb-5">Neural Bridge Analysis</div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {/* Why it works */}
+                <div className="md:col-span-2">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: targetStyleData.color }}>Why This Lands</div>
+                  <p className="text-sm text-text-muted leading-relaxed italic">"{result.principle}"</p>
+                </div>
+                {/* Bridge distance gauge */}
+                {bridgeDistance !== null && (
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted/50 mb-2">Bridge Distance</div>
+                    <div className="flex items-end gap-1.5 mb-2">
+                      <motion.span
+                        className="font-display font-black text-3xl tabular-nums"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        style={{ color: bridgeDistance < 20 ? '#00E896' : bridgeDistance < 40 ? '#FFB340' : '#FF6B6B' }}
+                      >
+                        {bridgeDistance}
+                      </motion.span>
+                      <span className="text-[10px] text-text-muted/40 mb-1.5">pts</span>
+                    </div>
+                    <div className="h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(bridgeDistance, 100)}%` }}
+                        transition={{ delay: 0.4, duration: 0.7 }}
+                        className="h-full rounded-full"
+                        style={{ background: bridgeDistance < 20 ? '#00E896' : bridgeDistance < 40 ? '#FFB340' : '#FF6B6B' }}
+                      />
+                    </div>
+                    <p className="text-[9px] text-text-muted/40 mt-2 leading-relaxed">
+                      {bridgeDistance < 20 ? 'Natural alignment — easy reach' : bridgeDistance < 40 ? 'Moderate stretch — conscious effort' : 'High stretch — significant adaptation needed'}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Per-axis shift arrows */}
+              {userProfile?.axisScores && (
+                <div className="mt-5 pt-4 border-t border-white/[0.05]">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted/40 mb-3">Per-Axis Shift</div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['who', 'why', 'what', 'how'].map((ax, i) => {
+                      const userVal = userProfile.axisScores[ax] || 50
+                      const targetVal = STYLES[targetStyle].axes[ax] === 'high' ? 80 : 25
+                      const delta = targetVal - userVal
+                      const isUp = delta > 0
+                      const absD = Math.abs(Math.round(delta))
+                      const arrowColor = absD < 10 ? '#00E896' : absD < 30 ? '#FFB340' : '#FF6B6B'
+                      return (
+                        <div key={ax} className="text-center">
+                          <div className="text-[10px] font-black mb-1" style={{ color: AXIS_COLORS[ax] }}>{AXIS_LABELS[ax]}</div>
+                          <motion.div
+                            className="font-black text-lg leading-none"
+                            initial={{ opacity: 0, y: isUp ? 8 : -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + i * 0.07 }}
+                            style={{ color: arrowColor }}
+                          >
+                            {isUp ? '↑' : '↓'} {absD}
+                          </motion.div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 4. All style versions */}
             {result.versions && (
               <div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-3">All Style Versions</div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-3">All Style Translations</div>
                 <div className="space-y-2">
                   {Object.entries(result.versions).map(([key, text]) => (
                     <div
@@ -1233,16 +1418,15 @@ function MessageTranslator() {
                         onClick={() => setExpandedVersion(expandedVersion === key ? null : key)}
                         className="w-full text-left px-5 py-4 flex items-center gap-3"
                       >
-                        {/* Axis mini bars */}
-                        <div className="flex gap-0.5 shrink-0">
-                          {['who', 'why', 'what', 'how'].map(axis => (
+                        {/* Axis fingerprint */}
+                        <div className="flex items-end gap-0.5 shrink-0">
+                          {['who', 'why', 'what', 'how'].map(ax => (
                             <div
-                              key={axis}
-                              className="w-0.5 h-4 rounded-full"
+                              key={ax}
+                              className="w-1.5 rounded-full"
                               style={{
-                                background: STYLES[key]?.axes?.[axis] === 'high'
-                                  ? { who: '#B88AFF', why: '#00C8FF', what: '#00E896', how: '#FFB340' }[axis]
-                                  : 'rgba(255,255,255,0.08)',
+                                height: STYLES[key]?.axes?.[ax] === 'high' ? 16 : 7,
+                                background: STYLES[key]?.axes?.[ax] === 'high' ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.08)',
                               }}
                             />
                           ))}
