@@ -5,6 +5,7 @@ import { STYLES } from '../data/styles'
 import { computeStyle } from '../data/scoring'
 import { translateMessage, analyzeConversationStyle } from '../api/anthropic'
 import QuadrantPlot from '../components/QuadrantPlot'
+import LeadershipRadar from '../components/simulator/LeadershipRadar'
 import AxonMascot from '../components/simulator/AxonMascot'
 import TeamSignalMap from '../components/simulator/TeamSignalMap'
 import { ParallelRealityEngine } from '../components/simulator/ParallelRealityEngine'
@@ -48,133 +49,287 @@ const SLIDER_META = {
   how: { short: 'HOW', desc: 'Execution, speed, results', color: '#FFB340' },
 }
 
+const AXIS_COLORS = { who: '#B88AFF', why: '#00C8FF', what: '#00E896', how: '#FFB340' }
+const AXIS_LABELS = { who: 'WHO', why: 'WHY', what: 'WHAT', how: 'HOW' }
+const AXIS_DESCS  = { who: 'People & Relationships', why: 'Vision & Purpose', what: 'Systems & Process', how: 'Execution & Results' }
+
 function MapYourStyle() {
   const [axes, setAxes] = useState({ who: 50, why: 50, what: 50, how: 50 })
 
   useEffect(() => {
     const stored = localStorage.getItem('neuroleader_profile')
     if (stored) {
-      const profile = JSON.parse(stored)
-      if (profile.axisScores) {
-        setAxes(profile.axisScores)
-      }
+      try {
+        const p = JSON.parse(stored)
+        if (p.axisScores) setAxes(p.axisScores)
+      } catch { /* ignore */ }
     }
   }, [])
 
-  const style = computeStyle(axes.who, axes.why, axes.what, axes.how)
+  const style     = computeStyle(axes.who, axes.why, axes.what, axes.how)
   const styleData = STYLES[style]
 
+  // Data analyst: sort axes by value for ranked breakdown
+  const axesSorted = ['who', 'why', 'what', 'how'].sort((a, b) => axes[b] - axes[a])
+  const dominant   = axesSorted[0]
+  const weakest    = axesSorted[3]
+
   const sliders = [
-    { key: 'who', ...SLIDER_META.who },
-    { key: 'why', ...SLIDER_META.why },
-    { key: 'what', ...SLIDER_META.what },
-    { key: 'how', ...SLIDER_META.how },
+    { key: 'who',  color: AXIS_COLORS.who,  label: AXIS_LABELS.who,  desc: AXIS_DESCS.who  },
+    { key: 'why',  color: AXIS_COLORS.why,  label: AXIS_LABELS.why,  desc: AXIS_DESCS.why  },
+    { key: 'what', color: AXIS_COLORS.what, label: AXIS_LABELS.what, desc: AXIS_DESCS.what },
+    { key: 'how',  color: AXIS_COLORS.how,  label: AXIS_LABELS.how,  desc: AXIS_DESCS.how  },
   ]
 
   return (
     <div>
-      {/* Editorial header */}
-      <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-3">Your Style Lab</p>
-        <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-3">
+      {/* Header */}
+      <div className="mb-8">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-2">Neural Signature Lab</p>
+        <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-2">
           Your Leadership<br />
           <span className="bg-gradient-to-r from-cyan via-purple to-coral bg-clip-text text-transparent">
-            Frequency
+            Neural Signature
           </span>
         </h1>
         <p className="text-text-muted text-sm max-w-md leading-relaxed">
-          Drag each axis to match how you actually lead. Watch your style emerge in real time.
+          Drag each axis. The radar maps your behavioral fingerprint in real time — dominant axes glow, coverage scores your range.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Sliders */}
-        <div className="space-y-3">
-          {sliders.map(s => (
-            <div
-              key={s.key}
-              className="relative bg-bg-surface border border-white/[0.06] rounded-2xl p-5 overflow-hidden transition-all hover:border-white/10"
-              style={{ borderColor: axes[s.key] > 65 ? `${s.color}30` : undefined }}
-            >
-              {/* Watermark axis letter */}
+      {/* Main layout: radar hero + style intel */}
+      <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-6 mb-6 items-start">
+
+        {/* ── Radar chart hero ── */}
+        <div className="flex flex-col items-center">
+          <div
+            className="relative rounded-3xl border p-3"
+            style={{
+              background: `radial-gradient(ellipse at center, ${styleData.color}08 0%, rgba(6,10,14,0) 70%)`,
+              borderColor: `${styleData.color}18`,
+            }}
+          >
+            <LeadershipRadar axes={axes} size={340} />
+          </div>
+          {/* Axis dominance rank strip — data analyst: ranked order below chart */}
+          <div className="flex gap-1.5 mt-3 w-full max-w-[340px]">
+            {axesSorted.map((ax, rank) => (
               <div
-                className="absolute right-3 top-1/2 -translate-y-1/2 font-display font-black text-6xl pointer-events-none select-none leading-none"
-                style={{ color: `${s.color}08` }}
+                key={ax}
+                className="flex-1 rounded-lg px-2 py-1.5 text-center transition-all"
+                style={{
+                  background: rank === 0 ? `${AXIS_COLORS[ax]}15` : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${rank === 0 ? `${AXIS_COLORS[ax]}35` : 'rgba(255,255,255,0.05)'}`,
+                }}
               >
-                {s.short}
-              </div>
-              <div className="relative">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <div className="font-display font-black text-base text-white">{s.short}</div>
-                    <div className="text-[11px] text-text-muted mt-0.5">{s.desc}</div>
-                  </div>
-                  <motion.span
-                    key={axes[s.key]}
-                    initial={{ scale: 1.2 }}
-                    animate={{ scale: 1 }}
-                    className="font-display font-black text-2xl tabular-nums leading-none"
-                    style={{ color: s.color }}
-                  >
-                    {axes[s.key]}
-                  </motion.span>
+                <div className="text-[8px] font-bold uppercase tracking-wider mb-0.5"
+                  style={{ color: rank === 0 ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.25)' }}>
+                  #{rank + 1}
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={axes[s.key]}
-                  onChange={e => setAxes({ ...axes, [s.key]: Number(e.target.value) })}
-                  className="w-full"
-                  style={{ background: `linear-gradient(to right, ${s.color} ${axes[s.key]}%, rgba(255,255,255,0.06) ${axes[s.key]}%)` }}
-                />
-                {/* Level indicator */}
-                <div className="flex justify-between mt-1.5">
-                  <span className="text-[9px] text-text-muted/40">Low</span>
-                  <span className="text-[9px] text-text-muted/40">High</span>
+                <div className="text-[10px] font-black"
+                  style={{ color: rank === 0 ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.4)' }}>
+                  {AXIS_LABELS[ax]}
+                </div>
+                <div className="text-[9px] font-bold tabular-nums mt-0.5"
+                  style={{ color: rank === 0 ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.3)' }}>
+                  {axes[ax]}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Quadrant + result */}
-        <div className="flex flex-col items-center">
-          <div className="w-full bg-bg-surface border border-white/[0.06] rounded-2xl p-5 mb-4">
-            <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-3">Quadrant Map</div>
-            <QuadrantPlot {...axes} size={280} />
-          </div>
+        {/* ── Style intel panel ── */}
+        <div className="flex flex-col gap-4 min-w-0">
 
+          {/* Style archetype card — animates on style change */}
           <AnimatePresence mode="wait">
             <motion.div
               key={style}
-              initial={{ opacity: 0, y: 12, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              className="w-full relative overflow-hidden rounded-2xl border p-6"
+              initial={{ opacity: 0, x: 20, scale: 0.97 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -10, scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 22 }}
+              className="relative overflow-hidden rounded-2xl border p-6"
               style={{
                 borderColor: `${styleData.color}30`,
-                background: `linear-gradient(135deg, ${styleData.color}08 0%, transparent 60%)`,
+                background: `linear-gradient(135deg, ${styleData.color}10 0%, rgba(6,10,14,0.8) 55%)`,
               }}
             >
-              {/* Watermark style initial */}
+              {/* Giant watermark letter */}
               <div
-                className="absolute right-4 top-1/2 -translate-y-1/2 font-display font-black text-[88px] leading-none pointer-events-none select-none"
-                style={{ color: `${styleData.color}06` }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 font-display font-black leading-none pointer-events-none select-none"
+                style={{ fontSize: 120, color: `${styleData.color}07` }}
               >
                 {styleData.name.charAt(0)}
               </div>
               <div className="relative">
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-2">Computed Style</div>
-                <div className="font-display text-2xl font-black mb-1" style={{ color: styleData.color }}>
+                <div className="text-[9px] font-bold uppercase tracking-[0.2em] mb-2"
+                  style={{ color: `${styleData.color}80` }}>
+                  Computed Archetype
+                </div>
+                <div className="font-display text-3xl font-black mb-0.5" style={{ color: styleData.color }}>
                   {styleData.name}
                 </div>
-                <div className="text-xs text-text-muted/70 italic mb-3">{styleData.short}</div>
-                <p className="text-sm text-text-muted leading-relaxed">{styleData.orientDesc}</p>
+                <div className="text-xs italic mb-4" style={{ color: `${styleData.color}90` }}>
+                  {styleData.short}
+                </div>
+                <p className="text-sm text-text-muted leading-relaxed mb-4">
+                  {styleData.orientDesc}
+                </p>
+                {/* High axes tags */}
+                <div className="flex flex-wrap gap-1.5">
+                  {Object.entries(styleData.axes).filter(([, v]) => v === 'high').map(([ax]) => (
+                    <span key={ax}
+                      className="text-[9px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider"
+                      style={{
+                        background: `${AXIS_COLORS[ax]}18`,
+                        color: AXIS_COLORS[ax],
+                        border: `1px solid ${AXIS_COLORS[ax]}40`,
+                      }}>
+                      {AXIS_LABELS[ax]} dominant
+                    </span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
+
+          {/* Axis signal breakdown — data analyst: bar chart per axis with delta encoding */}
+          <div className="rounded-2xl border border-white/[0.06] p-5"
+            style={{ background: 'rgba(6,10,14,0.6)' }}>
+            <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-text-muted/40 mb-4">
+              Axis Signal Breakdown
+            </div>
+            <div className="space-y-3">
+              {axesSorted.map((ax, rank) => {
+                const val = axes[ax]
+                const isStyleHigh = styleData.axes[ax] === 'high'
+                const isDom = rank === 0
+                return (
+                  <div key={ax}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: AXIS_COLORS[ax] }} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider"
+                          style={{ color: isDom ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.5)' }}>
+                          {AXIS_LABELS[ax]}
+                        </span>
+                        {isDom && (
+                          <span className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase"
+                            style={{ background: `${AXIS_COLORS[ax]}18`, color: AXIS_COLORS[ax] }}>
+                            Lead
+                          </span>
+                        )}
+                        {ax === weakest && (
+                          <span className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase"
+                            style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.25)' }}>
+                            Develop
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px]"
+                          style={{ color: isStyleHigh ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.2)' }}>
+                          {isStyleHigh ? '↑ in style' : '↓ in style'}
+                        </span>
+                        <span className="text-xs font-black tabular-nums"
+                          style={{ color: isDom ? AXIS_COLORS[ax] : 'rgba(255,255,255,0.5)' }}>
+                          {val}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Bar track */}
+                    <div className="h-1.5 rounded-full overflow-hidden"
+                      style={{ background: 'rgba(255,255,255,0.04)' }}>
+                      <motion.div
+                        className="h-full rounded-full"
+                        animate={{ width: `${val}%` }}
+                        transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+                        style={{
+                          background: isDom
+                            ? `linear-gradient(to right, ${AXIS_COLORS[ax]}, ${AXIS_COLORS[ax]}80)`
+                            : `${AXIS_COLORS[ax]}50`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Neuroscience insight card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`neuro-${style}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.15, duration: 0.4 }}
+              className="rounded-2xl border p-5"
+              style={{ borderColor: 'rgba(0,200,255,0.12)', background: 'rgba(0,200,255,0.04)' }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-1.5 h-4 rounded-full" style={{ background: '#00C8FF' }} />
+                <span className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: '#00C8FF' }}>
+                  Neuroscience
+                </span>
+              </div>
+              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                {styleData.neuro}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* ── Signal dial sliders ── */}
+      <div className="rounded-2xl border border-white/[0.06] p-6"
+        style={{ background: 'rgba(6,10,14,0.5)' }}>
+        <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-text-muted/40 mb-5">
+          Adjust Your Axes — Radar Updates Live
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {sliders.map(s => (
+            <div
+              key={s.key}
+              className="relative rounded-xl p-4 transition-all"
+              style={{
+                background: axes[s.key] > 65 ? `${s.color}08` : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${axes[s.key] > 65 ? `${s.color}25` : 'rgba(255,255,255,0.05)'}`,
+              }}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <span className="font-display font-black text-sm" style={{ color: s.color }}>{s.label}</span>
+                  <span className="text-[10px] text-text-muted/50 ml-2">{s.desc}</span>
+                </div>
+                <motion.span
+                  key={axes[s.key]}
+                  initial={{ scale: 1.3, opacity: 0.7 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="font-display font-black text-xl tabular-nums"
+                  style={{ color: s.color }}
+                >
+                  {axes[s.key]}
+                </motion.span>
+              </div>
+              <input
+                type="range" min="0" max="100" value={axes[s.key]}
+                onChange={e => setAxes({ ...axes, [s.key]: Number(e.target.value) })}
+                className="w-full"
+                style={{
+                  background: `linear-gradient(to right, ${s.color} ${axes[s.key]}%, rgba(255,255,255,0.06) ${axes[s.key]}%)`,
+                  accentColor: s.color,
+                }}
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-[8px] text-text-muted/30">Developing</span>
+                <span className="text-[8px] text-text-muted/30">Dominant</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
