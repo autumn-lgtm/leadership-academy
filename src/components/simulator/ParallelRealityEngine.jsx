@@ -22,24 +22,42 @@ function resolveStyle(profile) {
 }
 
 function ScoreBar({ score, color }) {
+  const R = 30, CX = 40, CY = 34
+  const arcLen = Math.PI * R
+  const t = Math.min(score, 100) / 100
+  const d = `M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`
+
   return (
-    <div className="mt-4">
-      <div className="flex justify-between items-center mb-1.5">
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          Predicted effectiveness
-        </span>
-        <span className="font-display font-black text-lg tabular-nums" style={{ color }}>
-          {score}
-        </span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-        <motion.div
-          className="h-full rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${score}%` }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          style={{ background: color }}
-        />
+    <div className="mt-4 pt-4 border-t border-white/[0.05]">
+      <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/35 mb-3">Predicted effectiveness</div>
+      <div className="flex items-center gap-4">
+        {/* Mini arc gauge */}
+        <svg viewBox="0 0 80 42" className="w-20 h-12 shrink-0">
+          <path d={d} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" strokeLinecap="round" />
+          <motion.path
+            d={d} fill="none" stroke={color} strokeWidth="6" strokeLinecap="round"
+            initial={{ strokeDashoffset: arcLen }}
+            animate={{ strokeDashoffset: arcLen * (1 - t) }}
+            transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+            style={{ strokeDasharray: arcLen, filter: `drop-shadow(0 0 4px ${color}80)` }}
+          />
+          <motion.text
+            x={40} y={35} textAnchor="middle" fontSize="14" fontWeight="900" fill={color}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+          >
+            {score}
+          </motion.text>
+        </svg>
+        {/* Flat track bar */}
+        <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${score}%` }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            style={{ background: color, boxShadow: `0 0 8px ${color}60` }}
+          />
+        </div>
       </div>
     </div>
   )
@@ -297,15 +315,24 @@ export function ParallelRealityEngine({ profile }) {
                 <div className="text-[10px] font-bold uppercase tracking-[0.14em] mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
                   Effectiveness gap
                 </div>
-                <motion.div
-                  className="font-display font-black leading-none tabular-nums"
-                  style={{ fontSize: 48, color: '#00C8FF' }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
-                >
-                  +{result.gapScore}
-                </motion.div>
+                <div className="relative">
+                  <motion.div
+                    className="font-display font-black leading-none tabular-nums"
+                    style={{ fontSize: 56, color: '#00C8FF' }}
+                    initial={{ opacity: 0, scale: 0.7, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ delay: 0.3, type: 'spring', stiffness: 240, damping: 18 }}
+                  >
+                    +{result.gapScore}
+                  </motion.div>
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.5, 0] }}
+                    transition={{ delay: 0.4, duration: 1.8 }}
+                    style={{ background: 'radial-gradient(ellipse at center, rgba(0,200,255,0.35), transparent 70%)', filter: 'blur(8px)' }}
+                  />
+                </div>
               </div>
               <div className="flex-1">
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>

@@ -363,23 +363,25 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onRe
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
 
       {/* Header */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#00C8FF', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6"
+      >
+        <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-cyan mb-2">
           Team Signal Map — {teamName}
         </div>
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 22, color: '#fff', marginBottom: 4 }}>
+        <h2 className="font-display text-2xl font-bold text-white mb-1 leading-snug">
           {teamName} is in{' '}
           <span style={{ color: STAGE_COLORS[result.stage] }}>{STAGES[result.stage]?.label}</span>.
           {result.confidence === 'transitional' && result.secondaryStage && (
-            <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>
+            <span className="text-base text-white/40 font-normal">
               {' '}Transitioning toward {STAGES[result.secondaryStage]?.label}
             </span>
           )}
         </h2>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
-          {confidenceLabel} · Select a stage below to explore the full alignment map.
-        </div>
-      </div>
+        <div className="text-sm text-white/45">{confidenceLabel} · Select a stage below.</div>
+      </motion.div>
 
       {/* Stage selector pills */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
@@ -421,71 +423,84 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onRe
       </div>
 
       {/* Score strip */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, margin: '4px 0 20px', flexWrap: 'wrap' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Alignment</div>
-          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#00C8FF' }}>
-            {stageInfo.score}
-          </div>
-        </div>
-        <div style={{ padding: '7px 16px', borderRadius: 6, background: fitConfig.bg, border: `1px solid ${fitConfig.border}`, color: fitConfig.color, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>
+      <div className="flex items-center justify-center gap-8 mb-6 flex-wrap">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="text-center"
+        >
+          <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/30 mb-1">Alignment</div>
+          <div className="font-display font-black text-4xl" style={{ color: '#00C8FF' }}>{stageInfo.score}</div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="px-4 py-2 rounded-full border text-[11px] font-black uppercase tracking-wider"
+          style={{ borderColor: fitConfig.border, background: fitConfig.bg, color: fitConfig.color }}
+        >
           {fitConfig.label}
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Gap axes</div>
-          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#FF6B6B' }}>
-            {stageInfo.gaps}
-          </div>
-        </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.28 }}
+          className="text-center"
+        >
+          <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/30 mb-1">Gap axes</div>
+          <div className="font-display font-black text-4xl" style={{ color: '#FF6B6B' }}>{stageInfo.gaps}</div>
+        </motion.div>
       </div>
 
       {/* 4 insight cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 10, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         {[
           { label: 'What this stage needs', color: '#B88AFF', text: insights?.need },
           { label: 'Your alignment',        color: '#00C8FF', text: insights?.align?.[leaderStyle] },
           { label: 'This week',             color: '#FFB340', text: insights?.week?.[leaderStyle] },
           { label: 'Watch for',             color: '#FF6B6B', text: insights?.watch?.[leaderStyle] },
-        ].map(({ label, color, text }) => (
-          <div key={label} style={{
-            background: '#0D1426', borderRadius: 10, padding: '13px 15px',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginBottom: 6 }}>
+        ].map(({ label, color, text }, i) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 + i * 0.09, type: 'spring', stiffness: 160, damping: 20 }}
+            className="rounded-2xl p-4 border border-white/[0.06]"
+            style={{ background: '#0D1426', borderLeft: `3px solid ${color}40` }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-[0.12em] mb-2" style={{ color }}>
               {label}
             </div>
-            <div style={{ fontSize: 12, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)' }}>
+            <div className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
               {text}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Axon line */}
-      <div style={{
-        background: 'rgba(255,179,64,0.07)', border: '1px solid rgba(255,179,64,0.2)',
-        borderRadius: 10, padding: '13px 16px', marginBottom: 16,
-        display: 'flex', alignItems: 'flex-start', gap: 12,
-      }}>
+      {/* Axon quote */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.46 }}
+        className="flex items-start gap-3 p-4 rounded-2xl border mb-5"
+        style={{ background: 'rgba(255,179,64,0.06)', borderColor: 'rgba(255,179,64,0.2)' }}
+      >
         <img
           src={AXON_IMG}
           alt="Axon"
-          style={{ width: 40, height: 'auto', flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 12px rgba(0,200,255,0.2))' }}
+          style={{ width: 40, flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 12px rgba(0,200,255,0.2))' }}
         />
-        <div style={{ fontSize: 13, fontStyle: 'italic', color: '#FFB340', lineHeight: 1.6 }}>
+        <p className="text-sm italic leading-relaxed" style={{ color: '#FFB340' }}>
           {insights?.axon}
-        </div>
-      </div>
+        </p>
+      </motion.div>
 
       {/* Remap */}
       <button
         onClick={onReset}
-        style={{
-          background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: 8, padding: '10px 20px',
-          color: 'rgba(255,255,255,0.5)', fontSize: 13,
-          cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
-        }}
+        className="px-5 py-2.5 rounded-xl border border-white/[0.12] text-[13px] text-white/50 hover:text-white transition-colors"
       >
         Map a different team →
       </button>
