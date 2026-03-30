@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import BrainOrbit from '../components/BrainOrbit'
 import AxonMascot from '../components/simulator/AxonMascot'
+import BrainLogo from '../components/BrainLogo'
 import { SectionHeader, RainbowDivider, NeuralSection, GlowCard, AxonQuote } from '../components/DesignSystem'
 
 const features = [
@@ -45,9 +46,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/60 backdrop-blur-2xl border-b border-white/[0.04]">
         <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-              <span className="text-white font-display font-bold text-sm">N</span>
-            </div>
+            <BrainLogo size={32} />
             <span className="font-display font-bold text-white text-lg tracking-tight">NeuroLeader</span>
           </Link>
           <div className="flex items-center gap-6">
@@ -56,7 +55,8 @@ export default function Home() {
             <Link to="/simulator" className="text-sm text-text-muted hover:text-white transition-colors hidden md:block">Simulator</Link>
             <Link
               to="/assessment"
-              className="px-5 py-2 rounded-full bg-white text-bg-primary text-sm font-semibold hover:bg-white/90 transition-all"
+              className="px-5 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90"
+              style={{ background: '#B88AFF', color: '#060A0E' }}
             >
               Get Started
             </Link>
@@ -66,12 +66,23 @@ export default function Home() {
 
       {/* Hero — Centered brain above, text below */}
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16">
-        {/* Background radial glow */}
+        {/* Mesh gradient background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[120px]"
-            style={{ background: 'radial-gradient(circle, rgba(0,200,255,0.08) 0%, rgba(184,138,255,0.04) 50%, transparent 100%)' }} />
-          <div className="absolute top-[20%] left-[20%] w-[300px] h-[300px] rounded-full blur-[100px] bg-purple/[0.04]" />
-          <div className="absolute top-[40%] right-[15%] w-[250px] h-[250px] rounded-full blur-[100px] bg-coral/[0.03]" />
+          {/* Primary purple mesh — center-left */}
+          <div className="absolute top-[28%] left-[35%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(184,138,255,0.09) 0%, transparent 65%)', filter: 'blur(60px)' }} />
+          {/* Cyan accent — upper right */}
+          <div className="absolute top-[10%] right-[10%] w-[450px] h-[450px] rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%)', filter: 'blur(80px)' }} />
+          {/* Green accent — lower left */}
+          <div className="absolute bottom-[15%] left-[8%] w-[350px] h-[350px] rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(0,232,150,0.05) 0%, transparent 70%)', filter: 'blur(90px)' }} />
+          {/* Amber warmth — lower right */}
+          <div className="absolute bottom-[20%] right-[20%] w-[280px] h-[280px] rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(255,179,64,0.04) 0%, transparent 70%)', filter: 'blur(80px)' }} />
+          {/* Deep coral hint — top center */}
+          <div className="absolute top-[0%] left-[50%] -translate-x-1/2 w-[500px] h-[200px] rounded-full"
+            style={{ background: 'radial-gradient(circle, rgba(255,107,107,0.04) 0%, transparent 70%)', filter: 'blur(70px)' }} />
         </div>
 
         {/* Brain — centered hero element */}
@@ -231,6 +242,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Editorial statement */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="border-l-2 pl-8 py-2"
+            style={{ borderColor: 'rgba(184,138,255,0.35)' }}
+          >
+            <p className="font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-tight" style={{ color: 'rgba(255,255,255,0.18)' }}>
+              The best teams aren't built from similar minds.
+            </p>
+            <p className="font-display text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mt-1">
+              <span className="text-white">They're built from </span>
+              <span style={{ color: '#B88AFF' }}>complementary ones.</span>
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Meet Axon */}
       <NeuralSection className="py-28">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-surface/40 to-transparent pointer-events-none" />
@@ -334,9 +367,7 @@ export default function Home() {
             {/* Brand */}
             <div>
               <Link to="/" className="flex items-center gap-2.5 mb-4 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan via-purple to-coral flex items-center justify-center">
-                  <span className="text-white font-display font-bold text-sm">N</span>
-                </div>
+                <BrainLogo size={32} />
                 <span className="font-display font-bold text-white text-lg">NeuroLeader</span>
               </Link>
               <p className="text-sm text-text-muted leading-relaxed max-w-xs">
