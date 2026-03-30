@@ -306,7 +306,6 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onRe
     saveResult({ teamName, teamType, stage: result.stage, confidence: result.confidence, leaderStyle })
   }, [])
 
-  const stageColor = STAGE_COLORS[selectedStage]
   const stageInfo = STAGE_DATA[selectedStage]
   const insights = STAGE_INSIGHTS[selectedStage]
   const { alignment } = deriveInsights(selectedStage, leaderStyle)
@@ -322,42 +321,42 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onRe
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
 
       {/* Header */}
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: '#00C8FF', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>
+      <div className="mb-5">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-cyan mb-1.5">
           Team Signal Map — {teamName}
         </div>
-        <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 22, color: '#fff', marginBottom: 4 }}>
+        <h2 className="font-display text-xl font-bold text-white mb-1">
           {teamName} is in{' '}
           <span style={{ color: STAGE_COLORS[result.stage] }}>{STAGES[result.stage]?.label}</span>.
           {result.confidence === 'transitional' && result.secondaryStage && (
-            <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>
+            <span className="text-base font-normal text-white/40">
               {' '}Transitioning toward {STAGES[result.secondaryStage]?.label}
             </span>
           )}
         </h2>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)' }}>
+        <p className="text-sm text-text-muted">
           {confidenceLabel} · Select a stage below to explore the full alignment map.
-        </div>
+        </p>
       </div>
 
       {/* Stage selector pills */}
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+      <div className="flex gap-2 flex-wrap mb-4">
         {Object.entries(STAGES).map(([key, val]) => {
           const c = STAGE_COLORS[key]
           const isActive = selectedStage === key
           const isResult = key === result.stage
           return (
-            <button key={key} onClick={() => setSelectedStage(key)} style={{
-              padding: '6px 14px', borderRadius: 20,
-              fontSize: 11, fontWeight: 700, cursor: 'pointer',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              border: `1px solid ${isActive ? c : `${c}35`}`,
-              background: isActive ? `${c}22` : `${c}10`,
-              color: c,
-              boxShadow: isActive ? `0 0 0 1px ${c}` : 'none',
-              fontFamily: 'DM Sans, sans-serif',
-              transition: 'all 0.2s',
-            }}>
+            <button
+              key={key}
+              onClick={() => setSelectedStage(key)}
+              className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                border: `1px solid ${isActive ? c : `${c}35`}`,
+                background: isActive ? `${c}22` : `${c}10`,
+                color: c,
+                boxShadow: isActive ? `0 0 0 1px ${c}` : 'none',
+              }}
+            >
               {val.label}{isResult ? ' ●' : ''}
             </button>
           )
@@ -368,83 +367,79 @@ function ResultsScreen({ teamName, teamType, answers, leaderStyle, profile, onRe
       <SpiderMap stage={selectedStage} profile={profile} />
 
       {/* Legend */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, margin: '8px 0 12px', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 20, height: 2, borderTop: '2px dashed #B88AFF', borderRadius: 1 }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Stage needs</span>
+      <div className="flex items-center justify-center gap-5 my-3 flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <div className="w-5" style={{ height: 0, borderTop: '2px dashed #B88AFF' }} />
+          <span className="text-[10px] text-white/40">Stage needs</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 20, height: 2, background: '#00C8FF', borderRadius: 1 }} />
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Your Map</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-5 h-0.5 rounded-full bg-cyan" />
+          <span className="text-[10px] text-white/40">Your Map</span>
         </div>
       </div>
 
       {/* Score strip */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, margin: '4px 0 20px', flexWrap: 'wrap' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Alignment</div>
-          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#00C8FF' }}>
-            {stageInfo.score}
-          </div>
+      <div className="flex items-center justify-center gap-6 mb-5 flex-wrap">
+        <div className="text-center">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Alignment</div>
+          <div className="font-mono text-3xl font-bold text-cyan">{stageInfo.score}</div>
         </div>
-        <div style={{ padding: '7px 16px', borderRadius: 6, background: fitConfig.bg, border: `1px solid ${fitConfig.border}`, color: fitConfig.color, fontSize: 11, fontWeight: 700, letterSpacing: '0.06em' }}>
+        <div
+          className="px-4 py-1.5 rounded-lg text-[10px] font-bold tracking-widest uppercase"
+          style={{ background: fitConfig.bg, border: `1px solid ${fitConfig.border}`, color: fitConfig.color }}
+        >
           {fitConfig.label}
         </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 3 }}>Gap axes</div>
-          <div style={{ fontSize: 30, fontWeight: 700, fontFamily: 'monospace', color: '#FF6B6B' }}>
-            {stageInfo.gaps}
-          </div>
+        <div className="text-center">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">Gap axes</div>
+          <div className="font-mono text-3xl font-bold text-coral">{stageInfo.gaps}</div>
         </div>
       </div>
 
       {/* 4 insight cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 10, marginBottom: 14 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
         {[
           { label: 'What this stage needs', color: '#B88AFF', text: insights?.need },
           { label: 'Your alignment',        color: '#00C8FF', text: insights?.align?.[leaderStyle] },
           { label: 'This week',             color: '#FFB340', text: insights?.week?.[leaderStyle] },
           { label: 'Watch for',             color: '#FF6B6B', text: insights?.watch?.[leaderStyle] },
-        ].map(({ label, color, text }) => (
-          <div key={label} style={{
-            background: '#0D1426', borderRadius: 10, padding: '13px 15px',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginBottom: 6 }}>
+        ].map(({ label, color, text }, i) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 + i * 0.05 }}
+            className="bg-bg-surface/60 border border-white/[0.06] rounded-2xl p-4"
+            style={{ borderLeft: `3px solid ${color}40` }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color }}>
               {label}
             </div>
-            <div style={{ fontSize: 12, lineHeight: 1.55, color: 'rgba(255,255,255,0.72)' }}>
-              {text}
-            </div>
-          </div>
+            <div className="text-sm text-white/75 leading-relaxed">{text}</div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Axon line */}
-      <div style={{
-        background: 'rgba(255,179,64,0.07)', border: '1px solid rgba(255,179,64,0.2)',
-        borderRadius: 10, padding: '13px 16px', marginBottom: 16,
-        display: 'flex', alignItems: 'flex-start', gap: 12,
-      }}>
+      {/* Axon quote */}
+      <div className="bg-amber/[0.06] border border-amber/20 rounded-2xl px-5 py-4 flex items-start gap-3 mb-5">
         <img
           src={AXON_IMG}
           alt="Axon"
-          style={{ width: 40, height: 'auto', flexShrink: 0, mixBlendMode: 'screen', filter: 'drop-shadow(0 0 12px rgba(0,200,255,0.2))' }}
+          style={{
+            width: 40, height: 'auto', flexShrink: 0,
+            mixBlendMode: 'screen',
+            filter: 'drop-shadow(0 0 12px rgba(0,200,255,0.2))',
+          }}
         />
-        <div style={{ fontSize: 13, fontStyle: 'italic', color: '#FFB340', lineHeight: 1.6 }}>
+        <div className="text-sm italic text-amber leading-relaxed">
           {insights?.axon}
         </div>
       </div>
 
-      {/* Remap */}
+      {/* Reset */}
       <button
         onClick={onReset}
-        style={{
-          background: 'transparent', border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: 8, padding: '10px 20px',
-          color: 'rgba(255,255,255,0.5)', fontSize: 13,
-          cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
-        }}
+        className="border border-white/10 text-text-muted text-sm rounded-xl px-5 py-2.5 hover:border-white/20 hover:text-white transition-all"
       >
         Map a different team →
       </button>
