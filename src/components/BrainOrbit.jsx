@@ -147,9 +147,9 @@ export default function BrainOrbit({ size = 420 }) {
       const t = time * 0.001
 
       // === BACKGROUND GLOW ===
-      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.48)
-      bg.addColorStop(0, 'rgba(0,200,255,0.06)')
-      bg.addColorStop(0.4, 'rgba(184,138,255,0.03)')
+      const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.42)
+      bg.addColorStop(0, 'rgba(0,200,255,0.04)')
+      bg.addColorStop(0.5, 'rgba(184,138,255,0.02)')
       bg.addColorStop(1, 'rgba(0,0,0,0)')
       ctx.fillStyle = bg
       ctx.fillRect(0, 0, size, size)
@@ -485,7 +485,7 @@ export default function BrainOrbit({ size = 420 }) {
   return (
     <canvas
       ref={canvasRef}
-      style={{ width: size, height: size }}
+      style={{ width: size, height: size, background: 'transparent' }}
       className="pointer-events-none"
     />
   )
