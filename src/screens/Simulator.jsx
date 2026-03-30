@@ -347,8 +347,8 @@ function StyleDecoder() {
   const [convError, setConvError] = useState(null)
   const [detectedSignals, setDetectedSignals] = useState(null)
 
-  const axisColors = { who: '#B88AFF', why: '#00C8FF', what: '#00E896', how: '#FFB340' }
-  const axisLabels = { who: 'WHO', why: 'WHY', what: 'WHAT', how: 'HOW' }
+  const axisColors = AXIS_COLORS
+  const axisLabels = AXIS_LABELS
 
   function toggleWord(axis, word) {
     const next = { ...selected }
@@ -450,19 +450,46 @@ function StyleDecoder() {
     ? Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]
     : null
 
+  // Data analyst: signal density = selected / available per axis
+  const signalDensity = {
+    who:  Math.round((counts.who  / SIGNAL_WORDS.who.length)  * 100),
+    why:  Math.round((counts.why  / SIGNAL_WORDS.why.length)  * 100),
+    what: Math.round((counts.what / SIGNAL_WORDS.what.length) * 100),
+    how:  Math.round((counts.how  / SIGNAL_WORDS.how.length)  * 100),
+  }
+  // Signal clarity: how much the dominant axis leads (0=ambiguous, 100=clear)
+  const maxCount     = Math.max(...Object.values(counts), 1)
+  const signalClarity = totalSelected > 0
+    ? Math.round((maxCount / totalSelected) * 100)
+    : 0
+  // Live radar axes — normalized to max selected axis = 100
+  const liveRadarAxes = totalSelected > 0 ? {
+    who:  Math.round((counts.who  / maxCount) * 100),
+    why:  Math.round((counts.why  / maxCount) * 100),
+    what: Math.round((counts.what / maxCount) * 100),
+    how:  Math.round((counts.how  / maxCount) * 100),
+  } : { who: 12, why: 12, what: 12, how: 12 }
+  // Top evidence words from dominant axis (for fingerprint reveal)
+  const dominantAxisKey = totalSelected > 0
+    ? Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0]
+    : null
+  const topEvidenceWords = dominantAxisKey
+    ? Array.from(selected[dominantAxisKey]).slice(0, 4)
+    : []
+
   return (
     <div>
-      {/* Editorial header */}
-      <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-3">Read the Room</p>
-        <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-3">
+      {/* Header */}
+      <div className="mb-8">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted/60 mb-2">Neural Signal Lab</p>
+        <h1 className="font-display text-4xl md:text-5xl font-black text-white leading-none mb-2">
           Decode Who<br />
           <span className="bg-gradient-to-r from-purple to-cyan bg-clip-text text-transparent">
             You're Talking To
           </span>
         </h1>
         <p className="text-text-muted text-sm max-w-md leading-relaxed">
-          Tap words you hear them say. We'll reveal their leadership wiring — before they tell you.
+          Tap the words you hear them use. Their leadership wiring reveals itself — signal by signal.
         </p>
       </div>
 
@@ -605,247 +632,341 @@ function StyleDecoder() {
         </motion.div>
       )}
 
-      {/* Signal detection summary strip */}
-      {mode === 'words' && totalSelected > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 mb-6 p-3 bg-bg-surface/60 border border-white/[0.06] rounded-xl overflow-hidden"
-        >
-          <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 shrink-0">Signals detected</span>
-          <div className="flex gap-1.5 flex-1">
-            {['who', 'why', 'what', 'how'].map(axis => (
-              <div key={axis} className="flex-1 relative h-6 rounded overflow-hidden">
-                <motion.div
-                  className="absolute inset-0 rounded"
-                  initial={false}
-                  animate={{ opacity: counts[axis] > 0 ? 1 : 0.2 }}
-                  style={{ background: axisColors[axis], opacity: 0.15 }}
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-[9px] font-bold" style={{ color: axisColors[axis] }}>
-                    {axisLabels[axis]} {counts[axis] > 0 ? `×${counts[axis]}` : ''}
+      {/* ── Live Signal Radar (words mode) ── */}
+      {mode === 'words' && (
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 mb-6 p-4 rounded-2xl border"
+          style={{ background: 'rgba(6,10,14,0.6)', borderColor: 'rgba(255,255,255,0.05)' }}>
+          {/* Mini radar builds in real time */}
+          <div className="flex flex-col items-center">
+            <div className="text-[8px] font-bold uppercase tracking-[0.18em] text-text-muted/40 mb-2">
+              Signal Profile
+            </div>
+            <LeadershipRadar axes={liveRadarAxes} size={200} />
+          </div>
+          {/* Signal metrics panel */}
+          <div className="flex flex-col justify-center gap-3 min-w-0">
+            <div className="text-[9px] font-bold uppercase tracking-[0.16em] text-text-muted/40 mb-1">
+              Axis Density — Signals / Available
+            </div>
+            {['who', 'why', 'what', 'how'].map(ax => (
+              <div key={ax}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider"
+                    style={{ color: counts[ax] > 0 ? axisColors[ax] : 'rgba(255,255,255,0.25)' }}>
+                    {axisLabels[ax]}
                   </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] tabular-nums" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      {counts[ax]}/{SIGNAL_WORDS[ax].length}
+                    </span>
+                    <span className="text-[10px] font-black tabular-nums w-8 text-right"
+                      style={{ color: counts[ax] > 0 ? axisColors[ax] : 'rgba(255,255,255,0.2)' }}>
+                      {signalDensity[ax]}%
+                    </span>
+                  </div>
+                </div>
+                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  <motion.div
+                    className="h-full rounded-full"
+                    animate={{ width: `${signalDensity[ax]}%` }}
+                    transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+                    style={{ background: `${axisColors[ax]}${counts[ax] > 0 ? 'cc' : '30'}` }}
+                  />
                 </div>
               </div>
             ))}
+            {/* Signal clarity meter */}
+            <div className="mt-2 pt-3 border-t border-white/[0.05] flex items-center justify-between">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted/40">
+                Signal Clarity
+              </span>
+              <div className="flex items-center gap-2">
+                <div className="w-20 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  <motion.div
+                    className="h-full rounded-full"
+                    animate={{ width: `${signalClarity}%` }}
+                    transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                    style={{
+                      background: signalClarity > 66 ? '#00E896' : signalClarity > 33 ? '#FFB340' : '#FF6B6B',
+                    }}
+                  />
+                </div>
+                <span className="text-[10px] font-black tabular-nums"
+                  style={{ color: signalClarity > 66 ? '#00E896' : signalClarity > 33 ? '#FFB340' : 'rgba(255,255,255,0.3)' }}>
+                  {totalSelected > 0 ? `${signalClarity}%` : '—'}
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="text-xs font-bold text-white/60 shrink-0">{totalSelected}</span>
-        </motion.div>
+        </div>
       )}
 
-      {mode === 'words' && <div className="space-y-4">
-        {Object.entries(SIGNAL_WORDS).map(([axis, words]) => (
-          <div
-            key={axis}
-            className="bg-bg-surface border border-white/[0.06] rounded-2xl overflow-hidden transition-all"
-            style={{ borderColor: counts[axis] > 0 ? `${axisColors[axis]}25` : undefined }}
-          >
-            {/* Axis header */}
-            <div
-              className="flex items-center gap-3 px-5 py-3"
-              style={{ background: counts[axis] > 0 ? `${axisColors[axis]}08` : undefined }}
-            >
-              <span className="font-display font-black text-sm" style={{ color: axisColors[axis] }}>
-                {axisLabels[axis]}
-              </span>
-              <span className="text-[11px] text-text-muted/60 flex-1">
-                {SLIDER_META[axis].desc}
-              </span>
-              {/* Fill bar */}
-              <div className="w-16 h-1 bg-white/[0.04] rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full"
-                  animate={{ width: `${Math.min((counts[axis] / 6) * 100, 100)}%` }}
-                  style={{ background: axisColors[axis] }}
-                />
+      {/* ── Word tap grid ── */}
+      {mode === 'words' && (
+        <div className="space-y-3 mb-6">
+          {Object.entries(SIGNAL_WORDS).map(([axis, words]) => (
+            <div key={axis}
+              className="rounded-2xl overflow-hidden transition-all"
+              style={{
+                background: counts[axis] > 0 ? `${axisColors[axis]}06` : 'rgba(6,10,14,0.5)',
+                border: `1px solid ${counts[axis] > 0 ? `${axisColors[axis]}22` : 'rgba(255,255,255,0.05)'}`,
+              }}>
+              {/* Axis header */}
+              <div className="flex items-center gap-3 px-5 py-3 border-b"
+                style={{ borderColor: counts[axis] > 0 ? `${axisColors[axis]}15` : 'rgba(255,255,255,0.04)' }}>
+                <span className="font-display font-black text-sm" style={{ color: axisColors[axis] }}>
+                  {axisLabels[axis]}
+                </span>
+                <span className="text-[11px] text-text-muted/50 flex-1">{SLIDER_META[axis].desc}</span>
+                {/* Density bar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-20 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                    <motion.div className="h-full rounded-full"
+                      animate={{ width: `${signalDensity[axis]}%` }}
+                      transition={{ type: 'spring', stiffness: 140, damping: 18 }}
+                      style={{ background: axisColors[axis] }}
+                    />
+                  </div>
+                  <span className="text-[9px] font-black tabular-nums w-6"
+                    style={{ color: counts[axis] > 0 ? axisColors[axis] : 'rgba(255,255,255,0.2)' }}>
+                    {counts[axis] || '0'}
+                  </span>
+                </div>
               </div>
-              <span className="text-xs font-bold w-4 text-right" style={{ color: counts[axis] > 0 ? axisColors[axis] : 'rgba(255,255,255,0.2)' }}>
-                {counts[axis] || ''}
-              </span>
+              {/* Word chips */}
+              <div className="flex flex-wrap gap-2 px-5 py-4">
+                {words.map(word => {
+                  const isOn = selected[axis].has(word)
+                  return (
+                    <motion.button
+                      key={word}
+                      onClick={() => toggleWord(axis, word)}
+                      whileTap={{ scale: 0.88 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                      className="text-xs px-3 py-1.5 rounded-full border transition-colors"
+                      style={isOn ? {
+                        background: `${axisColors[axis]}22`,
+                        borderColor: `${axisColors[axis]}70`,
+                        color: axisColors[axis],
+                        boxShadow: `0 0 10px ${axisColors[axis]}25`,
+                      } : {
+                        background: 'rgba(255,255,255,0.02)',
+                        borderColor: 'rgba(255,255,255,0.07)',
+                        color: 'rgba(255,255,255,0.45)',
+                      }}
+                    >
+                      {isOn && <span className="mr-1 text-[9px]">✦</span>}
+                      {word}
+                    </motion.button>
+                  )
+                })}
+              </div>
             </div>
-            {/* Words */}
-            <div className="flex flex-wrap gap-2 px-5 py-4">
-              {words.map(word => (
-                <button
-                  key={word}
-                  onClick={() => toggleWord(axis, word)}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
-                    selected[axis].has(word)
-                      ? 'text-white'
-                      : 'border-white/8 text-text-muted hover:border-white/20'
-                  }`}
-                  style={selected[axis].has(word) ? {
-                    background: `${axisColors[axis]}20`,
-                    borderColor: `${axisColors[axis]}80`,
-                    color: axisColors[axis],
-                  } : {}}
-                >
-                  {word}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>}
+          ))}
+        </div>
+      )}
 
-      {mode === 'words' && <div className="flex gap-3 mt-6">
-        <button
-          onClick={decode}
-          disabled={totalSelected === 0}
-          className={`px-6 py-3 rounded-xl font-bold text-sm transition-all ${
-            totalSelected === 0
-              ? 'bg-bg-surface text-text-muted/40 cursor-not-allowed'
-              : 'bg-gradient-to-r from-purple to-cyan text-white shadow-[0_0_20px_rgba(184,138,255,0.3)]'
-          }`}
-        >
-          Decode their style →
-        </button>
-        {decoded && (
-          <button
-            onClick={() => {
-              localStorage.setItem('neuroleader_decoded_target', decoded.styleKey)
+      {/* ── Decode button ── */}
+      {mode === 'words' && (
+        <div className="flex gap-3 mb-2">
+          <motion.button
+            onClick={decode}
+            disabled={totalSelected === 0}
+            whileHover={totalSelected > 0 ? { scale: 1.02 } : {}}
+            whileTap={totalSelected > 0 ? { scale: 0.97 } : {}}
+            className="px-7 py-3.5 rounded-xl font-bold text-sm transition-all"
+            style={totalSelected === 0 ? {
+              background: 'rgba(255,255,255,0.04)',
+              color: 'rgba(255,255,255,0.2)',
+              cursor: 'not-allowed',
+              border: '1px solid rgba(255,255,255,0.05)',
+            } : {
+              background: 'linear-gradient(135deg, #B88AFF, #00C8FF)',
+              color: '#fff',
+              border: 'none',
+              boxShadow: '0 0 24px rgba(184,138,255,0.35)',
             }}
-            className="px-6 py-3 rounded-xl border border-cyan/20 text-cyan text-sm hover:bg-cyan/10 transition-all"
           >
-            Build a translated message →
-          </button>
-        )}
-      </div>}
+            {totalSelected === 0 ? 'Tap words to begin →' : `Identify their neural wiring — ${totalSelected} signal${totalSelected !== 1 ? 's' : ''} →`}
+          </motion.button>
+          {decoded && (
+            <button
+              onClick={() => localStorage.setItem('neuroleader_decoded_target', decoded.styleKey)}
+              className="px-5 py-3 rounded-xl border text-sm transition-all hover:bg-cyan/10"
+              style={{ borderColor: 'rgba(0,200,255,0.2)', color: '#00C8FF' }}
+            >
+              Translate a message →
+            </button>
+          )}
+        </div>
+      )}
 
-      {/* In convo mode, show the "Build a translated message" CTA once decoded */}
       {mode === 'convo' && decoded && (
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-3 mt-4 mb-2">
           <button
             onClick={() => localStorage.setItem('neuroleader_decoded_target', decoded.styleKey)}
-            className="px-6 py-3 rounded-xl border border-cyan/20 text-cyan text-sm hover:bg-cyan/10 transition-all"
+            className="px-5 py-3 rounded-xl border text-sm transition-all hover:bg-cyan/10"
+            style={{ borderColor: 'rgba(0,200,255,0.2)', color: '#00C8FF' }}
           >
-            Build a translated message →
+            Translate a message for them →
           </button>
         </div>
       )}
 
+      {/* ── Fingerprint reveal ── */}
       <AnimatePresence>
         {decoded && (
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: 'spring', stiffness: 160, damping: 20 }}
-            className="mt-8 space-y-4"
+            initial={{ opacity: 0, y: 28, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 160, damping: 22 }}
+            className="mt-6 space-y-4"
           >
-            {/* Big reveal card */}
-            <div
-              className="relative overflow-hidden rounded-2xl border p-7"
+            {/* ── Hero reveal card ── */}
+            <div className="relative overflow-hidden rounded-2xl border"
               style={{
                 borderColor: `${decoded.style.color}35`,
-                background: `linear-gradient(135deg, ${decoded.style.color}10 0%, transparent 60%)`,
-              }}
-            >
-              {/* Watermark */}
-              <div
-                className="absolute right-4 top-1/2 -translate-y-1/2 font-display font-black text-[100px] leading-none pointer-events-none select-none"
-                style={{ color: `${decoded.style.color}06` }}
-              >
-                {decoded.style.name.charAt(0)}
-              </div>
-              <div className="relative">
-                <div className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: decoded.style.color }}>
-                  Detected Style
+                background: `linear-gradient(135deg, ${decoded.style.color}12 0%, rgba(6,10,14,0.95) 55%)`,
+              }}>
+              {/* Scan line animation */}
+              <motion.div
+                className="absolute inset-x-0 h-px pointer-events-none"
+                style={{ background: `linear-gradient(to right, transparent, ${decoded.style.color}60, transparent)` }}
+                initial={{ top: 0, opacity: 1 }}
+                animate={{ top: '100%', opacity: 0 }}
+                transition={{ duration: 1.2, ease: 'linear' }}
+              />
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: decoded.style.color }} />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.22em]"
+                    style={{ color: `${decoded.style.color}90` }}>
+                    Neural fingerprint identified
+                  </span>
                 </div>
-                <div className="font-display text-3xl font-black text-white mb-1">
-                  {decoded.style.name}
-                </div>
-                <div className="text-sm italic mb-4" style={{ color: decoded.style.color }}>{decoded.style.short}</div>
+                {/* Style name — big */}
+                <motion.div
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15, type: 'spring', stiffness: 200, damping: 22 }}
+                >
+                  <div className="font-display text-4xl font-black mb-0.5" style={{ color: decoded.style.color }}>
+                    {decoded.style.name}
+                  </div>
+                  <div className="text-sm italic mb-4" style={{ color: `${decoded.style.color}80` }}>
+                    {decoded.style.short}
+                  </div>
+                </motion.div>
+                {/* Axis signature tags */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {Object.entries(decoded.style.axes).map(([axis, level]) => (
-                    <span
-                      key={axis}
-                      className="text-[10px] px-2.5 py-1 rounded-full font-bold uppercase"
+                    <motion.span key={axis}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2 + Object.keys(decoded.style.axes).indexOf(axis) * 0.06 }}
+                      className="text-[9px] px-2.5 py-1 rounded-full font-bold uppercase"
                       style={{
-                        background: level === 'high' ? `${axisColors[axis]}20` : 'rgba(255,255,255,0.04)',
-                        color: level === 'high' ? axisColors[axis] : 'rgba(255,255,255,0.3)',
-                        border: `1px solid ${level === 'high' ? `${axisColors[axis]}40` : 'rgba(255,255,255,0.06)'}`,
-                      }}
-                    >
-                      {axis.toUpperCase()} ↑
-                    </span>
+                        background: level === 'high' ? `${axisColors[axis]}22` : 'rgba(255,255,255,0.03)',
+                        color: level === 'high' ? axisColors[axis] : 'rgba(255,255,255,0.25)',
+                        border: `1px solid ${level === 'high' ? `${axisColors[axis]}45` : 'rgba(255,255,255,0.06)'}`,
+                      }}>
+                      {axisLabels[axis]} {level === 'high' ? '↑ dominant' : '↓ low'}
+                    </motion.span>
                   ))}
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed">{decoded.style.orientDesc}</p>
-              </div>
-            </div>
-
-            {/* Quadrant comparison + gap */}
-            <div className="bg-bg-surface border border-white/[0.06] rounded-2xl p-6">
-              <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-text-muted/50 mb-4">Quadrant Overlap</div>
-              <div className="flex items-start gap-6">
-                <div className="shrink-0">
-                  {userProfile?.axisScores ? (
-                    <QuadrantPlot
-                      {...userProfile.axisScores}
-                      compareAxes={decodeCompareAxes}
-                      compareLabel={decoded.style.name}
-                      size={180}
-                    />
-                  ) : (
-                    <QuadrantPlot
-                      who={decodeCompareAxes.who} why={decodeCompareAxes.why}
-                      what={decodeCompareAxes.what} how={decodeCompareAxes.how}
-                      size={180}
-                    />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0 space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-2 h-2 rounded-full bg-cyan shrink-0" />
-                    <span className="text-text-muted">You — {userProfile?.dominantStyle || 'Your style'}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-2 h-2 rounded-full bg-white/40 shrink-0" />
-                    <span className="text-text-muted">{decoded.style.name}</span>
-                  </div>
-                  {userProfile?.axisScores && (
-                    <div className="pt-2 space-y-2">
-                      {['who', 'why', 'what', 'how'].map(axis => {
-                        const userVal = userProfile.axisScores[axis] || 50
-                        const theirVal = decodeCompareAxes[axis]
-                        const diff = Math.abs(userVal - theirVal)
-                        const color = diff < 20 ? '#00E896' : diff < 40 ? '#FFB340' : '#FF6B6B'
-                        return (
-                          <div key={axis} className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold w-8 shrink-0" style={{ color: axisColors[axis] }}>{axis.toUpperCase()}</span>
-                            <div className="flex-1 h-1 bg-white/[0.04] rounded-full overflow-hidden">
-                              <motion.div
-                                className="h-full rounded-full"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${diff}%` }}
-                                transition={{ delay: 0.1, duration: 0.5 }}
-                                style={{ background: color }}
-                              />
-                            </div>
-                            <span className="text-[10px] font-bold w-5 shrink-0 tabular-nums" style={{ color }}>{diff}</span>
-                          </div>
-                        )
-                      })}
-                      <p className="text-[9px] text-text-muted/40 pt-1">Gap per axis — lower = easier to connect</p>
+                <p className="text-sm text-text-muted leading-relaxed mb-5">
+                  {decoded.style.orientDesc}
+                </p>
+                {/* Top evidence signals */}
+                {topEvidenceWords.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="rounded-xl p-3 border"
+                    style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.06)' }}
+                  >
+                    <div className="text-[8px] font-bold uppercase tracking-[0.16em] text-text-muted/40 mb-2">
+                      Key signals detected
                     </div>
-                  )}
-                </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {topEvidenceWords.map((w, i) => (
+                        <motion.span key={w}
+                          initial={{ opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.45 + i * 0.07 }}
+                          className="text-[10px] px-2.5 py-1 rounded-full font-medium"
+                          style={{
+                            background: `${axisColors[dominantAxisKey]}18`,
+                            color: axisColors[dominantAxisKey],
+                            border: `1px solid ${axisColors[dominantAxisKey]}35`,
+                          }}>
+                          ✦ {w}
+                        </motion.span>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </div>
 
-            {/* How to adjust */}
-            {userProfile && (
-              <div
-                className="rounded-2xl border p-5"
-                style={{ borderColor: 'rgba(255,179,64,0.2)', background: 'rgba(255,179,64,0.04)' }}
-              >
-                <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber mb-3">Your Bridge Strategy</div>
-                <p className="text-sm text-text-primary leading-relaxed">
-                  {STYLES[userProfile.dominantStyle]?.adjustTo?.[decoded.styleKey] ||
-                    'Adapt your communication by emphasizing their primary axes.'}
+            {/* ── Gap analysis ── */}
+            {userProfile?.axisScores && (
+              <div className="rounded-2xl border border-white/[0.06] p-5"
+                style={{ background: 'rgba(6,10,14,0.6)' }}>
+                <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-text-muted/40 mb-4">
+                  Your Gap to Their Wiring — Axis by Axis
+                </div>
+                <div className="space-y-2.5">
+                  {['who', 'why', 'what', 'how'].map(axis => {
+                    const userVal  = userProfile.axisScores[axis] || 50
+                    const theirVal = decodeCompareAxes[axis]
+                    const diff     = Math.abs(userVal - theirVal)
+                    const gapColor = diff < 20 ? '#00E896' : diff < 40 ? '#FFB340' : '#FF6B6B'
+                    const label    = diff < 20 ? 'Aligned' : diff < 40 ? 'Moderate gap' : 'High gap'
+                    return (
+                      <div key={axis} className="flex items-center gap-3">
+                        <span className="text-[10px] font-black w-10 uppercase"
+                          style={{ color: axisColors[axis] }}>{axisLabels[axis]}</span>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden"
+                          style={{ background: 'rgba(255,255,255,0.04)' }}>
+                          <motion.div className="h-full rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${diff}%` }}
+                            transition={{ delay: 0.1, type: 'spring', stiffness: 100, damping: 20 }}
+                            style={{ background: gapColor }}
+                          />
+                        </div>
+                        <span className="text-[9px] font-bold w-16 text-right tabular-nums"
+                          style={{ color: gapColor }}>{diff}pt — {label}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className="text-[9px] text-text-muted/30 mt-3">
+                  Lower gap = less translation effort needed. High gap = speak their axis first.
                 </p>
               </div>
+            )}
+
+            {/* ── Bridge strategy ── */}
+            {userProfile && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="rounded-2xl border p-5"
+                style={{ borderColor: 'rgba(255,179,64,0.18)', background: 'rgba(255,179,64,0.04)' }}
+              >
+                <div className="text-[9px] font-bold uppercase tracking-[0.2em] mb-3"
+                  style={{ color: '#FFB340' }}>Your Bridge Strategy</div>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                  {STYLES[userProfile.dominantStyle]?.adjustTo?.[decoded.styleKey] ||
+                    'Lead with their dominant axis. Match their language before introducing your own frame.'}
+                </p>
+              </motion.div>
             )}
           </motion.div>
         )}
