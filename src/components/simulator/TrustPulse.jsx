@@ -61,43 +61,119 @@ function AxonNudge({ text }) {
   )
 }
 
-function TrustBar({ score, numId }) {
+// ── Trust Arc Gauge — semicircle meter with animated fill + glow tip ─────────
+function TrustBar({ score }) {
   const ti = getTI(score)
+  const R = 72, CX = 100, CY = 88
+  const arcLen = Math.PI * R
+  const t = Math.min(score, 100) / 100
+  // Tip position: arc from left (angle=π) to right (angle=0)
+  const theta = (1 - t) * Math.PI
+  const tipX = CX + R * Math.cos(theta)
+  const tipY = CY - R * Math.sin(theta)
+  const d = `M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`
+
   return (
     <div className="rounded-2xl border p-5" style={{ background: '#0D1422', borderColor: 'rgba(255,255,255,0.06)' }}>
-      <div className="flex items-baseline justify-between mb-3">
-        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40">Trust Index</span>
-        <motion.span
-          key={score}
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
-          className="font-display text-4xl font-black"
-          style={{ color: ti.color }}
+      <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40 mb-1">Trust Index</div>
+
+      <svg viewBox="0 0 200 104" className="w-full" style={{ maxHeight: 148, overflow: 'visible' }}>
+        {/* Subtle background rings */}
+        {[0.45, 0.7, 0.92].map((f, i) => {
+          const rr = R * f
+          return (
+            <path
+              key={i}
+              d={`M ${CX - rr} ${CY} A ${rr} ${rr} 0 0 1 ${CX + rr} ${CY}`}
+              fill="none" stroke="rgba(255,255,255,0.025)" strokeWidth="1"
+            />
+          )
+        })}
+
+        {/* Track */}
+        <path d={d} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" strokeLinecap="round" />
+
+        {/* Glow layer */}
+        <motion.path
+          d={d} fill="none" stroke={ti.color} strokeWidth="10" strokeLinecap="round"
+          initial={{ strokeDashoffset: arcLen }}
+          animate={{ strokeDashoffset: arcLen * (1 - t) }}
+          transition={{ duration: 1.3, ease: [0.4, 0, 0.2, 1] }}
+          style={{ strokeDasharray: arcLen, filter: `blur(4px)`, opacity: 0.4 }}
+        />
+
+        {/* Fill arc */}
+        <motion.path
+          d={d} fill="none" stroke={ti.color} strokeWidth="10" strokeLinecap="round"
+          initial={{ strokeDashoffset: arcLen }}
+          animate={{ strokeDashoffset: arcLen * (1 - t) }}
+          transition={{ duration: 1.3, ease: [0.4, 0, 0.2, 1] }}
+          style={{ strokeDasharray: arcLen, filter: `drop-shadow(0 0 5px ${ti.color}90)` }}
+        />
+
+        {/* Pulsing tip dot */}
+        {score > 2 && (
+          <>
+            <motion.circle
+              cx={tipX} cy={tipY} r={6}
+              fill={ti.color}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.4 }}
+              style={{ filter: `drop-shadow(0 0 10px ${ti.color})` }}
+            />
+            <motion.circle
+              cx={tipX} cy={tipY} r={6}
+              fill="none" stroke={ti.color} strokeWidth="1.5"
+              animate={{ r: [6, 14, 6], opacity: [0.7, 0, 0.7] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: 1.1 }}
+            />
+          </>
+        )}
+
+        {/* Score in center bottom */}
+        <motion.text
+          x={CX} y={CY + 6}
+          textAnchor="middle" fontSize="32" fontWeight="900"
+          fill={ti.color}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
         >
           {score}
-        </motion.span>
-      </div>
-      <div className="h-1.5 rounded-full overflow-hidden mb-1.5" style={{ background: 'rgba(255,255,255,0.04)' }}>
-        <motion.div
-          className="h-full rounded-full"
-          animate={{ width: `${score}%`, background: ti.color }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-        />
-      </div>
-      <div className="flex justify-between mb-3">
-        {['Critical', 'Fragile', 'Building', 'Strong', 'Anchored'].map(z => (
-          <span key={z} className="text-[9px]" style={{ color: 'rgba(100,180,255,0.2)' }}>{z}</span>
+        </motion.text>
+
+        {/* Zone marks */}
+        <text x={22} y={100} textAnchor="middle" fontSize="5.5" fill="rgba(255,255,255,0.2)">0</text>
+        <text x={100} y={16} textAnchor="middle" fontSize="5.5" fill="rgba(255,255,255,0.2)">50</text>
+        <text x={178} y={100} textAnchor="middle" fontSize="5.5" fill="rgba(255,255,255,0.2)">100</text>
+      </svg>
+
+      {/* Tier label + description */}
+      <motion.div
+        key={score}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7 }}
+        className="text-center -mt-1 mb-3"
+      >
+        <div className="font-display font-black text-xl mb-1" style={{ color: ti.color }}>{ti.label}</div>
+        <p className="text-xs leading-relaxed max-w-xs mx-auto" style={{ color: 'rgba(255,255,255,0.55)' }}>{ti.text}</p>
+      </motion.div>
+
+      {/* Tier strip */}
+      <div className="flex rounded-full overflow-hidden h-1 mb-1">
+        {TI_TABLE.map((tier, i) => (
+          <div
+            key={i} className="flex-1 h-full transition-opacity duration-700"
+            style={{ background: tier.color, opacity: score >= tier.min && score <= tier.max ? 1 : 0.18 }}
+          />
         ))}
       </div>
-      <div className="flex items-start gap-2.5">
-        <motion.div
-          className="w-2 h-2 rounded-full shrink-0 mt-1"
-          animate={{ background: ti.color }}
-          transition={{ duration: 0.5 }}
-        />
-        <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>
-          <strong style={{ color: ti.color }}>{ti.label}</strong> {ti.text}
-        </p>
+      <div className="flex justify-between">
+        {TI_TABLE.map(tier => (
+          <span key={tier.label} className="text-[8px]" style={{ color: 'rgba(100,180,255,0.22)' }}>{tier.label}</span>
+        ))}
       </div>
     </div>
   )
@@ -142,11 +218,32 @@ function FrequencyRow({ label, value, onChange, colorHex }) {
   )
 }
 
+// ── Dimension mini arc card ───────────────────────────────────────────────────
 function DimCard({ score, label, color }) {
+  const R = 28, CX = 40, CY = 33
+  const arcLen = Math.PI * R
+  const t = Math.min(score, 10) / 10
+  const d = `M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`
+
   return (
     <div className="rounded-xl border p-3 text-center" style={{ background: '#0D1422', borderColor: 'rgba(255,255,255,0.06)' }}>
-      <div className="font-display text-2xl font-black mb-1" style={{ color }}>{score}</div>
-      <div className="text-[9px] font-bold uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</div>
+      <svg viewBox="0 0 80 40" className="w-full" style={{ maxHeight: 44 }}>
+        <path d={d} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" strokeLinecap="round" />
+        <motion.path
+          d={d} fill="none" stroke={color} strokeWidth="6" strokeLinecap="round"
+          initial={{ strokeDashoffset: arcLen }}
+          animate={{ strokeDashoffset: arcLen * (1 - t) }}
+          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+          style={{ strokeDasharray: arcLen, filter: `drop-shadow(0 0 4px ${color}80)` }}
+        />
+        <motion.text
+          x={40} y={35} textAnchor="middle" fontSize="13" fontWeight="900" fill={color}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+        >
+          {score}
+        </motion.text>
+      </svg>
+      <div className="text-[9px] font-bold uppercase tracking-wider mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</div>
     </div>
   )
 }
